@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AB DRY FRUITS | Premium Nuts & Spices (91543 39465)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body class="bg-stone-950 text-stone-100 font-sans min-h-screen">
+
+  <!-- HEADER -->
+  <header class="bg-stone-900 border-b border-amber-500/30 sticky top-0 z-50 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-stone-950 font-black text-xl">AB</div>
+        <div>
+          <h1 class="text-lg font-extrabold tracking-wide text-amber-400">AB DRY FRUITS</h1>
+          <p class="text-xs text-stone-400">Fresh Grade-A Dry Fruits & Spices • 📞 91543 39465</p>
+        </div>
+      </div>
+      <a href="pos.html" class="bg-stone-800 hover:bg-stone-700 text-amber-400 border border-amber-500/40 px-3 py-1.5 rounded-lg text-xs font-bold">
+        🔒 Staff POS Login
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4">
+    <!-- ANNOUNCEMENT BANNER -->
+    <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 mb-5 flex flex-wrap justify-between items-center text-xs text-amber-200">
+      <span>✨ <b>Weekly Market Fresh Stock:</b> Select pack size (100g to 1Kg). Direct PhonePe/UPI Online Checkout.</span>
+      <a href="https://wa.me/919154339465?text=Hi%20AB%20Dry%20Fruits,%20I%20want%20wholesale%20rates." target="_blank" class="underline font-bold text-amber-400">
+        💬 Bulk / Wholesale Enquiry on WhatsApp
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- CATALOG GRID -->
+      <div class="lg:col-span-2">
+        <div class="flex flex-wrap gap-2 mb-4">
+          <input id="shopSearch" oninput="renderShopCatalog()" placeholder="🔍 Search Badam, Kaju, Pista, Dates, Saffron..." 
+                 class="flex-1 bg-stone-900 border border-stone-700 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-amber-400">
+          <select id="shopCategoryFilter" onchange="renderShopCatalog()" class="bg-stone-900 border border-stone-700 rounded-xl px-3 py-2.5 text-sm">
+            <option value="ALL">All Categories</option>
+            <option value="Almonds">Almonds (Badam)</option>
+            <option value="Cashews">Cashews (Kaju)</option>
+            <option value="Pistachios">Pistachios (Pista)</option>
+            <option value="Dates">Dates (Khajoor)</option>
+            <option value="Raisins">Raisins (Kismis)</option>
+            <option value="Figs & Apricots">Figs & Apricots</option>
+            <option value="Walnuts">Walnuts (Akhrot)</option>
+            <option value="Seeds & Berries">Seeds & Berries</option>
+            <option value="Spices & Saffron">Spices & Saffron</option>
+          </select>
+        </div>
+        <div id="shopGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+
+      <!-- CART & CHECKOUT -->
+      <div class="bg-stone-900 border border-stone-800 rounded-2xl p-4 h-fit sticky top-20">
+        <h2 class="text-base font-bold text-amber-400 mb-3">🛒 Your Order Basket</h2>
+        <div id="shopCartList" class="space-y-2 text-sm mb-4 max-h-56 overflow-y-auto"></div>
+
+        <div class="border-t border-stone-800 pt-3 mb-4 flex justify-between items-center">
+          <span class="text-stone-400 text-sm">Total Payable Online:</span>
+          <span id="shopCartTotal" class="text-2xl font-black text-emerald-400">₹0</span>
+        </div>
+
+        <div class="space-y-2.5 text-xs">
+          <input id="custName" placeholder="Your Full Name *" class="w-full bg-stone-950 border border-stone-800 rounded-lg p-2.5">
+          <input id="custPhone" placeholder="10-Digit Mobile Number *" type="tel" class="w-full bg-stone-950 border border-stone-800 rounded-lg p-2.5">
+          <textarea id="custAddress" placeholder="Full Delivery Address / Landmark *" rows="2" class="w-full bg-stone-950 border border-stone-800 rounded-lg p-2.5"></textarea>
+        </div>
+
+        <div class="mt-4 bg-stone-950 border border-amber-500/40 rounded-xl p-3">
+          <p class="text-xs font-bold text-amber-300 mb-1">📲 Step 1: Pay via PhonePe / UPI</p>
+          <p class="text-[11px] text-stone-400 mb-2">Merchant UPI: <b class="text-white">9154339465@ybl</b></p>
+          
+          <div class="flex items-center gap-3 my-2">
+            <img id="dynamicQrImg" src="" alt="Scan QR" class="w-24 h-24 rounded-lg bg-white p-1 hidden">
+            <div class="flex-1 space-y-2">
+              <a id="upiDeepLinkBtn" href="#" class="block text-center bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-3 rounded-lg text-xs">
+                ⚡ Tap to Pay (PhonePe / GPay)
+              </a>
+            </div>
+          </div>
+
+          <label class="block text-[11px] text-emerald-300 font-semibold mt-3 mb-1">✅ Step 2: Enter Last 4 Digits of UPI UTR *</label>
+          <input id="custUtr" placeholder="e.g. 4829" maxlength="12" class="w-full bg-stone-900 border border-emerald-500/60 rounded-lg p-2 text-xs text-emerald-200 font-bold">
+
+          <button onclick="submitOnlinePrepaidOrder()" class="w-full mt-3 bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-black py-3 rounded-xl text-sm">
+            🚀 Confirm Order & Send to Counter
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhI-fREaktl1LgVPMnatAv9w872PTqlVY",
+    authDomain: "ab-dry-fruits.firebaseapp.com",
+    databaseURL: "https://ab-dry-fruits-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "ab-dry-fruits",
+    storageBucket: "ab-dry-fruits.firebasestorage.app",
+    messagingSenderId: "987471017129",
+    appId: "1:987471017129:web:be8aa0f51b5f4784ac65b8",
+    measurementId: "G-0QEKNEDXXJ"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  let catalog = {};
+  let shopCart = [];
+
+  // Load Catalog from Firebase
+  db.ref('catalog').on('value', snapshot => {
+    catalog = snapshot.val() || {};
+    renderShopCatalog();
+  });
+
+  function renderShopCatalog() {
+    const q = (document.getElementById('shopSearch').value || '').toLowerCase();
+    const cat = document.getElementById('shopCategoryFilter').value;
+    const grid = document.getElementById('shopGrid');
+
+    const items = Object.values(catalog).filter(i => {
+      const matchQ = i.name.toLowerCase().includes(q) || (i.category || '').toLowerCase().includes(q);
+      const matchCat = cat === 'ALL' || i.category === cat;
+      return matchQ && matchCat;
+    });
+
+    if (items.length === 0) {
+      grid.innerHTML = `<div class="text-stone-500 text-sm py-8 text-center col-span-2">Loading catalog or no items found...</div>`;
+      return;
+    }
+
+    grid.innerHTML = items.map(item => {
+      const rateKg = item.onlineRate || 800;
+      const r100 = Math.round(rateKg * 0.1);
+      const r250 = Math.round(rateKg * 0.25);
+      const r500 = Math.round(rateKg * 0.5);
+      const safeName = item.name.replace(/'/g, "\\'");
+      return `
+        <div class="bg-stone-900 border border-stone-800 rounded-xl p-3 flex flex-col justify-between">
+          <div>
+            <span class="text-[10px] text-amber-400 font-bold uppercase">${item.category || 'Dry Fruit'}</span>
+            <h3 class="font-bold text-sm text-white mt-0.5">${item.name}</h3>
+            <p class="text-xs text-stone-400 mt-0.5">Rate: <b class="text-emerald-400">₹${rateKg}/Kg</b></p>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5 mt-3">
+            <button onclick="addToCart('${safeName}', 100, ${r100})" class="bg-stone-950 hover:bg-amber-500 hover:text-stone-950 border border-stone-700 rounded-lg py-1.5 text-[11px] font-bold">100g<br>₹${r100}</button>
+            <button onclick="addToCart('${safeName}', 250, ${r250})" class="bg-stone-950 hover:bg-amber-500 hover:text-stone-950 border border-stone-700 rounded-lg py-1.5 text-[11px] font-bold">250g<br>₹${r250}</button>
+            <button onclick="addToCart('${safeName}', 500, ${r500})" class="bg-stone-950 hover:bg-amber-500 hover:text-stone-950 border border-stone-700 rounded-lg py-1.5 text-[11px] font-bold">500g<br>₹${r500}</button>
+            <button onclick="addToCart('${safeName}', 1000, ${rateKg})" class="bg-stone-950 hover:bg-amber-500 hover:text-stone-950 border border-stone-700 rounded-lg py-1.5 text-[11px] font-bold">1Kg<br>₹${rateKg}</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function addToCart(name, weightG, price) {
+    shopCart.push({ name, weightG, price });
+    renderCart();
+  }
+
+  function renderCart() {
+    const list = document.getElementById('shopCartList');
+    let total = 0;
+    list.innerHTML = shopCart.map((c, i) => {
+      total += c.price;
+      return `
+        <div class="flex justify-between items-center bg-stone-950 px-2.5 py-1.5 rounded-lg border border-stone-800 text-xs">
+          <span>${c.name} (${c.weightG}g)</span>
+          <div class="flex items-center gap-2">
+            <b class="text-emerald-400">₹${c.price}</b>
+            <button onclick="shopCart.splice(${i},1);renderCart()" class="text-rose-400">✕</button>
+          </div>
+        </div>`;
+    }).join('');
+    document.getElementById('shopCartTotal').innerText = `₹${total}`;
+
+    const upiUrl = `upi://pay?pa=9154339465@ybl&pn=AB_DRY_FRUITS&am=${total}&cu=INR`;
+    document.getElementById('upiDeepLinkBtn').href = upiUrl;
+    const qr = document.getElementById('dynamicQrImg');
+    if (total > 0) {
+      qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiUrl)}`;
+      qr.classList.remove('hidden');
+    } else {
+      qr.classList.add('hidden');
+    }
+  }
+
+  function submitOnlinePrepaidOrder() {
+    if (shopCart.length === 0) return alert("Basket is empty!");
+    const name = document.getElementById('custName').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const address = document.getElementById('custAddress').value.trim();
+    const utr = document.getElementById('custUtr').value.trim();
+
+    if (!name || !phone || !address) return alert("Please fill contact details and address.");
+    if (!utr || utr.length < 4) return alert("Please enter the UTR / UPI Reference Number from PhonePe!");
+
+    const total = shopCart.reduce((s, i) => s + i.price, 0);
+    const orderId = "ORD_" + Date.now().toString().slice(-6);
+    const order = {
+      orderId, customerName: name, phone, address,
+      items: [...shopCart], totalAmount: total, utrNumber: utr, timestamp: Date.now()
+    };
+
+    db.ref(`live_orders/${orderId}`).set(order);
+    window.open(`https://wa.me/919154339465?text=${encodeURIComponent(`*NEW ORDER #${orderId}*\nCustomer: ${name} (${phone})\nTotal: ₹${total}\nUTR: ${utr}`)}`, '_blank');
+    
+    shopCart = [];
+    document.getElementById('custUtr').value = '';
+    renderCart();
+    alert(`✅ Order ${orderId} submitted! Counter staff will verify UTR #${utr} and pack your order.`);
+  }
+</script>
+</body>
+</html>
