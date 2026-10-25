@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AB DRY FRUITS | Royal Enterprise POS & Inventory Suite</title>
+  <title>AB DRY FRUITS | Blinkit-Speed Counter POS & Live Rate Controller</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Firebase Compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #F8F6F0;
-      color: #1C1917;
+      font-family: 'Inter', sans-serif;
+      background-color: #F4F6FB;
+      color: #1F2937;
     }
-    .font-serif-luxury { font-family: 'Playfair Display', serif; }
-    .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%); }
-    .gold-border { border-color: rgba(212, 175, 55, 0.35); }
+    .blinkit-yellow { background-color: #F8CB46; }
+    .blinkit-green { background-color: #0C831F; }
+    .blinkit-green:hover { background-color: #096B19; }
     .panel-card {
       background: #FFFFFF;
-      border: 1px solid rgba(212, 175, 55, 0.28);
-      box-shadow: 0 4px 16px -2px rgba(28, 25, 23, 0.05);
+      border: 1px solid #E5E7EB;
+      box-shadow: 0 4px 16px -2px rgba(17, 24, 39, 0.05);
     }
 
     /* DYNAMIC 58MM AND 80MM THERMAL RECEIPT PRINT ENGINE */
@@ -53,69 +53,69 @@
     }
   </style>
 </head>
-<body class="min-h-screen p-3">
+<body class="min-h-screen p-3 flex flex-col justify-between">
 
-  <!-- TOP EXECUTIVE BAR -->
-  <header class="panel-card rounded-2xl p-3 mb-3 flex flex-wrap justify-between items-center gap-3">
+<div>
+  <!-- TOP ADMIN COMMAND BAR -->
+  <header class="blinkit-yellow rounded-2xl p-3 mb-3 flex flex-wrap justify-between items-center gap-3 shadow-sm border border-amber-400">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center text-white font-serif-luxury font-bold text-xl shadow">AB</div>
+      <div class="w-10 h-10 rounded-xl bg-stone-950 text-[#F8CB46] flex items-center justify-center font-black text-xl shadow">AB</div>
       <div>
         <div class="flex items-center gap-2">
-          <h1 class="text-base font-serif-luxury font-bold text-stone-900">AB DRY FRUITS — COUNTER POS</h1>
-          <span id="authBadge" class="bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold">🔓 Staff Counter</span>
+          <h1 class="text-base font-black text-stone-950">AB DRY FRUITS — MASTER POS</h1>
+          <span id="authBadge" class="bg-stone-950 text-[#F8CB46] px-2.5 py-0.5 rounded-full text-[10px] font-black">🔓 Staff Counter</span>
         </div>
-        <p class="text-[11px] text-stone-500">Live Cloud Sync • Shortcut: <kbd class="bg-stone-100 border px-1 rounded">Enter</kbd> to Add Item</p>
+        <p class="text-[11px] text-stone-800 font-semibold">Last-Minute Rate & Online Rate Auto-Sync Active</p>
       </div>
     </div>
 
     <!-- NAVIGATION TABS -->
-    <div class="flex items-center gap-1.5 bg-stone-100 p-1 rounded-xl text-xs font-bold">
-      <button onclick="switchTab('BILLING')" id="tabBtn_BILLING" class="px-3.5 py-1.5 rounded-lg bg-white text-amber-900 shadow-sm">⚡ Counter Billing</button>
-      <button onclick="switchTab('CATALOG')" id="tabBtn_CATALOG" class="px-3.5 py-1.5 rounded-lg text-stone-600 hover:text-stone-900">📦 Master Catalog & Stock</button>
-      <button onclick="switchTab('HISTORY')" id="tabBtn_HISTORY" class="px-3.5 py-1.5 rounded-lg text-stone-600 hover:text-stone-900">📊 Today's Invoices</button>
+    <div class="flex items-center gap-1.5 bg-stone-950/10 p-1 rounded-xl text-xs font-extrabold">
+      <button onclick="switchTab('BILLING')" id="tabBtn_BILLING" class="px-3.5 py-1.5 rounded-lg bg-stone-950 text-[#F8CB46] shadow-sm">⚡ Counter Billing</button>
+      <button onclick="switchTab('CATALOG')" id="tabBtn_CATALOG" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📦 Master Catalog & Online Rates</button>
+      <button onclick="switchTab('HISTORY')" id="tabBtn_HISTORY" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📊 Today's Invoices</button>
     </div>
 
-    <!-- PRINTER WIDTH & ADMIN CONTROLS -->
+    <!-- PRINTER WIDTH & QUICK ACTIONS -->
     <div class="flex flex-wrap items-center gap-2 text-xs">
-      <div class="flex items-center gap-1 bg-amber-50 border border-amber-300 rounded-lg px-2 py-1">
-        <span class="text-[11px] font-bold text-amber-900">🖨️ Thermal Roll:</span>
-        <select id="paperWidthSelect" onchange="setPaperWidth(this.value)" class="bg-transparent font-extrabold text-stone-900 outline-none">
-          <option value="80mm">80mm (3 Inch Standard)</option>
-          <option value="58mm">58mm (2 Inch Compact)</option>
+      <div class="flex items-center gap-1 bg-white border border-stone-300 rounded-xl px-2.5 py-1.5">
+        <span class="text-[11px] font-extrabold text-stone-700">🖨️ Roll:</span>
+        <select id="paperWidthSelect" onchange="setPaperWidth(this.value)" class="bg-transparent font-black text-stone-950 outline-none">
+          <option value="80mm">80mm (3")</option>
+          <option value="58mm">58mm (2")</option>
         </select>
       </div>
-
-      <button onclick="downloadExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-bold shadow-sm">📥 Export Excel</button>
-      <a href="index.html" target="_blank" class="bg-stone-800 hover:bg-stone-700 text-amber-300 px-3 py-1.5 rounded-lg font-bold">🛍️ Storefront</a>
+      <button onclick="downloadExcel()" class="blinkit-green text-white px-3 py-1.5 rounded-xl font-extrabold shadow-sm">📥 Excel</button>
+      <a href="index.html" target="_blank" class="bg-stone-950 text-white px-3 py-1.5 rounded-xl font-extrabold">🛍️ Storefront</a>
     </div>
   </header>
 
   <!-- KPI ANALYTICS RIBBON -->
   <section class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-3">
     <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-semibold">Today's Counter Revenue</p>
-      <p id="kpiTodayRevenue" class="text-xl font-extrabold text-stone-900">₹0</p>
+      <p class="text-[11px] text-stone-500 font-bold">Today's Total Sales</p>
+      <p id="kpiTodayRevenue" class="text-xl font-black text-stone-900">₹0</p>
     </div>
     <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-semibold">Cash / UPI Split</p>
-      <p id="kpiPaySplit" class="text-xs font-extrabold text-amber-800 mt-1">Cash: ₹0 | UPI: ₹0</p>
+      <p class="text-[11px] text-stone-500 font-bold">Cash vs UPI Split</p>
+      <p id="kpiPaySplit" class="text-xs font-extrabold text-[#0C831F] mt-1">Cash: ₹0 | UPI: ₹0</p>
     </div>
     <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-semibold">Bills Printed Today</p>
-      <p id="kpiBillCount" class="text-xl font-extrabold text-emerald-700">0</p>
+      <p class="text-[11px] text-stone-500 font-bold">Invoices Printed</p>
+      <p id="kpiBillCount" class="text-xl font-black text-amber-600">0</p>
     </div>
     <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-semibold">Pending Online Orders</p>
-      <p id="kpiPendingOnline" class="text-xl font-extrabold text-sky-600">0</p>
+      <p class="text-[11px] text-stone-500 font-bold">Pending Online Orders</p>
+      <p id="kpiPendingOnline" class="text-xl font-black text-sky-600">0</p>
     </div>
     <div class="panel-card rounded-xl p-2.5 flex flex-col justify-center">
       <div class="flex gap-1">
         <input id="adminEmail" value="admin@abdryfruits.com" class="w-1/2 bg-stone-50 border border-stone-200 rounded px-1.5 py-1 text-[10px]">
-        <input id="adminPass" type="password" placeholder="Admin Pass" class="w-1/2 bg-stone-50 border border-stone-200 rounded px-1.5 py-1 text-[10px]">
+        <input id="adminPass" type="password" placeholder="Password" class="w-1/2 bg-stone-50 border border-stone-200 rounded px-1.5 py-1 text-[10px]">
       </div>
       <div class="flex gap-1 mt-1">
-        <button onclick="loginAdmin()" class="flex-1 gold-gradient text-white font-bold py-1 rounded text-[10px]">Admin Login</button>
-        <button onclick="safeClearFirebase()" class="bg-rose-50 text-rose-700 border border-rose-200 font-bold px-2 py-1 rounded text-[10px]" title="Backup & Clear Old Bills">🧹 Clear</button>
+        <button onclick="loginAdmin()" class="flex-1 bg-stone-950 text-[#F8CB46] font-bold py-1 rounded text-[10px]">Admin Login</button>
+        <button onclick="safeClearFirebase()" class="bg-rose-50 text-rose-700 border border-rose-200 font-bold px-2 py-1 rounded text-[10px]">🧹 Clear Old</button>
       </div>
     </div>
   </section>
@@ -123,35 +123,34 @@
   <!-- ==================== TAB 1: COUNTER BILLING ==================== -->
   <div id="tab_BILLING" class="grid grid-cols-1 lg:grid-cols-12 gap-3">
 
-    <!-- LEFT 8 COLS: FAST COUNTER POS -->
+    <!-- LEFT 8 COLS: COUNTER BILLING & LAST-MINUTE RATE CONTROLLER -->
     <div class="lg:col-span-8 panel-card rounded-2xl p-4">
       <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
         <div>
-          <h2 class="text-base font-serif-luxury font-bold text-stone-900">⚡ Fast Walk-In Counter Billing</h2>
-          <p class="text-[11px] text-stone-500">Type weight OR type customer's ₹ budget (e.g. ₹200) to reverse-calculate exact grams automatically</p>
+          <h2 class="text-base font-black text-stone-900">⚡ Instant Counter Billing & Live Rate Override</h2>
+          <p class="text-[11px] text-stone-500 font-medium">Change Counter Rate, Online Rate, Weight, or Total even 1 second before printing—auto-updates everywhere!</p>
         </div>
-        <!-- HOLD / RECALL BILL BUTTONS -->
         <div class="flex items-center gap-2">
-          <button onclick="holdCurrentBill()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3 py-1.5 rounded-xl text-xs font-bold">
+          <button onclick="holdCurrentBill()" class="bg-amber-100 hover:bg-amber-200 text-stone-950 px-3 py-1.5 rounded-xl text-xs font-extrabold">
             ⏸️ Hold Bill (<span id="heldCount">0</span>)
           </button>
-          <button onclick="recallHeldBill()" id="recallBtn" class="hidden bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-300 px-3 py-1.5 rounded-xl text-xs font-bold">
+          <button onclick="recallHeldBill()" id="recallBtn" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-900 px-3 py-1.5 rounded-xl text-xs font-extrabold">
             ▶️ Recall Held
           </button>
         </div>
       </div>
 
-      <!-- QUICK ENTRY BAR -->
-      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 bg-amber-50/50 p-3 rounded-2xl border gold-border mb-3">
-        <div class="sm:col-span-4">
-          <label class="text-[11px] font-bold text-stone-600">Item Name (Search or Type New)</label>
-          <input id="posItem" list="catList" oninput="onItemSelect()" placeholder="e.g. California Badam"
-                 class="w-full bg-white border border-stone-300 rounded-xl p-2 text-sm font-semibold text-stone-900 outline-none focus:border-amber-600">
+      <!-- ENTRY ROW WITH COUNTER RATE + ONLINE RATE CONTROL -->
+      <div class="grid grid-cols-2 sm:grid-cols-12 gap-2 bg-stone-50 p-3 rounded-2xl border border-stone-200 mb-3">
+        <div class="col-span-2 sm:col-span-3">
+          <label class="text-[10px] font-extrabold text-stone-600 uppercase">Item Name</label>
+          <input id="posItem" list="catList" oninput="onItemSelect()" placeholder="Type or select item..."
+                 class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-bold text-stone-900 outline-none focus:border-[#0C831F]">
           <datalist id="catList"></datalist>
         </div>
-        <div class="sm:col-span-2">
-          <label class="text-[11px] font-bold text-stone-600">Quick Pack</label>
-          <select id="posPack" onchange="onPackChange()" class="w-full bg-white border border-stone-300 rounded-xl p-2 text-sm font-semibold">
+        <div class="col-span-1 sm:col-span-2">
+          <label class="text-[10px] font-extrabold text-stone-600 uppercase">Pack</label>
+          <select id="posPack" onchange="onPackChange()" class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-bold">
             <option value="1000">1 Kg</option>
             <option value="500">500g</option>
             <option value="250">250g</option>
@@ -160,93 +159,96 @@
             <option value="CUSTOM">Custom</option>
           </select>
         </div>
-        <div class="sm:col-span-2">
-          <label class="text-[11px] font-bold text-stone-600">Weight (g)</label>
-          <input id="posWeight" type="number" value="1000" oninput="recalc()" class="w-full bg-white border border-stone-300 rounded-xl p-2 text-sm font-bold">
+        <div class="col-span-1 sm:col-span-2">
+          <label class="text-[10px] font-extrabold text-stone-600 uppercase">Grams (g)</label>
+          <input id="posWeight" type="number" value="1000" oninput="recalc()" class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-black">
         </div>
-        <div class="sm:col-span-2">
-          <label class="text-[11px] font-extrabold text-amber-800">Rate/Kg (₹)</label>
-          <input id="posRate" type="number" placeholder="Rate" oninput="recalc()" class="w-full bg-amber-50 border-2 border-amber-400 rounded-xl p-2 text-sm font-extrabold text-stone-900">
+        <div class="col-span-1 sm:col-span-2">
+          <label class="text-[10px] font-black text-amber-800 uppercase">Counter ₹/Kg</label>
+          <input id="posRate" type="number" placeholder="Counter" oninput="onCounterRateInput()" class="w-full bg-amber-50 border-2 border-amber-400 rounded-xl p-2 text-xs font-black text-stone-900">
         </div>
-        <div class="sm:col-span-2">
-          <label class="text-[11px] font-extrabold text-emerald-800">Amount (₹)</label>
-          <input id="posTotal" type="number" placeholder="₹ Amt" oninput="reverseCalc()" onkeydown="if(event.key==='Enter') addItem()" class="w-full bg-emerald-50 border-2 border-emerald-500 rounded-xl p-2 text-sm font-extrabold text-emerald-900">
+        <div class="col-span-1 sm:col-span-1">
+          <label class="text-[10px] font-black text-sky-700 uppercase">Online ₹/Kg</label>
+          <input id="posOnlineRate" type="number" placeholder="Online" class="w-full bg-sky-50 border border-sky-400 rounded-xl p-2 text-xs font-black text-sky-900" title="Online Customer Store Rate/Kg">
+        </div>
+        <div class="col-span-2 sm:col-span-2">
+          <label class="text-[10px] font-black text-[#0C831F] uppercase">Total (₹)</label>
+          <input id="posTotal" type="number" placeholder="₹ Amt" oninput="reverseCalc()" onkeydown="if(event.key==='Enter') addItem()" class="w-full bg-emerald-50 border-2 border-[#0C831F] rounded-xl p-2 text-xs font-black text-[#0C831F]">
         </div>
       </div>
 
       <div class="flex flex-wrap justify-between items-center gap-2 mb-3 text-xs">
-        <div class="flex items-center gap-4">
-          <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-stone-700">
-            <input id="saveMaster" type="checkbox" checked class="accent-amber-600 w-4 h-4">
-            <span>⚡ Auto-Save New Item / Updated Rate to Master Catalog</span>
+        <div class="flex flex-wrap items-center gap-3">
+          <label class="flex items-center gap-1.5 cursor-pointer font-bold text-stone-700">
+            <input id="saveMaster" type="checkbox" checked class="accent-[#0C831F] w-4 h-4">
+            <span>🔄 Auto-Sync Any Rate Edit to Master Catalog & Online Store</span>
           </label>
-          <select id="posNewCat" class="bg-stone-100 border border-stone-200 rounded-lg px-2 py-1 text-[11px] font-semibold">
-            <option value="Almonds">Category: Almonds</option>
-            <option value="Cashews">Category: Cashews</option>
-            <option value="Pistachios">Category: Pistachios</option>
-            <option value="Dates">Category: Dates</option>
-            <option value="Raisins">Category: Raisins</option>
-            <option value="Figs & Apricots">Category: Figs & Apricots</option>
-            <option value="Walnuts">Category: Walnuts</option>
-            <option value="Seeds & Berries">Category: Seeds & Berries</option>
-            <option value="Spices & Saffron">Category: Spices & Saffron</option>
+          <select id="posNewCat" class="bg-stone-100 border border-stone-200 rounded-lg px-2 py-1 text-[11px] font-bold">
+            <option value="Almonds">Almonds</option>
+            <option value="Cashews">Cashews</option>
+            <option value="Pistachios">Pistachios</option>
+            <option value="Dates">Dates</option>
+            <option value="Raisins">Raisins</option>
+            <option value="Figs & Apricots">Figs & Apricots</option>
+            <option value="Walnuts">Walnuts</option>
+            <option value="Seeds & Berries">Seeds & Berries</option>
+            <option value="Spices & Saffron">Spices & Saffron</option>
           </select>
         </div>
-        <button onclick="addItem()" class="gold-gradient text-white font-extrabold px-6 py-2 rounded-xl text-xs shadow-sm hover:opacity-95">
-          + Add Item to Bill (Enter)
+        <button onclick="addItem()" class="blinkit-green text-white font-black px-5 py-2 rounded-xl text-xs shadow-sm">
+          + Add to Bill (Enter)
         </button>
       </div>
 
-      <!-- BILL TABLE -->
-      <div class="border border-stone-200 rounded-xl overflow-hidden mb-4">
+      <!-- LIVE EDITABLE BILL TABLE (CHANGE RATE / ONLINE RATE / TOTAL UNTIL LAST SECOND) -->
+      <div class="border border-stone-200 rounded-xl overflow-x-auto mb-4">
         <table class="w-full text-xs text-left">
-          <thead class="bg-stone-100 text-stone-600 uppercase text-[10px] font-extrabold">
+          <thead class="bg-stone-100 text-stone-700 uppercase text-[10px] font-black">
             <tr>
-              <th class="py-2.5 px-3">#</th>
-              <th class="py-2.5 px-3">Item Name</th>
-              <th class="py-2.5 px-2">Weight (Editable)</th>
-              <th class="py-2.5 px-2">Rate/Kg (Editable)</th>
-              <th class="py-2.5 px-3">Line Total</th>
-              <th class="py-2.5 px-2 text-right">Action</th>
+              <th class="py-2.5 px-2">#</th>
+              <th class="py-2.5 px-2">Item</th>
+              <th class="py-2.5 px-2">Weight (g)</th>
+              <th class="py-2.5 px-2">Counter ₹/Kg (Live Edit)</th>
+              <th class="py-2.5 px-2">Online ₹/Kg (Live Sync)</th>
+              <th class="py-2.5 px-2">Line Total ₹ (Live Edit)</th>
+              <th class="py-2.5 px-2 text-right">✕</th>
             </tr>
           </thead>
           <tbody id="billBody" class="divide-y divide-stone-200 bg-white"></tbody>
         </table>
       </div>
 
-      <!-- CUSTOMER & CHECKOUT FOOTER -->
-      <div class="bg-stone-50 p-3.5 rounded-2xl border gold-border space-y-3">
-        <!-- OPTIONAL WALK-IN CUSTOMER DETAILS & DISCOUNT -->
+      <!-- CHECKOUT & PRINT CONTROLS -->
+      <div class="bg-stone-50 p-3.5 rounded-2xl border border-stone-200 space-y-3">
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
-          <input id="walkinName" placeholder="Walk-in Customer Name (Optional)" class="bg-white border border-stone-200 rounded-xl px-3 py-2">
-          <input id="walkinPhone" placeholder="Customer WhatsApp (10 digits)" maxlength="10" class="bg-white border border-stone-200 rounded-xl px-3 py-2">
-          <div class="flex items-center bg-white border border-stone-200 rounded-xl px-2">
-            <span class="text-stone-500 text-[11px] font-bold mr-1">Discount:</span>
-            <input id="billDiscount" type="number" value="0" oninput="renderBill()" class="w-full py-2 text-xs font-bold outline-none">
-            <select id="discountType" onchange="renderBill()" class="text-[11px] font-bold bg-stone-100 rounded px-1 py-0.5">
+          <input id="walkinName" placeholder="Customer Name (Optional)" class="bg-white border border-stone-300 rounded-xl px-3 py-2 font-medium">
+          <input id="walkinPhone" placeholder="Customer WhatsApp (10 digits)" maxlength="10" class="bg-white border border-stone-300 rounded-xl px-3 py-2 font-medium">
+          <div class="flex items-center bg-white border border-stone-300 rounded-xl px-2">
+            <span class="text-stone-500 text-[11px] font-bold mr-1">Disc:</span>
+            <input id="billDiscount" type="number" value="0" oninput="renderBillTotalsOnly()" class="w-full py-2 text-xs font-black outline-none">
+            <select id="discountType" onchange="renderBillTotalsOnly()" class="text-[11px] font-black bg-stone-100 rounded px-1 py-0.5">
               <option value="RS">₹</option>
               <option value="PCT">%</option>
             </select>
           </div>
-          <div class="flex items-center bg-white border border-stone-200 rounded-xl px-2">
-            <span class="text-stone-500 text-[11px] font-bold mr-1">Cash Given:</span>
-            <input id="cashTendered" type="number" placeholder="₹" oninput="calcChange()" class="w-full py-2 text-xs font-bold outline-none">
-            <span id="changeDueText" class="text-[10px] font-extrabold text-emerald-700 shrink-0"></span>
+          <div class="flex items-center bg-white border border-stone-300 rounded-xl px-2">
+            <span class="text-stone-500 text-[11px] font-bold mr-1">Cash:</span>
+            <input id="cashTendered" type="number" placeholder="₹ Given" oninput="calcChange()" class="w-full py-2 text-xs font-black outline-none">
+            <span id="changeDueText" class="text-[10px] font-black text-[#0C831F] shrink-0"></span>
           </div>
         </div>
 
-        <!-- GRAND TOTAL & PRINT ACTIONS -->
         <div class="flex flex-wrap justify-between items-center gap-3 pt-2 border-t border-stone-200">
           <div>
-            <span class="text-xs text-stone-500 font-bold">Net Payable Total:</span>
-            <span id="grandTotal" class="text-3xl font-extrabold text-emerald-700 ml-2">₹0</span>
-            <span id="totalWeightBadge" class="ml-2 text-xs bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full">0g</span>
+            <span class="text-xs text-stone-500 font-bold">Net Payable:</span>
+            <span id="grandTotal" class="text-3xl font-black text-[#0C831F] ml-2">₹0</span>
+            <span id="totalWeightBadge" class="ml-2 text-xs bg-[#F8CB46] text-stone-950 font-black px-2.5 py-0.5 rounded-full">0g</span>
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
-            <select id="payMode" onchange="toggleSplitBox()" class="bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-bold">
+            <select id="payMode" onchange="toggleSplitBox()" class="bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-extrabold">
               <option value="PHONEPE">📲 PhonePe / UPI (91543 39465)</option>
-              <option value="CASH">💵 Cash Counter</option>
+              <option value="CASH">💵 Cash</option>
               <option value="SPLIT">⚖️ Split (Cash + UPI)</option>
             </select>
 
@@ -255,11 +257,11 @@
               <input id="splitUpiAmt" type="number" placeholder="UPI ₹" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 font-bold">
             </div>
 
-            <button onclick="sendWalkinWhatsApp()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold px-3.5 py-2 rounded-xl text-xs">
+            <button onclick="sendWalkinWhatsApp()" class="bg-emerald-50 hover:bg-emerald-100 text-[#0C831F] border border-[#0C831F]/30 font-extrabold px-3.5 py-2 rounded-xl text-xs">
               💬 WhatsApp Bill
             </button>
-            <button onclick="printAndSaveBill()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs shadow-md">
-              🖨️ Save & Print Receipt
+            <button onclick="printAndSaveBill()" class="blinkit-green text-white font-black px-5 py-2.5 rounded-xl text-xs shadow-md">
+              🖨️ Save Rates & Print Bill
             </button>
           </div>
         </div>
@@ -267,44 +269,48 @@
     </div>
 
     <!-- RIGHT 4 COLS: LIVE ONLINE ORDERS QUEUE -->
-    <div class="lg:col-span-4 panel-card rounded-2xl p-4 flex flex-col justify-between">
-      <div>
-        <div class="flex justify-between items-center mb-2">
-          <div>
-            <h2 class="text-base font-serif-luxury font-bold text-stone-900">🔔 Live Online Store Orders</h2>
-            <p class="text-[11px] text-stone-500">Check PhonePe UTR in <b>91543 39465</b> & Verify</p>
-          </div>
-          <span id="orderCount" class="gold-gradient text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-sm">0</span>
+    <div class="lg:col-span-4 panel-card rounded-2xl p-4">
+      <div class="flex justify-between items-center mb-2">
+        <div>
+          <h2 class="text-base font-black text-stone-900">🔔 Live Online Orders</h2>
+          <p class="text-[11px] text-stone-500">Verify PhonePe UTR in <b>91543 39465</b></p>
         </div>
-        <div id="onlineFeed" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1 mt-3"></div>
+        <span id="orderCount" class="blinkit-green text-white text-xs font-black px-3 py-1 rounded-full">0</span>
       </div>
+      <div id="onlineFeed" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1 mt-3"></div>
     </div>
 
   </div>
 
-  <!-- ==================== TAB 2: MASTER CATALOG & INVENTORY ==================== -->
+  <!-- ==================== TAB 2: MASTER CATALOG & ONLINE RATE CONTROLLER ==================== -->
   <div id="tab_CATALOG" class="hidden panel-card rounded-2xl p-4">
-    <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
+    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
       <div>
-        <h2 class="text-base font-serif-luxury font-bold text-stone-900">📦 Master Price List & Live Stock (Kg)</h2>
-        <p class="text-xs text-stone-500">Edit Counter Rate, Online Store Rate, or Stock Kg directly below. Changes sync to customer website immediately.</p>
+        <h2 class="text-base font-black text-stone-900">📦 Master Price List & Live Online Store Rate Controller</h2>
+        <p class="text-xs text-stone-500">Edit Counter Rate, Online Store Rate, or Stock Kg below—updates customer website in 0.1 seconds.</p>
       </div>
-      <div class="flex gap-2">
-        <button onclick="seedDefaultCatalog()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-3.5 py-2 rounded-xl text-xs font-extrabold">
-          ✨ Seed Starter Dry Fruits Catalog
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center gap-1 bg-sky-50 border border-sky-200 rounded-xl px-2.5 py-1.5 text-xs">
+          <span class="font-bold text-sky-900">Bulk Online Markup: +₹</span>
+          <input id="bulkMarkupRs" type="number" value="40" class="w-14 bg-white border border-sky-300 rounded px-1.5 py-0.5 font-black text-sky-900">
+          <button onclick="applyBulkOnlineMarkup()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-1 rounded-lg">Apply All</button>
+        </div>
+        <button onclick="seedDefaultCatalog()" class="blinkit-yellow text-stone-950 px-3.5 py-2 rounded-xl text-xs font-black shadow-sm">
+          ✨ Seed Starter Catalog
         </button>
       </div>
     </div>
+
     <div class="overflow-x-auto">
       <table class="w-full text-xs text-left border border-stone-200 rounded-xl">
-        <thead class="bg-stone-100 text-stone-600 uppercase text-[10px] font-extrabold">
+        <thead class="bg-stone-100 text-stone-700 uppercase text-[10px] font-black">
           <tr>
-            <th class="p-2.5">Product Name</th>
+            <th class="p-2.5">Item Name</th>
             <th class="p-2.5">Category</th>
             <th class="p-2.5">Counter Rate (₹/Kg)</th>
             <th class="p-2.5">Online Store Rate (₹/Kg)</th>
-            <th class="p-2.5">Stock Available (Kg)</th>
-            <th class="p-2.5 text-right">Actions</th>
+            <th class="p-2.5">Available Stock (Kg)</th>
+            <th class="p-2.5 text-right">Action</th>
           </tr>
         </thead>
         <tbody id="catalogManagerBody" class="divide-y divide-stone-200"></tbody>
@@ -312,24 +318,19 @@
     </div>
   </div>
 
-  <!-- ==================== TAB 3: TODAY'S SALES & REPRINT ==================== -->
+  <!-- ==================== TAB 3: TODAY'S INVOICES ==================== -->
   <div id="tab_HISTORY" class="hidden panel-card rounded-2xl p-4">
-    <div class="flex justify-between items-center mb-4">
-      <div>
-        <h2 class="text-base font-serif-luxury font-bold text-stone-900">📊 Today's Invoices & Reprint Queue</h2>
-        <p class="text-xs text-stone-500">All counter and verified online sales recorded in Firebase</p>
-      </div>
-    </div>
+    <h2 class="text-base font-black text-stone-900 mb-3">📊 Today's Invoices & 1-Click Reprint</h2>
     <div class="overflow-x-auto">
       <table class="w-full text-xs text-left border border-stone-200 rounded-xl">
-        <thead class="bg-stone-100 text-stone-600 uppercase text-[10px] font-extrabold">
+        <thead class="bg-stone-100 text-stone-700 uppercase text-[10px] font-black">
           <tr>
             <th class="p-2.5">Invoice ID</th>
             <th class="p-2.5">Time</th>
             <th class="p-2.5">Customer</th>
-            <th class="p-2.5">Items Summary</th>
-            <th class="p-2.5">Payment Mode</th>
-            <th class="p-2.5">Total (₹)</th>
+            <th class="p-2.5">Items</th>
+            <th class="p-2.5">Mode</th>
+            <th class="p-2.5">Total</th>
             <th class="p-2.5 text-right">Reprint</th>
           </tr>
         </thead>
@@ -337,38 +338,47 @@
       </table>
     </div>
   </div>
+</div>
 
-  <!-- THERMAL RECEIPT TEMPLATE (SUPPORTS 58MM & 80MM) -->
+  <!-- 1-CLICK DEVELOPER CREDIT BAR IN POS -->
+  <footer class="mt-6 bg-stone-950 text-stone-200 rounded-2xl p-3 flex flex-wrap justify-between items-center gap-3 text-xs">
+    <div class="flex items-center gap-2.5">
+      <span class="w-7 h-7 rounded-lg bg-[#F8CB46] text-stone-950 font-black flex items-center justify-center">SZA</span>
+      <span>POS System Engineered by <b class="text-[#F8CB46]">Syed Zeeshaan Ali High-Fledged Engineering And Digital Tech Solutions</b></span>
+    </div>
+    <div class="flex flex-wrap items-center gap-2 text-[11px] font-bold">
+      <a href="https://instagram.com/syedzeeshaanali07" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-white px-2.5 py-1 rounded-lg">📸 @syedzeeshaanali07</a>
+      <a href="https://wa.me/919032208086" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg">💬 WA: 9032208086</a>
+      <a href="tel:7989698613" class="bg-[#F8CB46] text-stone-950 px-2.5 py-1 rounded-lg">📞 Call: 7989698613</a>
+    </div>
+  </footer>
+
+  <!-- THERMAL RECEIPT PRINT TEMPLATE -->
   <div id="thermalReceipt" class="hidden paper-80mm">
     <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:6px; margin-bottom:6px;">
-      <div style="font-size:15px; font-weight:bold; letter-spacing:0.5px;">AB DRY FRUITS</div>
-      <div style="font-size:10px;">Premium Grade-A Nuts & Spices</div>
+      <div style="font-size:15px; font-weight:bold;">AB DRY FRUITS</div>
+      <div style="font-size:10px;">Fresh Grade-A Dry Fruits & Spices</div>
       <div style="font-size:10px; font-weight:bold;">Ph / WhatsApp: 91543 39465</div>
       <div id="rcptMeta" style="font-size:9px; margin-top:3px;"></div>
       <div id="rcptCust" style="font-size:9px; font-weight:bold;"></div>
     </div>
-
     <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:bold; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:4px;">
-      <span>ITEM (QTY)</span>
+      <span>ITEM (WEIGHT)</span>
       <span>AMT</span>
     </div>
-
     <div id="rcptItems" style="font-size:10px; border-bottom:1px dashed #000; padding-bottom:4px; margin-bottom:4px;"></div>
-
     <div id="rcptDiscountRow" style="display:none; justify-content:space-between; font-size:10px;">
       <span>Discount:</span>
       <span id="rcptDiscountVal">-₹0</span>
     </div>
-
     <div style="font-size:13px; font-weight:bold; display:flex; justify-content:space-between; padding:2px 0;">
       <span>NET TOTAL:</span>
       <span id="rcptTotal">₹0</span>
     </div>
     <div id="rcptPayInfo" style="font-size:9px; text-align:right; margin-bottom:4px;"></div>
-
     <div style="text-align:center; border-top:1px dashed #000; padding-top:6px; margin-top:4px; font-size:9px;">
-      <div>100% Hygienic & Freshly Packed</div>
-      <div style="font-weight:bold; margin-top:2px;">Thank You! Visit Again 🙏</div>
+      <div>Thank You! Visit Again 🙏</div>
+      <div style="font-size:8px; margin-top:2px;">Tech by Syed Zeeshaan Ali (9032208086)</div>
     </div>
   </div>
 
@@ -393,7 +403,6 @@
   let onlineOrders = [];
   let salesHistory = [];
 
-  // Initialize Paper Width Preference (58mm vs 80mm)
   window.addEventListener('DOMContentLoaded', () => {
     const savedWidth = localStorage.getItem('pos_receipt_width') || '80mm';
     document.getElementById('paperWidthSelect').value = savedWidth;
@@ -411,10 +420,14 @@
   function switchTab(tab) {
     ['BILLING', 'CATALOG', 'HISTORY'].forEach(t => {
       document.getElementById(`tab_${t}`).classList.add('hidden');
-      document.getElementById(`tabBtn_${t}`).className = "px-3.5 py-1.5 rounded-lg text-stone-600 hover:text-stone-900";
+      document.getElementById(`tabBtn_${t}`).className = "px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50";
     });
     document.getElementById(`tab_${tab}`).classList.remove('hidden');
-    document.getElementById(`tabBtn_${tab}`).className = "px-3.5 py-1.5 rounded-lg bg-white text-amber-900 shadow-sm";
+    document.getElementById(`tabBtn_${tab}`).className = "px-3.5 py-1.5 rounded-lg bg-stone-950 text-[#F8CB46] shadow-sm";
+  }
+
+  function getCatalogKey(name) {
+    return (name || '').trim().replace(/[.#$/[\]]/g, "_");
   }
 
   // Listen to Master Catalog
@@ -425,7 +438,7 @@
     renderCatalogManager();
   });
 
-  // Listen to Today's & Historical Sales from Firebase
+  // Listen to Sales History
   db.ref('daily_sales').on('value', snap => {
     const allDays = snap.val() || {};
     const flatList = [];
@@ -451,10 +464,19 @@
     const key = Object.keys(catalog).find(k => catalog[k].name && catalog[k].name.toLowerCase() === val.toLowerCase());
     if (key) {
       const item = catalog[key];
-      document.getElementById('posRate').value = item.offlineRate || item.onlineRate || 800;
+      const cRate = item.offlineRate || item.onlineRate || 800;
+      const oRate = item.onlineRate || (cRate + 40);
+      document.getElementById('posRate').value = cRate;
+      document.getElementById('posOnlineRate').value = oRate;
       if (item.category) document.getElementById('posNewCat').value = item.category;
       recalc();
     }
+  }
+
+  function onCounterRateInput() {
+    const r = parseFloat(document.getElementById('posRate').value) || 0;
+    document.getElementById('posOnlineRate').value = r > 0 ? r + 40 : '';
+    recalc();
   }
 
   function onPackChange() {
@@ -480,45 +502,72 @@
     }
   }
 
+  function syncItemToMasterCatalog(name, offlineRate, onlineRate, category) {
+    if (!document.getElementById('saveMaster').checked) return;
+    const key = Object.keys(catalog).find(k => catalog[k].name && catalog[k].name.toLowerCase() === name.toLowerCase()) || getCatalogKey(name);
+    const existing = catalog[key] || {};
+    const updated = {
+      name,
+      offlineRate: Number(offlineRate) || 0,
+      onlineRate: Number(onlineRate) || (Number(offlineRate) + 40),
+      category: category || existing.category || 'Dry Fruits',
+      stockKg: existing.stockKg !== undefined ? existing.stockKg : 25
+    };
+    catalog[key] = updated;
+    db.ref(`catalog/${key}`).set(updated);
+  }
+
   function addItem() {
     const name = document.getElementById('posItem').value.trim();
     const weightG = parseFloat(document.getElementById('posWeight').value) || 1000;
     const rateKg = parseFloat(document.getElementById('posRate').value) || 0;
+    const onlineRateKg = parseFloat(document.getElementById('posOnlineRate').value) || (rateKg + 40);
     const totalRs = parseFloat(document.getElementById('posTotal').value) || 0;
     const cat = document.getElementById('posNewCat').value || 'Dry Fruits';
 
-    if (!name || totalRs <= 0) return alert("Please enter an item name and valid rate/amount.");
+    if (!name || totalRs <= 0) return alert("Enter item name and valid rate/amount!");
 
-    const key = name.replace(/[.#$/[\]]/g, "_");
-    const existing = catalog[key];
-    if (!existing || document.getElementById('saveMaster').checked) {
-      catalog[key] = {
-        name,
-        offlineRate: rateKg,
-        onlineRate: existing?.onlineRate || (rateKg + 40),
-        category: existing?.category || cat,
-        stockKg: existing?.stockKg !== undefined ? existing.stockKg : 25
-      };
-      db.ref(`catalog/${key}`).set(catalog[key]);
-    }
+    syncItemToMasterCatalog(name, rateKg, onlineRateKg, cat);
 
-    currentBill.push({ name, weightG, rateKg, totalRs });
+    currentBill.push({ name, weightG, rateKg, onlineRateKg, totalRs, category: cat });
     renderBill();
     document.getElementById('posItem').value = '';
     document.getElementById('posRate').value = '';
+    document.getElementById('posOnlineRate').value = '';
     document.getElementById('posTotal').value = '';
     document.getElementById('posItem').focus();
   }
 
+  // LAST-SECOND LIVE ROW EDITORS (AUTO-SYNCS TO FIREBASE CATALOG IMMEDIATELY)
   function editRowWeight(idx, val) {
-    currentBill[idx].weightG = parseFloat(val) || 0;
-    currentBill[idx].totalRs = Math.round((currentBill[idx].weightG / 1000) * currentBill[idx].rateKg);
+    const w = parseFloat(val) || 0;
+    currentBill[idx].weightG = w;
+    currentBill[idx].totalRs = Math.round((w / 1000) * currentBill[idx].rateKg);
     renderBill();
   }
 
-  function editRowRate(idx, val) {
-    currentBill[idx].rateKg = parseFloat(val) || 0;
-    currentBill[idx].totalRs = Math.round((currentBill[idx].weightG / 1000) * currentBill[idx].rateKg);
+  function editRowCounterRate(idx, val) {
+    const newRate = parseFloat(val) || 0;
+    currentBill[idx].rateKg = newRate;
+    currentBill[idx].totalRs = Math.round((currentBill[idx].weightG / 1000) * newRate);
+    syncItemToMasterCatalog(currentBill[idx].name, newRate, currentBill[idx].onlineRateKg, currentBill[idx].category);
+    renderBill();
+  }
+
+  function editRowOnlineRate(idx, val) {
+    const newOnline = parseFloat(val) || 0;
+    currentBill[idx].onlineRateKg = newOnline;
+    syncItemToMasterCatalog(currentBill[idx].name, currentBill[idx].rateKg, newOnline, currentBill[idx].category);
+  }
+
+  function editRowLineTotal(idx, val) {
+    const newTotal = parseFloat(val) || 0;
+    currentBill[idx].totalRs = newTotal;
+    if (currentBill[idx].weightG > 0) {
+      const impliedRateKg = Math.round((newTotal / currentBill[idx].weightG) * 1000);
+      currentBill[idx].rateKg = impliedRateKg;
+      syncItemToMasterCatalog(currentBill[idx].name, impliedRateKg, currentBill[idx].onlineRateKg, currentBill[idx].category);
+    }
     renderBill();
   }
 
@@ -535,25 +584,33 @@
   function renderBill() {
     const tbody = document.getElementById('billBody');
     if (currentBill.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-stone-400">No items added to current counter bill yet.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-stone-400 font-medium">Bill is empty. Add items above—you can adjust rates here right until printing.</td></tr>`;
     } else {
       tbody.innerHTML = currentBill.map((r, i) => `
         <tr class="hover:bg-amber-50/40">
-          <td class="py-2 px-3 font-bold text-stone-400">${i + 1}</td>
-          <td class="py-2 px-3 font-bold text-stone-900">${r.name}</td>
+          <td class="py-2 px-2 font-bold text-stone-400">${i + 1}</td>
+          <td class="py-2 px-2 font-black text-stone-900">${r.name}</td>
           <td class="py-2 px-2">
-            <input type="number" value="${r.weightG}" onchange="editRowWeight(${i}, this.value)" class="w-20 bg-stone-50 border border-stone-300 rounded-lg px-2 py-1 font-bold"> g
+            <input type="number" value="${r.weightG}" onchange="editRowWeight(${i}, this.value)" class="w-16 bg-stone-50 border border-stone-300 rounded-lg px-1.5 py-1 font-bold"> g
           </td>
           <td class="py-2 px-2">
-            ₹ <input type="number" value="${r.rateKg}" onchange="editRowRate(${i}, this.value)" class="w-20 bg-amber-50 border border-amber-400 rounded-lg px-2 py-1 text-amber-900 font-bold">
+            ₹ <input type="number" value="${r.rateKg}" onchange="editRowCounterRate(${i}, this.value)" class="w-20 bg-amber-50 border-2 border-amber-400 rounded-lg px-1.5 py-1 text-stone-900 font-black" title="Changes counter rate & syncs to catalog">
           </td>
-          <td class="py-2 px-3 font-extrabold text-emerald-700 text-sm">₹${r.totalRs}</td>
+          <td class="py-2 px-2">
+            ₹ <input type="number" value="${r.onlineRateKg || (r.rateKg + 40)}" onchange="editRowOnlineRate(${i}, this.value)" class="w-20 bg-sky-50 border border-sky-400 rounded-lg px-1.5 py-1 text-sky-900 font-black" title="Changes live customer website rate">
+          </td>
+          <td class="py-2 px-2">
+            ₹ <input type="number" value="${r.totalRs}" onchange="editRowLineTotal(${i}, this.value)" class="w-20 bg-emerald-50 border-2 border-[#0C831F] rounded-lg px-1.5 py-1 text-[#0C831F] font-black" title="Override final price & auto-recalculate rate/Kg">
+          </td>
           <td class="py-2 px-2 text-right">
-            <button onclick="currentBill.splice(${i},1);renderBill()" class="text-rose-500 hover:bg-rose-50 px-2 py-1 rounded font-bold">✕</button>
+            <button onclick="currentBill.splice(${i},1);renderBill()" class="text-rose-500 hover:bg-rose-50 px-2 py-1 rounded font-black">✕</button>
           </td>
         </tr>`).join('');
     }
+    renderBillTotalsOnly();
+  }
 
+  function renderBillTotalsOnly() {
     const { grandTotal, totalGrams } = getNetBillTotals();
     document.getElementById('grandTotal').innerText = `₹${grandTotal}`;
     document.getElementById('totalWeightBadge').innerText = totalGrams >= 1000 ? `${(totalGrams / 1000).toFixed(2)} Kg` : `${totalGrams}g`;
@@ -573,22 +630,15 @@
 
   function toggleSplitBox() {
     const mode = document.getElementById('payMode').value;
-    const box = document.getElementById('splitInputs');
-    if (mode === 'SPLIT') {
-      box.classList.remove('hidden');
-    } else {
-      box.classList.add('hidden');
-    }
+    document.getElementById('splitInputs').classList.toggle('hidden', mode !== 'SPLIT');
   }
 
-  // Hold / Recall Bills
   function holdCurrentBill() {
     if (currentBill.length === 0) return alert("Current bill is empty!");
     heldBills.push({
       items: [...currentBill],
       custName: document.getElementById('walkinName').value,
-      custPhone: document.getElementById('walkinPhone').value,
-      time: new Date().toLocaleTimeString()
+      custPhone: document.getElementById('walkinPhone').value
     });
     localStorage.setItem('ab_pos_held_bills', JSON.stringify(heldBills));
     currentBill = [];
@@ -611,12 +661,9 @@
 
   function updateHeldUI() {
     document.getElementById('heldCount').innerText = heldBills.length;
-    const btn = document.getElementById('recallBtn');
-    if (heldBills.length > 0) btn.classList.remove('hidden');
-    else btn.classList.add('hidden');
+    document.getElementById('recallBtn').classList.toggle('hidden', heldBills.length === 0);
   }
 
-  // Deduct stock helper
   function deductInventory(items) {
     items.forEach(item => {
       const key = Object.keys(catalog).find(k => catalog[k].name === item.name);
@@ -629,11 +676,10 @@
 
   function populateAndPrintReceipt(record) {
     document.getElementById('rcptMeta').innerText = `${record.invoiceId} | ${new Date(record.timestamp).toLocaleString()}`;
-    document.getElementById('rcptCust').innerText = record.customerName ? `Customer: ${record.customerName} ${record.customerPhone ? '(' + record.customerPhone + ')' : ''}` : '';
-
+    document.getElementById('rcptCust').innerText = record.customerName ? `Customer: ${record.customerName}` : '';
     document.getElementById('rcptItems').innerHTML = (record.items || []).map(i => `
       <div style="display:flex;justify-content:space-between; margin:2px 0;">
-        <span>${i.name} (${i.weightG}g)</span>
+        <span>${i.name} (${i.weightG}g @₹${i.rateKg}/Kg)</span>
         <span>₹${i.totalRs || i.price}</span>
       </div>`).join('');
 
@@ -652,6 +698,12 @@
 
   function printAndSaveBill() {
     if (currentBill.length === 0) return alert("Bill is empty!");
+
+    // Final guarantee: push any last-second rate edits in currentBill to Firebase Master Catalog
+    currentBill.forEach(item => {
+      syncItemToMasterCatalog(item.name, item.rateKg, item.onlineRateKg, item.category);
+    });
+
     const today = new Date().toISOString().split('T')[0];
     const inv = "INV_" + Date.now().toString().slice(-6);
     const { subtotal, discountRs, grandTotal } = getNetBillTotals();
@@ -687,28 +739,27 @@
   function sendWalkinWhatsApp() {
     if (currentBill.length === 0) return alert("Add items to the bill first!");
     const phone = document.getElementById('walkinPhone').value.trim();
-    if (phone.length < 10) return alert("Enter the customer's 10-digit WhatsApp number in the customer box.");
+    if (phone.length < 10) return alert("Enter customer's 10-digit WhatsApp number first.");
     const { grandTotal, discountRs } = getNetBillTotals();
     const lines = currentBill.map(i => `• ${i.name} (${i.weightG}g): ₹${i.totalRs}`).join('\n');
-    const msg = `*AB DRY FRUITS — INVOICE*\n${lines}\n${discountRs > 0 ? 'Discount: -₹' + discountRs + '\n' : ''}*Grand Total: ₹${grandTotal}*\nThank you for shopping with AB Dry Fruits! 🙏`;
+    const msg = `*AB DRY FRUITS — DIGITAL RECEIPT*\n${lines}\n${discountRs > 0 ? 'Discount: -₹' + discountRs + '\n' : ''}*Net Total: ₹${grandTotal}*\nThank you for shopping at AB Dry Fruits! 🙏`;
     window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank');
   }
 
-  // Online Orders Feed & Verification
   function renderOnlineFeed() {
     const feed = document.getElementById('onlineFeed');
     if (onlineOrders.length === 0) {
-      feed.innerHTML = `<div class="text-xs text-stone-400 text-center py-10 bg-stone-50 rounded-xl border border-dashed border-stone-200">No pending online orders right now.</div>`;
+      feed.innerHTML = `<div class="text-xs text-stone-400 text-center py-10 bg-stone-50 rounded-xl border border-dashed border-stone-200">No pending online orders.</div>`;
       return;
     }
     feed.innerHTML = onlineOrders.map(o => `
-      <div class="bg-amber-50/50 border border-amber-300 rounded-xl p-3 text-xs space-y-1.5">
-        <div class="flex justify-between items-center font-extrabold text-stone-900">
+      <div class="bg-amber-50/60 border border-amber-300 rounded-xl p-3 text-xs space-y-1.5">
+        <div class="flex justify-between items-center font-black text-stone-900">
           <span>${o.orderId} • ${o.customerName}</span>
-          <span class="text-emerald-700 text-sm">₹${o.totalAmount}</span>
+          <span class="text-[#0C831F] text-sm">₹${o.totalAmount}</span>
         </div>
         <div class="flex justify-between items-center bg-white px-2.5 py-1 rounded-lg border border-amber-200">
-          <span class="text-amber-900 font-extrabold">📲 UPI UTR: ${o.utrNumber}</span>
+          <span class="text-amber-900 font-black">📲 UTR: ${o.utrNumber}</span>
           <a href="tel:${o.phone}" class="text-sky-700 font-bold underline">📞 ${o.phone}</a>
         </div>
         <p class="text-stone-600 text-[11px]">📍 ${o.address}</p>
@@ -716,12 +767,12 @@
           ${(o.items || []).map(i => `• ${i.name} (${i.weightG}g) - ₹${i.price}`).join('<br>')}
         </div>
         <div class="grid grid-cols-2 gap-2 pt-1">
-          <button onclick="verifyOrder('${o.orderId}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-2 rounded-lg shadow-sm">
+          <button onclick="verifyOrder('${o.orderId}')" class="blinkit-green text-white font-black py-2 rounded-lg shadow-sm">
             ✅ Verify & Print
           </button>
           <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.customerName}, your AB Dry Fruits order #${o.orderId} (₹${o.totalAmount}) is verified and packed!`)}" target="_blank"
              class="bg-white hover:bg-stone-100 text-stone-800 border border-stone-300 font-bold py-2 rounded-lg text-center">
-            💬 Notify Customer
+            💬 WhatsApp
           </a>
         </div>
       </div>`).join('');
@@ -730,7 +781,6 @@
   function verifyOrder(id) {
     const ord = onlineOrders.find(o => o.orderId === id);
     if (!ord) return;
-
     const today = new Date().toISOString().split('T')[0];
     const saleRecord = {
       invoiceId: ord.orderId,
@@ -744,19 +794,17 @@
       upiSplit: ord.totalAmount,
       timestamp: Date.now()
     };
-
     db.ref(`live_orders/${id}/paymentStatus`).set("VERIFIED");
     db.ref(`daily_sales/${today}/${ord.orderId}`).set(saleRecord);
     deductInventory(ord.items || []);
     populateAndPrintReceipt(saleRecord);
   }
 
-  // Master Catalog & Stock Table
   function renderCatalogManager() {
     const tbody = document.getElementById('catalogManagerBody');
     const keys = Object.keys(catalog);
     if (keys.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-stone-400">Catalog is empty. Click "Seed Starter Dry Fruits Catalog" above to load standard items.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-stone-400">Catalog is empty. Click "Seed Starter Catalog" above.</td></tr>`;
       return;
     }
     tbody.innerHTML = keys.map(k => {
@@ -764,17 +812,16 @@
       const stock = item.stockKg !== undefined ? Number(item.stockKg) : 20;
       return `
         <tr class="hover:bg-stone-50">
-          <td class="p-2.5 font-bold text-stone-900">${item.name}</td>
-          <td class="p-2.5 text-stone-600">${item.category || 'Dry Fruits'}</td>
+          <td class="p-2.5 font-black text-stone-900">${item.name}</td>
+          <td class="p-2.5 text-stone-600 font-semibold">${item.category || 'Dry Fruits'}</td>
           <td class="p-2.5">
-            ₹ <input type="number" value="${item.offlineRate || 0}" onchange="updateCatalogField('${k}', 'offlineRate', this.value)" class="w-24 bg-amber-50 border border-amber-300 rounded px-2 py-1 font-bold">
+            ₹ <input type="number" value="${item.offlineRate || 0}" onchange="updateCatalogField('${k}', 'offlineRate', this.value)" class="w-24 bg-amber-50 border-2 border-amber-400 rounded-lg px-2 py-1 font-black">
           </td>
           <td class="p-2.5">
-            ₹ <input type="number" value="${item.onlineRate || 0}" onchange="updateCatalogField('${k}', 'onlineRate', this.value)" class="w-24 bg-emerald-50 border border-emerald-300 rounded px-2 py-1 font-bold">
+            ₹ <input type="number" value="${item.onlineRate || 0}" onchange="updateCatalogField('${k}', 'onlineRate', this.value)" class="w-24 bg-sky-50 border-2 border-sky-400 rounded-lg px-2 py-1 font-black text-sky-900">
           </td>
           <td class="p-2.5">
-            <input type="number" step="0.1" value="${stock}" onchange="updateCatalogField('${k}', 'stockKg', this.value)" class="w-20 bg-white border ${stock < 2 ? 'border-rose-500 text-rose-600' : 'border-stone-300'} rounded px-2 py-1 font-bold"> Kg
-            ${stock < 2 ? '<span class="text-[10px] text-rose-600 font-extrabold ml-1">LOW!</span>' : ''}
+            <input type="number" step="0.1" value="${stock}" onchange="updateCatalogField('${k}', 'stockKg', this.value)" class="w-20 bg-white border ${stock < 2 ? 'border-rose-500 text-rose-600' : 'border-stone-300'} rounded-lg px-2 py-1 font-bold"> Kg
           </td>
           <td class="p-2.5 text-right">
             <button onclick="deleteCatalogItem('${k}')" class="text-rose-600 hover:underline font-bold">Delete</button>
@@ -784,14 +831,22 @@
   }
 
   function updateCatalogField(key, field, value) {
-    const num = parseFloat(value) || 0;
-    db.ref(`catalog/${key}/${field}`).set(num);
+    db.ref(`catalog/${key}/${field}`).set(parseFloat(value) || 0);
+  }
+
+  function applyBulkOnlineMarkup() {
+    const markup = parseFloat(document.getElementById('bulkMarkupRs').value) || 0;
+    Object.keys(catalog).forEach(k => {
+      const base = Number(catalog[k].offlineRate || 0);
+      if (base > 0) {
+        db.ref(`catalog/${k}/onlineRate`).set(base + markup);
+      }
+    });
+    alert(`✅ Online Store rates updated to Counter Rate + ₹${markup}/Kg across all items!`);
   }
 
   function deleteCatalogItem(key) {
-    if (confirm("Remove this item from the catalog?")) {
-      db.ref(`catalog/${key}`).remove();
-    }
+    if (confirm("Delete this item from Master Catalog?")) db.ref(`catalog/${key}`).remove();
   }
 
   function seedDefaultCatalog() {
@@ -808,10 +863,9 @@
       "Golden_Long_Kismis": { name: "Golden Long Kismis (Raisins)", category: "Raisins", offlineRate: 330, onlineRate: 360, stockKg: 40 }
     };
     db.ref('catalog').update(starter);
-    alert("✅ Starter Dry Fruits Catalog synced to Firebase!");
+    alert("✅ Starter Catalog loaded!");
   }
 
-  // Analytics & Today's History
   function updateAnalyticsAndHistory() {
     const today = new Date().toISOString().split('T')[0];
     const todayBills = salesHistory.filter(s => s.date === today);
@@ -841,21 +895,16 @@
     }
     hBody.innerHTML = salesHistory.slice(0, 50).map((s, idx) => `
       <tr class="hover:bg-stone-50">
-        <td class="p-2.5 font-extrabold text-stone-900">${s.invoiceId}</td>
+        <td class="p-2.5 font-black text-stone-900">${s.invoiceId}</td>
         <td class="p-2.5 text-stone-500">${new Date(s.timestamp || Date.now()).toLocaleString()}</td>
-        <td class="p-2.5 font-semibold">${s.customerName || 'Walk-In'}</td>
+        <td class="p-2.5 font-bold">${s.customerName || 'Walk-In'}</td>
         <td class="p-2.5 text-stone-600">${(s.items || []).map(i => `${i.name} (${i.weightG}g)`).join(', ')}</td>
         <td class="p-2.5 font-bold text-amber-900">${s.payMode || 'CASH'}</td>
-        <td class="p-2.5 font-extrabold text-emerald-700">₹${s.totalAmount}</td>
+        <td class="p-2.5 font-black text-[#0C831F]">₹${s.totalAmount}</td>
         <td class="p-2.5 text-right">
-          <button onclick="reprintByIndex(${idx})" class="bg-stone-100 hover:bg-amber-100 text-stone-800 border border-stone-300 px-2.5 py-1 rounded-lg font-bold">🖨️ Reprint</button>
+          <button onclick="populateAndPrintReceipt(salesHistory[${idx}])" class="bg-stone-100 hover:bg-amber-100 text-stone-900 border border-stone-300 px-2.5 py-1 rounded-lg font-bold">🖨️ Reprint</button>
         </td>
       </tr>`).join('');
-  }
-
-  function reprintByIndex(idx) {
-    const rec = salesHistory[idx];
-    if (rec) populateAndPrintReceipt(rec);
   }
 
   function loginAdmin() {
@@ -863,7 +912,7 @@
       .then(() => {
         const badge = document.getElementById('authBadge');
         badge.innerText = "🔒 Admin Connected";
-        badge.className = "bg-emerald-100 text-emerald-900 border border-emerald-400 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold";
+        badge.className = "blinkit-green text-white px-2.5 py-0.5 rounded-full text-[10px] font-black";
       })
       .catch(e => alert(e.message));
   }
@@ -880,30 +929,28 @@
           Phone: inv.customerPhone || '',
           Item_Name: it.name,
           Weight_Grams: it.weightG,
-          Rate_Per_Kg: it.rateKg || '',
+          Counter_Rate_Kg: it.rateKg || '',
           Line_Total_Rs: it.totalRs || it.price,
-          Invoice_Grand_Total: inv.totalAmount,
+          Invoice_Net_Total: inv.totalAmount,
           Payment_Mode: inv.payMode || 'CASH'
         });
       });
     });
-
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(flatRows.length ? flatRows : [{ Status: "No sales recorded yet" }]);
-    XLSX.utils.book_append_sheet(wb, ws, "Detailed_Sales");
+    const ws = XLSX.utils.json_to_sheet(flatRows.length ? flatRows : [{ Status: "No sales yet" }]);
+    XLSX.utils.book_append_sheet(wb, ws, "Sales");
     XLSX.writeFile(wb, `AB_DryFruits_Sales_${new Date().toISOString().split('T')[0]}.xlsx`);
   }
 
   async function safeClearFirebase() {
-    if (!confirm("Download Excel backup and clear old Firebase sales bills? Your Master Catalog & Stock remain 100% untouched.")) return;
+    if (!confirm("Download Excel backup and clear old Firebase sales bills? Your Master Catalog remains 100% safe.")) return;
     downloadExcel();
     await db.ref('daily_sales').remove();
     await db.ref('live_orders').remove();
     salesHistory = [];
-    alert("✅ Excel Backup Downloaded & Old Bills Cleared from Firebase!");
+    alert("✅ Backup downloaded and old bills cleared!");
   }
 
-  // Initial render
   renderBill();
 </script>
 </body>
