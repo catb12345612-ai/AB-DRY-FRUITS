@@ -3,235 +3,248 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AB DRY FRUITS | Royal Dry Fruits, Nuts & Exotic Spices (91543 39465)</title>
+  <title>AB DRY FRUITS | Instant Quick-Commerce Delivery (91543 39465)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Firebase Compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #FAF8F5;
-      color: #1C1917;
+      font-family: 'Inter', sans-serif;
+      background-color: #F4F6FB;
+      color: #1F2937;
     }
-    .font-serif-luxury {
-      font-family: 'Playfair Display', serif;
+    .blinkit-yellow {
+      background-color: #F8CB46;
     }
-    .gold-gradient {
-      background: linear-gradient(135deg, #D4AF37 0%, #AA7C11 50%, #F3E5AB 100%);
+    .blinkit-green {
+      background-color: #0C831F;
     }
-    .gold-btn {
-      background: linear-gradient(135deg, #C59B27 0%, #9A7209 100%);
-      color: #FFFFFF;
+    .blinkit-green:hover {
+      background-color: #096B19;
+    }
+    .blinkit-green-text {
+      color: #0C831F;
+    }
+    .blinkit-green-border {
+      border-color: #0C831F;
+    }
+    .product-card {
+      background: #FFFFFF;
+      border: 1px solid #E5E7EB;
+      border-radius: 16px;
       transition: all 0.2s ease;
     }
-    .gold-btn:hover {
-      background: linear-gradient(135deg, #D4AF37 0%, #B38712 100%);
-      box-shadow: 0 8px 20px -4px rgba(197, 155, 39, 0.45);
-      transform: translateY(-1px);
-    }
-    .gold-border {
-      border-color: rgba(212, 175, 55, 0.35);
-    }
-    .card-luxury {
-      background: #FFFFFF;
-      border: 1px solid rgba(212, 175, 55, 0.22);
-      box-shadow: 0 4px 20px -2px rgba(28, 25, 23, 0.04);
-      transition: all 0.25s ease;
-    }
-    .card-luxury:hover {
-      border-color: rgba(197, 155, 39, 0.65);
-      box-shadow: 0 12px 28px -6px rgba(197, 155, 39, 0.16);
+    .product-card:hover {
+      border-color: #0C831F;
+      box-shadow: 0 10px 24px -6px rgba(12, 131, 31, 0.12);
+      transform: translateY(-2px);
     }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #F5F2EB; }
-    ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 9999px; }
+    ::-webkit-scrollbar-track { background: #F3F4F6; }
+    ::-webkit-scrollbar-thumb { background: #0C831F; border-radius: 9999px; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col pb-20 lg:pb-0">
 
-  <!-- TOP LUXURY MARQUEE -->
-  <div class="bg-stone-900 text-amber-200 text-xs py-2 px-4 border-b border-amber-500/30">
+  <!-- TOP EXPRESS PROMO BAR -->
+  <div class="bg-[#0C831F] text-white text-xs py-2 px-4 font-medium">
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
       <div class="flex items-center gap-2">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>✨ <b>100% Farm-Fresh Export Grade:</b> Handpicked Almonds, Cashews, Pistachios, Dates & Kashmiri Saffron</span>
+        <span class="bg-[#F8CB46] text-stone-950 font-black px-2 py-0.5 rounded text-[10px] uppercase">⚡ Express Dispatch</span>
+        <span>100% Farm-Fresh Grade-A Dry Fruits, Nuts & Spices • Direct Counter Packing</span>
       </div>
       <div class="flex items-center gap-4">
-        <button onclick="openTrackModal()" class="text-amber-300 hover:text-white font-semibold underline flex items-center gap-1">
-          📦 Track My Order
+        <button onclick="openTrackModal()" class="text-[#F8CB46] hover:underline font-bold flex items-center gap-1">
+          📦 Live Order Tracker
         </button>
-        <a href="https://wa.me/919154339465?text=Hi%20AB%20Dry%20Fruits,%20I%20have%20a%20bulk/wholesale%20enquiry." target="_blank" class="text-amber-300 hover:text-white font-semibold">
-          💬 Wholesale Enquiry: 91543 39465
+        <a href="https://wa.me/919154339465?text=Hi%20AB%20Dry%20Fruits,%20I%20want%20wholesale%20rates." target="_blank" class="hover:underline font-bold">
+          💬 Bulk / Wholesale: 91543 39465
         </a>
       </div>
     </div>
   </div>
 
-  <!-- HEADER -->
-  <header class="bg-white/95 backdrop-blur-md border-b gold-border sticky top-0 z-40 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap justify-between items-center gap-3">
-      <div class="flex items-center gap-3.5">
-        <div class="w-12 h-12 rounded-2xl gold-gradient flex items-center justify-center text-stone-950 font-serif-luxury font-extrabold text-2xl shadow-md border border-amber-300">
+  <!-- BLINKIT-STYLE STICKY HEADER -->
+  <header class="blinkit-yellow sticky top-0 z-40 shadow-sm border-b border-amber-400">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+      <!-- BRAND & EXPRESS BADGE -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-stone-950 text-[#F8CB46] flex items-center justify-center font-black text-xl shadow">
           AB
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-xl sm:text-2xl font-serif-luxury font-bold tracking-tight text-stone-900">AB DRY FRUITS</h1>
-            <span class="bg-amber-50 text-amber-800 border border-amber-300/70 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Premium Quality</span>
+            <h1 class="text-lg sm:text-xl font-black tracking-tight text-stone-950">AB DRY FRUITS</h1>
+            <span class="bg-[#0C831F] text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md uppercase">⚡ 15-Min Counter Pack</span>
           </div>
-          <p class="text-xs text-stone-500 font-medium">Finest Grade-A Nuts, Dry Fruits & Spices • 📞 <a href="tel:9154339465" class="text-amber-700 font-bold hover:underline">91543 39465</a></p>
+          <p class="text-xs text-stone-800 font-semibold">Fresh Export-Grade Nuts & Spices • 📞 <a href="tel:9154339465" class="underline font-black">91543 39465</a></p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2.5">
-        <button onclick="openCustomCalcModal()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition">
-          ⚖️ Buy by Custom Budget / Grams
+      <!-- INSTANT SEARCH BAR -->
+      <div class="flex-1 max-w-md mx-auto w-full order-3 md:order-2">
+        <div class="relative">
+          <span class="absolute left-3.5 top-2.5 text-stone-400 text-sm">🔍</span>
+          <input id="shopSearch" oninput="renderShopCatalog()" placeholder="Search 'Badam', 'Kaju W240', 'Pista', 'Kimia Dates'..." 
+                 class="w-full bg-white border border-stone-300 rounded-xl pl-9 pr-4 py-2 text-sm text-stone-900 font-medium outline-none focus:ring-2 focus:ring-[#0C831F] shadow-inner">
+        </div>
+      </div>
+
+      <!-- QUICK TOOLS -->
+      <div class="flex items-center gap-2 order-2 md:order-3">
+        <button onclick="openCustomCalcModal()" class="bg-stone-950 hover:bg-stone-800 text-[#F8CB46] px-3 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition">
+          ⚖️ Custom ₹ / Grams
         </button>
-        <a href="https://wa.me/919154339465" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition">
-          💬 WhatsApp Support
+        <a href="https://wa.me/919154339465" target="_blank" class="bg-white hover:bg-stone-100 text-[#0C831F] border border-stone-300 px-3 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1 shadow-sm transition">
+          💬 Help
         </a>
       </div>
     </div>
   </header>
 
-  <!-- HERO BANNER -->
-  <section class="max-w-7xl mx-auto px-4 pt-5 pb-2 w-full">
-    <div class="rounded-2xl bg-gradient-to-r from-amber-50 via-white to-amber-50/70 border gold-border p-4 sm:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm">
-      <div class="space-y-1.5 text-center md:text-left">
-        <span class="text-[11px] font-extrabold uppercase tracking-widest text-amber-700 bg-amber-100/80 px-2.5 py-1 rounded-full">Direct Counter-to-Home Dispatch</span>
-        <h2 class="text-xl sm:text-2xl font-serif-luxury font-bold text-stone-900">Pure, Hygienic & Freshly Packed to Your Exact Weight</h2>
-        <p class="text-xs sm:text-sm text-stone-600 max-w-2xl">Select from standard packs (100g, 250g, 500g, 1Kg) or use our custom calculator to order for any exact rupee amount. Instant UPI checkout with real-time order verification.</p>
+  <!-- QUICK PROMO BANNERS -->
+  <section class="max-w-7xl mx-auto px-4 pt-4 pb-1 w-full">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div class="bg-gradient-to-r from-emerald-900 to-emerald-700 text-white rounded-2xl p-4 flex justify-between items-center shadow-sm">
+        <div>
+          <span class="bg-[#F8CB46] text-stone-950 text-[10px] font-black px-2 py-0.5 rounded uppercase">Wholesale Rates</span>
+          <h3 class="font-black text-base mt-1">100% Grade-A Badam & Kaju</h3>
+          <p class="text-xs text-emerald-100 mt-0.5">Freshly vacuum/hygiene packed on order</p>
+        </div>
+        <span class="text-4xl">🥜</span>
       </div>
-      <div class="flex gap-3 text-center shrink-0">
-        <div class="bg-white border gold-border rounded-xl px-4 py-2.5 shadow-sm">
-          <p class="text-lg font-extrabold text-amber-700">100%</p>
-          <p class="text-[11px] text-stone-500 font-semibold">Grade-A Handpicked</p>
+      <div class="bg-gradient-to-r from-amber-500 to-amber-400 text-stone-950 rounded-2xl p-4 flex justify-between items-center shadow-sm">
+        <div>
+          <span class="bg-stone-950 text-[#F8CB46] text-[10px] font-black px-2 py-0.5 rounded uppercase">Custom Budget</span>
+          <h3 class="font-black text-base mt-1">Buy for Any Exact ₹ Amount</h3>
+          <p class="text-xs text-stone-900 font-medium mt-0.5">Need ₹150 or ₹300 pack? Use our calculator</p>
         </div>
-        <div class="bg-white border gold-border rounded-xl px-4 py-2.5 shadow-sm">
-          <p class="text-lg font-extrabold text-emerald-700">Instant</p>
-          <p class="text-[11px] text-stone-500 font-semibold">UPI Verification</p>
+        <button onclick="openCustomCalcModal()" class="bg-stone-950 text-white text-xs font-bold px-3 py-2 rounded-xl shrink-0">Try Now →</button>
+      </div>
+      <div class="bg-white border border-stone-200 rounded-2xl p-4 flex justify-between items-center shadow-sm">
+        <div>
+          <span class="bg-emerald-100 text-[#0C831F] text-[10px] font-black px-2 py-0.5 rounded uppercase">Zero Extra Fees</span>
+          <h3 class="font-black text-base text-stone-900 mt-1">Direct PhonePe / GPay UPI</h3>
+          <p class="text-xs text-stone-500 mt-0.5">Instant counter verification & fast dispatch</p>
         </div>
+        <span class="text-4xl">⚡</span>
       </div>
     </div>
   </section>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN WORKSPACE -->
   <main class="max-w-7xl mx-auto px-4 py-4 flex-1 w-full">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-      <!-- CATALOG COLUMN (8 COLS) -->
+      <!-- LEFT 8 COLS: CATEGORY RAIL & BLINKIT PRODUCT GRID -->
       <div class="lg:col-span-8 space-y-4">
-        <!-- SEARCH & FILTER BAR -->
-        <div class="bg-white border gold-border rounded-2xl p-3 shadow-sm space-y-3">
-          <div class="flex flex-col sm:flex-row gap-2.5">
-            <div class="relative flex-1">
-              <span class="absolute left-3.5 top-3 text-stone-400 text-sm">🔍</span>
-              <input id="shopSearch" oninput="renderShopCatalog()" placeholder="Search Badam, Kaju W240, Pista, Kimia Dates, Saffron, Akhrot..." 
-                     class="w-full bg-stone-50 border border-stone-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-stone-800 outline-none focus:border-amber-500 focus:bg-white transition">
-            </div>
-            <select id="shopSort" onchange="renderShopCatalog()" class="bg-stone-50 border border-stone-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-stone-700 outline-none focus:border-amber-500">
-              <option value="POPULAR">Sort: Featured Items</option>
+        <!-- CATEGORY PILLS + SORT -->
+        <div class="bg-white border border-stone-200 rounded-2xl p-3 shadow-sm flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <h2 class="text-sm font-black text-stone-900 uppercase tracking-wide">🛒 Shop by Category</h2>
+            <select id="shopSort" onchange="renderShopCatalog()" class="bg-stone-100 border border-stone-200 rounded-lg px-2.5 py-1.5 text-xs font-bold text-stone-700 outline-none">
+              <option value="POPULAR">Sort: Popular</option>
               <option value="PRICE_ASC">Price: Low to High</option>
               <option value="PRICE_DESC">Price: High to Low</option>
               <option value="NAME_ASC">Name: A to Z</option>
             </select>
           </div>
 
-          <!-- CATEGORY PILLS -->
-          <div id="categoryPills" class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-bold">
-            <button onclick="setCategory('ALL')" data-cat="ALL" class="cat-pill gold-btn px-3.5 py-1.5 rounded-full shrink-0">All Items</button>
-            <button onclick="setCategory('Almonds')" data-cat="Almonds" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Almonds (Badam)</button>
-            <button onclick="setCategory('Cashews')" data-cat="Cashews" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Cashews (Kaju)</button>
-            <button onclick="setCategory('Pistachios')" data-cat="Pistachios" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Pistachios (Pista)</button>
-            <button onclick="setCategory('Dates')" data-cat="Dates" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Dates (Khajoor)</button>
-            <button onclick="setCategory('Raisins')" data-cat="Raisins" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Raisins (Kismis)</button>
-            <button onclick="setCategory('Figs & Apricots')" data-cat="Figs & Apricots" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Figs (Anjeer)</button>
-            <button onclick="setCategory('Walnuts')" data-cat="Walnuts" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Walnuts (Akhrot)</button>
-            <button onclick="setCategory('Seeds & Berries')" data-cat="Seeds & Berries" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Seeds & Berries</button>
-            <button onclick="setCategory('Spices & Saffron')" data-cat="Spices & Saffron" class="cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition">Spices & Saffron</button>
+          <div id="categoryPills" class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-bold">
+            <button onclick="setCategory('ALL')" data-cat="ALL" class="cat-pill blinkit-green text-white px-3.5 py-2 rounded-xl shrink-0 shadow-sm">✨ All Dry Fruits</button>
+            <button onclick="setCategory('Almonds')" data-cat="Almonds" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🥜 Almonds (Badam)</button>
+            <button onclick="setCategory('Cashews')" data-cat="Cashews" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🥐 Cashews (Kaju)</button>
+            <button onclick="setCategory('Pistachios')" data-cat="Pistachios" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🌰 Pistachios (Pista)</button>
+            <button onclick="setCategory('Dates')" data-cat="Dates" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🌴 Dates (Khajoor)</button>
+            <button onclick="setCategory('Raisins')" data-cat="Raisins" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🍇 Raisins (Kismis)</button>
+            <button onclick="setCategory('Figs & Apricots')" data-cat="Figs & Apricots" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🍯 Figs (Anjeer)</button>
+            <button onclick="setCategory('Walnuts')" data-cat="Walnuts" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🧠 Walnuts (Akhrot)</button>
+            <button onclick="setCategory('Seeds & Berries')" data-cat="Seeds & Berries" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🌻 Seeds & Berries</button>
+            <button onclick="setCategory('Spices & Saffron')" data-cat="Spices & Saffron" class="cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition">🌸 Spices & Saffron</button>
           </div>
         </div>
 
-        <!-- CATALOG ITEMS GRID -->
-        <div id="shopGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+        <!-- PRODUCT GRID -->
+        <div id="shopGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5"></div>
       </div>
 
-      <!-- ROYAL BASKET & CHECKOUT COLUMN (4 COLS) -->
-      <div class="lg:col-span-4">
-        <div class="bg-white border-2 gold-border rounded-2xl p-4 sm:p-5 sticky top-20 shadow-lg">
+      <!-- RIGHT 4 COLS: BLINKIT INSTANT CHECKOUT CART -->
+      <div class="lg:col-span-4" id="cartSection">
+        <div class="bg-white border-2 border-stone-200 rounded-2xl p-4 sticky top-20 shadow-lg">
           <div class="flex justify-between items-center border-b border-stone-100 pb-3 mb-3">
             <div class="flex items-center gap-2">
-              <span class="text-xl">🛍️</span>
+              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-[#0C831F] flex items-center justify-center font-black text-lg">🛒</div>
               <div>
-                <h2 class="text-base font-serif-luxury font-bold text-stone-900">Your Royal Basket</h2>
-                <p id="cartWeightSummary" class="text-[11px] text-stone-500 font-medium">0 items • 0g total weight</p>
+                <h2 class="text-base font-black text-stone-900">My Express Cart</h2>
+                <p id="cartWeightSummary" class="text-[11px] text-stone-500 font-semibold">0 items • 0g total weight</p>
               </div>
             </div>
-            <button onclick="clearShopCart()" id="clearCartBtn" class="hidden text-[11px] text-rose-600 hover:underline font-bold">Clear All</button>
+            <button onclick="clearShopCart()" id="clearCartBtn" class="hidden text-[11px] text-rose-600 hover:underline font-extrabold">Clear Cart</button>
           </div>
 
-          <!-- CART ITEMS -->
-          <div id="shopCartList" class="space-y-2 text-xs mb-4 max-h-60 overflow-y-auto pr-1"></div>
+          <!-- CART ITEMS LIST -->
+          <div id="shopCartList" class="space-y-2 text-xs mb-4 max-h-56 overflow-y-auto pr-1"></div>
 
-          <!-- BILL SUMMARY -->
-          <div class="bg-amber-50/60 border border-amber-200/80 rounded-xl p-3 mb-4 space-y-1.5">
+          <!-- BILL DETAILS (BLINKIT STYLE) -->
+          <div class="bg-stone-50 border border-stone-200 rounded-xl p-3 mb-4 space-y-1.5">
+            <p class="text-[11px] font-black text-stone-800 uppercase">Bill Details</p>
             <div class="flex justify-between text-xs text-stone-600">
-              <span>Items Subtotal:</span>
-              <span id="shopSubtotal" class="font-bold text-stone-800">₹0</span>
+              <span>Items Total</span>
+              <span id="shopSubtotal" class="font-bold text-stone-900">₹0</span>
             </div>
             <div class="flex justify-between text-xs text-stone-600">
-              <span>Packaging & Hygiene Seal:</span>
-              <span class="font-bold text-emerald-700">FREE</span>
+              <span>Hygiene Packing & Weighing</span>
+              <span class="font-extrabold text-[#0C831F]">FREE</span>
             </div>
-            <div class="border-t border-amber-200 pt-2 flex justify-between items-center">
-              <span class="text-xs font-extrabold text-stone-800 uppercase tracking-wider">Total Payable:</span>
-              <span id="shopCartTotal" class="text-2xl font-extrabold text-amber-800">₹0</span>
+            <div class="border-t border-stone-200 pt-2 flex justify-between items-center">
+              <span class="text-xs font-black text-stone-900">To Pay Online</span>
+              <span id="shopCartTotal" class="text-2xl font-black text-[#0C831F]">₹0</span>
             </div>
           </div>
 
-          <!-- DELIVERY / PICKUP MODE -->
-          <div class="grid grid-cols-2 gap-2 mb-3 bg-stone-100 p-1 rounded-xl text-xs font-bold">
+          <!-- DELIVERY / STORE PICKUP SWITCH -->
+          <div class="grid grid-cols-2 gap-1.5 mb-3 bg-stone-100 p-1 rounded-xl text-xs font-extrabold">
             <button id="modeDeliveryBtn" onclick="setOrderMode('DELIVERY')" class="py-2 rounded-lg bg-white text-stone-900 shadow-sm transition">🛵 Home Delivery</button>
             <button id="modePickupBtn" onclick="setOrderMode('PICKUP')" class="py-2 rounded-lg text-stone-600 hover:text-stone-900 transition">🏪 Store Pickup</button>
           </div>
 
-          <!-- CUSTOMER DETAILS -->
-          <div class="space-y-2.5 text-xs">
-            <input id="custName" placeholder="Your Full Name *" class="w-full bg-stone-50 border border-stone-200 focus:border-amber-500 focus:bg-white rounded-xl p-2.5 text-stone-900 outline-none">
-            <input id="custPhone" placeholder="10-Digit WhatsApp / Mobile Number *" type="tel" maxlength="10" class="w-full bg-stone-50 border border-stone-200 focus:border-amber-500 focus:bg-white rounded-xl p-2.5 text-stone-900 outline-none">
-            <textarea id="custAddress" placeholder="Full Delivery Address / House No / Landmark *" rows="2" class="w-full bg-stone-50 border border-stone-200 focus:border-amber-500 focus:bg-white rounded-xl p-2.5 text-stone-900 outline-none"></textarea>
-            <input id="custNote" placeholder="Special Note (e.g. Gift Pack, Vacuum Seal)" class="w-full bg-stone-50 border border-stone-200 focus:border-amber-500 focus:bg-white rounded-xl p-2 text-stone-900 outline-none">
+          <!-- CUSTOMER INPUTS -->
+          <div class="space-y-2 text-xs">
+            <input id="custName" placeholder="Your Full Name *" class="w-full bg-stone-50 border border-stone-300 focus:border-[#0C831F] focus:bg-white rounded-xl p-2.5 text-stone-900 font-medium outline-none">
+            <input id="custPhone" placeholder="10-Digit WhatsApp Mobile Number *" type="tel" maxlength="10" class="w-full bg-stone-50 border border-stone-300 focus:border-[#0C831F] focus:bg-white rounded-xl p-2.5 text-stone-900 font-medium outline-none">
+            <textarea id="custAddress" placeholder="Full Delivery Address / House No / Landmark *" rows="2" class="w-full bg-stone-50 border border-stone-300 focus:border-[#0C831F] focus:bg-white rounded-xl p-2.5 text-stone-900 font-medium outline-none"></textarea>
+            <input id="custNote" placeholder="Packing Note (e.g. Gift Box, Separate 250g packs)" class="w-full bg-stone-50 border border-stone-300 focus:border-[#0C831F] focus:bg-white rounded-xl p-2 text-stone-900 font-medium outline-none">
           </div>
 
           <!-- STEP 1: UPI PAYMENT -->
-          <div class="mt-4 bg-gradient-to-b from-amber-50/70 to-white border border-amber-300 rounded-2xl p-3.5">
+          <div class="mt-4 bg-emerald-50/60 border-2 border-[#0C831F]/30 rounded-2xl p-3.5">
             <div class="flex justify-between items-center mb-1">
-              <p class="text-xs font-extrabold text-stone-900">📲 Step 1: Instant UPI Payment</p>
-              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Zero Extra Fee</span>
+              <p class="text-xs font-black text-stone-900">📲 Step 1: Pay via PhonePe / GPay</p>
+              <span class="text-[10px] bg-[#F8CB46] text-stone-950 font-black px-2 py-0.5 rounded">Instant UPI</span>
             </div>
-            <p class="text-[11px] text-stone-600 mb-2.5">
-              Merchant UPI ID: <b class="text-stone-900 select-all">9154339465@ybl</b>
-              <button onclick="copyUpiId()" class="ml-1 text-amber-700 underline font-bold text-[10px]">Copy</button>
+            <p class="text-[11px] text-stone-600 mb-2">
+              Merchant UPI: <b class="text-stone-900 select-all">9154339465@ybl</b>
+              <button onclick="copyUpiId()" class="ml-1 text-[#0C831F] underline font-extrabold text-[10px]">Copy UPI</button>
             </p>
-            
+
             <div class="flex items-center gap-3 my-2">
-              <img id="dynamicQrImg" src="" alt="Scan QR" class="w-24 h-24 rounded-xl bg-white p-1.5 border border-amber-300 shadow-sm hidden">
-              <div class="flex-1 space-y-2">
-                <a id="upiDeepLinkBtn" href="#" class="block text-center gold-btn font-extrabold py-2.5 px-3 rounded-xl text-xs shadow-sm">
-                  ⚡ Tap to Pay on PhonePe / GPay
+              <img id="dynamicQrImg" src="" alt="Scan QR" class="w-24 h-24 rounded-xl bg-white p-1.5 border border-stone-300 shadow-sm hidden">
+              <div class="flex-1 space-y-1.5">
+                <a id="upiDeepLinkBtn" href="#" class="block text-center blinkit-green text-white font-black py-2.5 px-3 rounded-xl text-xs shadow-sm">
+                  ⚡ Tap to Open UPI App
                 </a>
-                <p class="text-[10px] text-stone-500 text-center leading-tight">Amount auto-fills in your UPI app or scan the QR code</p>
+                <p class="text-[10px] text-stone-500 text-center leading-tight">Auto-fills exact amount in PhonePe, GPay, or Paytm</p>
               </div>
             </div>
 
             <!-- STEP 2: UTR INPUT -->
-            <label class="block text-[11px] text-stone-800 font-extrabold mt-3 mb-1">✅ Step 2: Enter Last 4+ Digits of UPI UTR / Ref No *</label>
-            <input id="custUtr" placeholder="Enter 4 to 12 digit UPI UTR (e.g. 4829)" maxlength="12" class="w-full bg-white border-2 border-emerald-500 rounded-xl p-2.5 text-xs text-stone-900 font-extrabold tracking-wider outline-none">
+            <label class="block text-[11px] text-stone-900 font-black mt-3 mb-1">✅ Step 2: Enter Last 4+ Digits of UPI UTR / Ref No *</label>
+            <input id="custUtr" placeholder="e.g. 4829 (From PhonePe/GPay History)" maxlength="12" class="w-full bg-white border-2 border-[#0C831F] rounded-xl p-2.5 text-xs text-stone-900 font-black tracking-wider outline-none">
 
-            <button onclick="submitOnlinePrepaidOrder()" class="w-full mt-3 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl text-sm shadow-md transition flex items-center justify-center gap-2">
-              <span>🚀 Confirm & Send Order to Counter</span>
+            <button onclick="submitOnlinePrepaidOrder()" class="w-full mt-3 blinkit-green text-white font-black py-3 rounded-xl text-sm shadow-md transition flex items-center justify-center gap-2">
+              <span>🚀 Place Order & Send to Counter</span>
             </button>
           </div>
         </div>
@@ -240,35 +253,46 @@
     </div>
   </main>
 
+  <!-- FLOATING MOBILE BOTTOM CART BAR (BLINKIT STYLE) -->
+  <div id="mobileCartBar" class="fixed bottom-3 inset-x-3 z-40 lg:hidden hidden">
+    <div onclick="document.getElementById('cartSection').scrollIntoView({behavior:'smooth'})" class="blinkit-green text-white rounded-2xl px-4 py-3 shadow-2xl flex justify-between items-center cursor-pointer">
+      <div>
+        <p id="mobileCartCount" class="text-xs font-extrabold uppercase">0 Items • ₹0</p>
+        <p class="text-[10px] text-emerald-100">Tap to view cart & pay via UPI</p>
+      </div>
+      <span class="font-black text-sm flex items-center gap-1">View Cart ➔</span>
+    </div>
+  </div>
+
   <!-- CUSTOM WEIGHT / BUDGET MODAL -->
   <div id="customCalcModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white border-2 gold-border rounded-2xl max-w-md w-full p-5 shadow-2xl">
+    <div class="bg-white border-2 border-stone-200 rounded-2xl max-w-md w-full p-5 shadow-2xl">
       <div class="flex justify-between items-center border-b border-stone-100 pb-3 mb-4">
         <div>
-          <h3 class="text-base font-serif-luxury font-bold text-stone-900">⚖️ Custom Weight & Budget Calculator</h3>
-          <p class="text-xs text-stone-500">Buy any dry fruit for your exact rupee budget or grams</p>
+          <h3 class="text-base font-black text-stone-900">⚖️ Custom Budget & Grams Calculator</h3>
+          <p class="text-xs text-stone-500">Order any dry fruit for your exact rupee budget or grams</p>
         </div>
         <button onclick="closeCustomCalcModal()" class="text-stone-400 hover:text-stone-700 text-lg font-bold">✕</button>
       </div>
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="font-bold text-stone-700 block mb-1">Select Item</label>
-          <select id="calcItemSelect" onchange="onCalcItemChange()" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-sm font-semibold text-stone-800 outline-none"></select>
+          <label class="font-bold text-stone-700 block mb-1">Select Dry Fruit / Spice</label>
+          <select id="calcItemSelect" onchange="onCalcItemChange()" class="w-full bg-stone-50 border border-stone-300 rounded-xl p-2.5 text-sm font-bold text-stone-900 outline-none"></select>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="font-bold text-amber-800 block mb-1">Enter Budget (₹)</label>
-            <input id="calcRupees" type="number" oninput="calcFromRupees()" placeholder="e.g. 300" class="w-full bg-amber-50/60 border border-amber-400 rounded-xl p-2.5 text-sm font-extrabold text-stone-900 outline-none">
+            <label class="font-extrabold text-amber-800 block mb-1">Your Budget (₹)</label>
+            <input id="calcRupees" type="number" oninput="calcFromRupees()" placeholder="e.g. 200" class="w-full bg-amber-50 border-2 border-amber-400 rounded-xl p-2.5 text-sm font-black text-stone-900 outline-none">
           </div>
           <div>
-            <label class="font-bold text-emerald-800 block mb-1">Or Enter Weight (Grams)</label>
-            <input id="calcGrams" type="number" oninput="calcFromGrams()" placeholder="e.g. 350" class="w-full bg-emerald-50/60 border border-emerald-400 rounded-xl p-2.5 text-sm font-extrabold text-stone-900 outline-none">
+            <label class="font-extrabold text-[#0C831F] block mb-1">Or Weight (Grams)</label>
+            <input id="calcGrams" type="number" oninput="calcFromGrams()" placeholder="e.g. 350" class="w-full bg-emerald-50 border-2 border-[#0C831F] rounded-xl p-2.5 text-sm font-black text-stone-900 outline-none">
           </div>
         </div>
-        <p id="calcSummaryText" class="text-center text-xs text-stone-600 bg-stone-100 py-2 rounded-xl font-semibold">Select an item and enter your preferred amount or weight.</p>
-        <button onclick="addCustomCalcToCart()" class="w-full gold-btn font-extrabold py-3 rounded-xl text-sm">
-          + Add Custom Pack to Basket
+        <p id="calcSummaryText" class="text-center text-xs text-stone-700 bg-stone-100 py-2.5 rounded-xl font-bold">Select an item and type your preferred ₹ amount or grams.</p>
+        <button onclick="addCustomCalcToCart()" class="w-full blinkit-green text-white font-black py-3 rounded-xl text-sm">
+          + Add Custom Pack to Cart
         </button>
       </div>
     </div>
@@ -276,32 +300,89 @@
 
   <!-- LIVE ORDER TRACKER MODAL -->
   <div id="trackModal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white border-2 gold-border rounded-2xl max-w-lg w-full p-5 shadow-2xl">
+    <div class="bg-white border-2 border-stone-200 rounded-2xl max-w-lg w-full p-5 shadow-2xl">
       <div class="flex justify-between items-center border-b border-stone-100 pb-3 mb-4">
         <div>
-          <h3 class="text-base font-serif-luxury font-bold text-stone-900">📦 Live Order Status Tracker</h3>
+          <h3 class="text-base font-black text-stone-900">📦 Live Order Status Tracker</h3>
           <p class="text-xs text-stone-500">Enter your 10-digit mobile number or Order ID (e.g. ORD_123456)</p>
         </div>
         <button onclick="closeTrackModal()" class="text-stone-400 hover:text-stone-700 text-lg font-bold">✕</button>
       </div>
       <div class="flex gap-2 mb-4">
-        <input id="trackQuery" placeholder="Enter Mobile Number or Order ID..." class="flex-1 bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:border-amber-500">
-        <button onclick="searchMyOrders()" class="gold-btn font-bold px-4 py-2 rounded-xl text-xs">Search</button>
+        <input id="trackQuery" placeholder="Enter Mobile Number or Order ID..." class="flex-1 bg-stone-50 border border-stone-300 rounded-xl px-3.5 py-2 text-sm outline-none focus:border-[#0C831F]">
+        <button onclick="searchMyOrders()" class="blinkit-green text-white font-bold px-4 py-2 rounded-xl text-xs">Search</button>
       </div>
       <div id="trackResults" class="space-y-2.5 max-h-72 overflow-y-auto text-xs"></div>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="bg-white border-t gold-border mt-12 py-6 px-4 text-xs text-stone-500">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
-      <div>
-        <p class="font-serif-luxury font-bold text-stone-900 text-sm">AB DRY FRUITS</p>
-        <p>Premium Grade-A Dry Fruits, Nuts, Seeds & Exotic Spices • Direct Counter Dispatch</p>
+  <!-- DEVELOPER PORTFOLIO & SMART SCAN MODAL -->
+  <div id="devModal" class="fixed inset-0 bg-stone-950/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-stone-900 border-2 border-amber-500/60 text-white rounded-2xl max-w-lg w-full p-6 shadow-2xl">
+      <div class="flex justify-between items-start border-b border-stone-800 pb-3 mb-4">
+        <div>
+          <span class="bg-amber-500 text-stone-950 text-[10px] font-black px-2 py-0.5 rounded uppercase">Official Software Partner</span>
+          <h3 class="text-lg font-black text-amber-400 mt-1">Syed Zeeshaan Ali High-Fledged Engineering And Digital Tech Solutions</h3>
+          <p class="text-xs text-stone-400">Full-Stack Web Apps • Cloud POS & Billing • 360° Virtual Tours • Smart QR Stands • AI Meta Ads</p>
+        </div>
+        <button onclick="document.getElementById('devModal').classList.add('hidden')" class="text-stone-400 hover:text-white text-lg font-bold">✕</button>
       </div>
-      <div class="text-center sm:text-right">
-        <p class="font-bold text-stone-800">📞 Customer Care & Wholesale: 91543 39465</p>
-        <p class="text-[11px] text-stone-400">© AB Dry Fruits. All Rights Reserved.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-bold">
+        <a href="https://instagram.com/syedzeeshaanali07" target="_blank" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:opacity-95 text-white py-3 px-3 rounded-xl text-center flex flex-col items-center gap-1">
+          <span>📸 Instagram</span>
+          <span class="text-[11px] font-normal">@syedzeeshaanali07</span>
+        </a>
+        <a href="https://wa.me/919032208086?text=Hi%20Syed%20Zeeshaan%20Ali,%20I%20saw%20your%20software%20at%20AB%20Dry%20Fruits%20and%20want%20to%20enquire%20about%20digital%20solutions." target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white py-3 px-3 rounded-xl text-center flex flex-col items-center gap-1">
+          <span>💬 WhatsApp</span>
+          <span class="text-[11px] font-normal">+91 90322 08086</span>
+        </a>
+        <a href="tel:7989698613" class="bg-amber-500 hover:bg-amber-400 text-stone-950 py-3 px-3 rounded-xl text-center flex flex-col items-center gap-1">
+          <span>📞 Direct Call</span>
+          <span class="text-[11px] font-bold">+91 79896 98613</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER WITH 1-CLICK DEVELOPER LINKS -->
+  <footer class="bg-white border-t border-stone-200 mt-12 py-6 px-4 text-xs text-stone-600">
+    <div class="max-w-7xl mx-auto flex flex-col gap-4">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pb-4 border-b border-stone-100">
+        <div>
+          <p class="font-black text-stone-900 text-sm">AB DRY FRUITS</p>
+          <p>Export-Quality Dry Fruits, Nuts, Seeds & Spices • Direct Counter Dispatch</p>
+        </div>
+        <div class="text-center sm:text-right">
+          <p class="font-extrabold text-stone-900">📞 Store & Wholesale: <a href="tel:9154339465" class="text-[#0C831F] underline">91543 39465</a></p>
+          <p class="text-[11px] text-stone-400">© AB Dry Fruits. All Rights Reserved.</p>
+        </div>
+      </div>
+
+      <!-- 1-CLICK DEVELOPER SIGNATURE BAR -->
+      <div class="bg-stone-950 text-stone-200 rounded-2xl p-3.5 flex flex-wrap justify-between items-center gap-3">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-lg bg-amber-500 text-stone-950 font-black flex items-center justify-center text-xs">SZA</span>
+          <div>
+            <p class="text-[11px] text-stone-400">Engineered & Powered by</p>
+            <button onclick="document.getElementById('devModal').classList.remove('hidden')" class="text-xs sm:text-sm font-black text-amber-400 hover:underline text-left">
+              Syed Zeeshaan Ali High-Fledged Engineering And Digital Tech Solutions
+            </button>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 text-[11px] font-bold">
+          <button onclick="document.getElementById('devModal').classList.remove('hidden')" class="bg-stone-800 hover:bg-stone-700 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-lg">
+            🌐 Web & Services
+          </button>
+          <a href="https://instagram.com/syedzeeshaanali07" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-white px-3 py-1.5 rounded-lg">
+            📸 @syedzeeshaanali07
+          </a>
+          <a href="https://wa.me/919032208086" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg">
+            💬 WA: 9032208086
+          </a>
+          <a href="tel:7989698613" class="bg-amber-500 hover:bg-amber-400 text-stone-950 px-3 py-1.5 rounded-lg">
+            📞 7989698613
+          </a>
+        </div>
       </div>
     </div>
   </footer>
@@ -323,17 +404,17 @@
   let catalog = {};
   let activeCategory = 'ALL';
   let orderMode = 'DELIVERY';
+  let selectedPackByItem = {}; // Tracks selected pack weight (100, 250, 500, 1000) per card
   let shopCart = JSON.parse(localStorage.getItem('ab_customer_cart') || '[]');
   let allLiveOrders = {};
 
-  // Fallback premium showcase items if database catalog hasn't loaded yet
   const defaultShowcase = {
     "Almonds_California_Jumbo": { name: "California Badam (Jumbo Grade-A)", category: "Almonds", onlineRate: 780, stockKg: 25 },
     "Mamra_Badam_Royal": { name: "Iranian Mamra Badam (100% Pure)", category: "Almonds", onlineRate: 2400, stockKg: 10 },
     "Cashew_W240_Royal": { name: "Goan Kaju W240 (Big Whole)", category: "Cashews", onlineRate: 920, stockKg: 30 },
     "Cashew_W320_Standard": { name: "Premium Kaju W320 (Whole)", category: "Cashews", onlineRate: 820, stockKg: 35 },
     "Pista_Iranian_Roasted": { name: "Iranian Roasted & Salted Pista", category: "Pistachios", onlineRate: 1120, stockKg: 20 },
-    "Pista_Green_Kernels": { name: "Pista Green Plain Kernels (Unsalted)", category: "Pistachios", onlineRate: 1850, stockKg: 12 },
+    "Pista_Green_Kernels": { name: "Pista Green Plain Kernels", category: "Pistachios", onlineRate: 1850, stockKg: 12 },
     "Dates_Kimia_Gold": { name: "Original Kimia Dates (Soft Crown)", category: "Dates", onlineRate: 380, stockKg: 40 },
     "Dates_Ajwa_Madinah": { name: "Authentic Madinah Ajwa Dates", category: "Dates", onlineRate: 1400, stockKg: 15 },
     "Anjeer_Afghani_Jumbo": { name: "Afghani Anjeer (Dried Figs Jumbo)", category: "Figs & Apricots", onlineRate: 1350, stockKg: 18 },
@@ -344,7 +425,6 @@
     "Green_Cardamom_8mm": { name: "Idukki Green Elaichi (8mm Bold)", category: "Spices & Saffron", onlineRate: 2900, stockKg: 10 }
   };
 
-  // Load saved customer profile
   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('custName').value = localStorage.getItem('ab_cust_name') || '';
     document.getElementById('custPhone').value = localStorage.getItem('ab_cust_phone') || '';
@@ -352,7 +432,7 @@
     renderCart();
   });
 
-  // Listen to Catalog from Firebase
+  // Real-time Firebase Catalog Listener (Automatically reflects Counter POS rate updates)
   db.ref('catalog').on('value', snapshot => {
     const fbCatalog = snapshot.val();
     catalog = (fbCatalog && Object.keys(fbCatalog).length > 0) ? fbCatalog : defaultShowcase;
@@ -360,7 +440,6 @@
     populateCalcDropdown();
   });
 
-  // Listen to Live Orders for real-time customer tracking
   db.ref('live_orders').on('value', snapshot => {
     allLiveOrders = snapshot.val() || {};
     if (!document.getElementById('trackModal').classList.contains('hidden')) {
@@ -372,11 +451,16 @@
     activeCategory = cat;
     document.querySelectorAll('.cat-pill').forEach(btn => {
       if (btn.getAttribute('data-cat') === cat) {
-        btn.className = "cat-pill gold-btn px-3.5 py-1.5 rounded-full shrink-0";
+        btn.className = "cat-pill blinkit-green text-white px-3.5 py-2 rounded-xl shrink-0 shadow-sm";
       } else {
-        btn.className = "cat-pill bg-stone-100 hover:bg-amber-50 text-stone-700 px-3.5 py-1.5 rounded-full shrink-0 transition";
+        btn.className = "cat-pill bg-stone-100 hover:bg-stone-200 text-stone-800 px-3.5 py-2 rounded-xl shrink-0 transition";
       }
     });
+    renderShopCatalog();
+  }
+
+  function selectCardPack(itemName, weightG) {
+    selectedPackByItem[itemName] = weightG;
     renderShopCatalog();
   }
 
@@ -398,64 +482,79 @@
 
     if (items.length === 0) {
       grid.innerHTML = `
-        <div class="bg-white border gold-border rounded-2xl p-8 text-center col-span-2">
-          <p class="text-stone-500 text-sm font-semibold">No matching dry fruits or spices found.</p>
-          <button onclick="document.getElementById('shopSearch').value='';setCategory('ALL');" class="mt-3 text-xs text-amber-700 font-bold underline">Show All Products</button>
+        <div class="bg-white border border-stone-200 rounded-2xl p-8 text-center col-span-full">
+          <p class="text-stone-500 text-sm font-bold">No matching items found.</p>
+          <button onclick="document.getElementById('shopSearch').value='';setCategory('ALL');" class="mt-2 text-xs blinkit-green-text font-extrabold underline">Reset Filters</button>
         </div>`;
       return;
     }
 
     grid.innerHTML = items.map(item => {
       const rateKg = Number(item.onlineRate || item.offlineRate || 800);
-      const r100 = Math.round(rateKg * 0.1);
-      const r250 = Math.round(rateKg * 0.25);
-      const r500 = Math.round(rateKg * 0.5);
+      const selWeight = selectedPackByItem[item.name] || 250; // Default 250g pack highlighted like Blinkit
+      const packPrice = Math.round((selWeight / 1000) * rateKg);
+      const mrpPrice = Math.round(packPrice * 1.15);
       const safeName = item.name.replace(/'/g, "\\'");
       const outOfStock = (item.stockKg !== undefined && Number(item.stockKg) <= 0);
 
+      // Check if this item + selected pack weight is already in cart
+      const cartIdx = shopCart.findIndex(c => c.name === item.name && c.unitWeightG === selWeight);
+      const inCartQty = cartIdx > -1 ? shopCart[cartIdx].qty : 0;
+
       return `
-        <div class="card-luxury rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden">
+        <div class="product-card p-3.5 flex flex-col justify-between">
           <div>
-            <div class="flex justify-between items-start gap-2">
-              <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
-                ${item.category || 'Royal Selection'}
+            <div class="flex justify-between items-center gap-1 mb-1.5">
+              <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-stone-100 text-stone-600">
+                ⏱️ 15 MINS
               </span>
-              ${outOfStock 
-                ? `<span class="text-[10px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">Out of Stock</span>`
-                : `<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">✓ Fresh Stock</span>`
+              ${outOfStock
+                ? `<span class="text-[10px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">Out of Stock</span>`
+                : `<span class="text-[10px] font-extrabold text-[#0C831F] bg-emerald-50 px-2 py-0.5 rounded">₹${rateKg}/Kg</span>`
               }
             </div>
-            <h3 class="font-serif-luxury font-bold text-base text-stone-900 mt-2 leading-snug">${item.name}</h3>
-            <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-xs text-stone-500">Rate:</span>
-              <span class="text-sm font-extrabold text-amber-800">₹${rateKg} / Kg</span>
-              <span class="text-[11px] text-stone-400">(₹${r250} per 250g)</span>
+
+            <h3 class="font-extrabold text-sm text-stone-900 leading-snug line-clamp-2 min-h-[2.5rem]">${item.name}</h3>
+            <p class="text-[11px] text-stone-400 font-medium">${item.category || 'Grade-A Dry Fruits'}</p>
+
+            <!-- BLINKIT WEIGHT VARIANT SELECTOR PILLS -->
+            <div class="grid grid-cols-4 gap-1 mt-2.5 bg-stone-100 p-1 rounded-xl">
+              ${[100, 250, 500, 1000].map(w => `
+                <button onclick="selectCardPack('${safeName}', ${w})" 
+                        class="py-1 rounded-lg text-[10px] font-extrabold transition ${selWeight === w ? 'bg-white text-[#0C831F] shadow-sm border border-[#0C831F]/40' : 'text-stone-600 hover:text-stone-900'}">
+                  ${w === 1000 ? '1Kg' : w + 'g'}
+                </button>
+              `).join('')}
             </div>
           </div>
 
-          <div class="mt-4 pt-3 border-t border-stone-100">
-            <p class="text-[10px] text-stone-400 font-bold uppercase tracking-wider mb-2">Tap Pack Size to Add:</p>
-            <div class="grid grid-cols-4 gap-1.5">
-              <button ${outOfStock ? 'disabled' : ''} onclick="addToCart('${safeName}', 100, ${r100}, ${rateKg})" class="bg-stone-50 hover:bg-amber-600 hover:text-white border border-stone-200 hover:border-amber-600 rounded-xl py-2 text-[11px] font-bold text-stone-800 transition disabled:opacity-40">
-                100g<br><span class="font-extrabold">₹${r100}</span>
-              </button>
-              <button ${outOfStock ? 'disabled' : ''} onclick="addToCart('${safeName}', 250, ${r250}, ${rateKg})" class="bg-amber-50/70 hover:bg-amber-600 hover:text-white border border-amber-300 hover:border-amber-600 rounded-xl py-2 text-[11px] font-bold text-stone-900 transition disabled:opacity-40">
-                250g<br><span class="font-extrabold">₹${r250}</span>
-              </button>
-              <button ${outOfStock ? 'disabled' : ''} onclick="addToCart('${safeName}', 500, ${r500}, ${rateKg})" class="bg-stone-50 hover:bg-amber-600 hover:text-white border border-stone-200 hover:border-amber-600 rounded-xl py-2 text-[11px] font-bold text-stone-800 transition disabled:opacity-40">
-                500g<br><span class="font-extrabold">₹${r500}</span>
-              </button>
-              <button ${outOfStock ? 'disabled' : ''} onclick="addToCart('${safeName}', 1000, ${rateKg}, ${rateKg})" class="bg-stone-50 hover:bg-amber-600 hover:text-white border border-stone-200 hover:border-amber-600 rounded-xl py-2 text-[11px] font-bold text-stone-800 transition disabled:opacity-40">
-                1Kg<br><span class="font-extrabold">₹${rateKg}</span>
-              </button>
+          <!-- PRICE + BLINKIT ADD / STEPPER BUTTON -->
+          <div class="flex justify-between items-center mt-3.5 pt-2.5 border-t border-stone-100">
+            <div>
+              <span class="text-[10px] text-stone-400 line-through font-semibold">₹${mrpPrice}</span>
+              <p class="text-base font-black text-stone-900 leading-none">₹${packPrice}</p>
             </div>
+
+            ${outOfStock ? `
+              <button disabled class="bg-stone-100 text-stone-400 font-bold text-xs px-4 py-2 rounded-xl cursor-not-allowed">Sold Out</button>
+            ` : inCartQty > 0 ? `
+              <div class="flex items-center blinkit-green text-white rounded-xl overflow-hidden shadow-sm">
+                <button onclick="changeCartQty(${cartIdx}, -1)" class="px-3 py-1.5 font-black text-sm hover:bg-black/10">−</button>
+                <span class="px-2 text-xs font-black">${inCartQty}</span>
+                <button onclick="changeCartQty(${cartIdx}, 1)" class="px-3 py-1.5 font-black text-sm hover:bg-black/10">+</button>
+              </div>
+            ` : `
+              <button onclick="addToCart('${safeName}', ${selWeight}, ${packPrice}, ${rateKg})" 
+                      class="bg-emerald-50 hover:bg-[#0C831F] text-[#0C831F] hover:text-white border-2 blinkit-green-border font-black text-xs px-5 py-1.5 rounded-xl transition shadow-sm">
+                ADD
+              </button>
+            `}
           </div>
         </div>`;
     }).join('');
   }
 
   function addToCart(name, weightG, unitPrice, rateKg) {
-    // Check if identical item + pack size already exists
     const existing = shopCart.find(c => c.name === name && c.unitWeightG === weightG);
     if (existing) {
       existing.qty += 1;
@@ -496,49 +595,56 @@
   function saveAndRenderCart() {
     localStorage.setItem('ab_customer_cart', JSON.stringify(shopCart));
     renderCart();
+    renderShopCatalog();
   }
 
   function renderCart() {
     const list = document.getElementById('shopCartList');
     const clearBtn = document.getElementById('clearCartBtn');
+    const mobileBar = document.getElementById('mobileCartBar');
     let total = 0;
     let totalGrams = 0;
+    let totalPacks = 0;
 
     if (shopCart.length === 0) {
       clearBtn.classList.add('hidden');
+      mobileBar.classList.add('hidden');
       list.innerHTML = `
         <div class="text-center py-6 bg-stone-50 rounded-xl border border-dashed border-stone-200 text-stone-400">
-          <p class="text-xs font-semibold">Your royal basket is empty</p>
-          <p class="text-[11px] mt-0.5">Tap any pack size (100g – 1Kg) to add items</p>
+          <p class="text-xs font-bold">Your cart is empty</p>
+          <p class="text-[11px] mt-0.5">Select a pack size and tap ADD on any item</p>
         </div>`;
     } else {
       clearBtn.classList.remove('hidden');
+      mobileBar.classList.remove('hidden');
       list.innerHTML = shopCart.map((c, i) => {
         total += Number(c.price);
         totalGrams += Number(c.weightG);
+        totalPacks += Number(c.qty || 1);
         const packLabel = c.weightG >= 1000 ? `${(c.weightG / 1000).toFixed(2).replace(/\.00$/, '')}Kg` : `${c.weightG}g`;
         return `
-          <div class="flex justify-between items-center bg-stone-50 px-3 py-2 rounded-xl border border-stone-200/80">
+          <div class="flex justify-between items-center bg-stone-50 px-3 py-2 rounded-xl border border-stone-200">
             <div class="pr-2">
               <p class="font-bold text-stone-900 leading-tight">${c.name}</p>
-              <p class="text-[11px] text-stone-500">Total: <b>${packLabel}</b> ${c.qty > 1 ? `(${c.qty} packs)` : ''}</p>
+              <p class="text-[11px] text-stone-500">Total: <b>${packLabel}</b> (${c.qty} × ${c.unitWeightG}g)</p>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <div class="flex items-center bg-white border border-stone-200 rounded-lg">
-                <button onclick="changeCartQty(${i}, -1)" class="px-2 py-0.5 text-stone-600 hover:text-rose-600 font-bold">-</button>
-                <span class="px-1.5 text-[11px] font-extrabold text-stone-800">${c.qty || 1}</span>
-                <button onclick="changeCartQty(${i}, 1)" class="px-2 py-0.5 text-stone-600 hover:text-emerald-600 font-bold">+</button>
+              <div class="flex items-center blinkit-green text-white rounded-lg">
+                <button onclick="changeCartQty(${i}, -1)" class="px-2 py-0.5 font-black">−</button>
+                <span class="px-1.5 text-[11px] font-black">${c.qty || 1}</span>
+                <button onclick="changeCartQty(${i}, 1)" class="px-2 py-0.5 font-black">+</button>
               </div>
-              <b class="text-amber-800 w-12 text-right">₹${c.price}</b>
+              <b class="text-stone-900 w-12 text-right font-black">₹${c.price}</b>
             </div>
           </div>`;
       }).join('');
     }
 
     const weightFormatted = totalGrams >= 1000 ? `${(totalGrams / 1000).toFixed(2)} Kg` : `${totalGrams}g`;
-    document.getElementById('cartWeightSummary').innerText = `${shopCart.length} items • ${weightFormatted} total weight`;
+    document.getElementById('cartWeightSummary').innerText = `${totalPacks} packs • ${weightFormatted} total weight`;
     document.getElementById('shopSubtotal').innerText = `₹${total}`;
     document.getElementById('shopCartTotal').innerText = `₹${total}`;
+    document.getElementById('mobileCartCount').innerText = `${totalPacks} Items (${weightFormatted}) • ₹${total}`;
 
     const upiUrl = `upi://pay?pa=9154339465@ybl&pn=AB_DRY_FRUITS&am=${total}&cu=INR`;
     document.getElementById('upiDeepLinkBtn').href = upiUrl;
@@ -573,7 +679,6 @@
     alert("Merchant UPI ID (9154339465@ybl) copied!");
   }
 
-  // Custom Weight / Budget Modal Functions
   function populateCalcDropdown() {
     const sel = document.getElementById('calcItemSelect');
     sel.innerHTML = Object.values(catalog).map(i => {
@@ -632,9 +737,8 @@
     closeCustomCalcModal();
   }
 
-  // Order Submission
   function submitOnlinePrepaidOrder() {
-    if (shopCart.length === 0) return alert("Your basket is empty! Please add items first.");
+    if (shopCart.length === 0) return alert("Your cart is empty! Add items first.");
     const name = document.getElementById('custName').value.trim();
     const phone = document.getElementById('custPhone').value.trim();
     const address = document.getElementById('custAddress').value.trim() || (orderMode === 'PICKUP' ? 'Store Self-Pickup' : '');
@@ -642,13 +746,12 @@
     const utr = document.getElementById('custUtr').value.trim();
 
     if (!name || phone.length < 10 || !address) {
-      return alert("Please enter your full name, 10-digit phone number, and address.");
+      return alert("Please fill your full name, 10-digit WhatsApp number, and delivery address.");
     }
     if (!utr || utr.length < 4) {
-      return alert("Please complete payment via UPI and enter at least the last 4 digits of your UTR / Reference number.");
+      return alert("Please enter at least the last 4 digits of your UPI UTR / Reference number.");
     }
 
-    // Save customer info for next visit
     localStorage.setItem('ab_cust_name', name);
     localStorage.setItem('ab_cust_phone', phone);
     localStorage.setItem('ab_cust_address', address);
@@ -672,17 +775,16 @@
     db.ref(`live_orders/${orderId}`).set(order);
 
     const itemsText = shopCart.map(i => `• ${i.name} (${i.weightG}g) - ₹${i.price}`).join('\n');
-    const waMsg = `*ROYAL ONLINE ORDER #${orderId}*\n*Customer:* ${name} (${phone})\n*Mode:* ${orderMode}\n*Address:* ${address}\n\n*Items:*\n${itemsText}\n\n*Total Paid:* ₹${total}\n*PhonePe/UPI UTR:* ${utr}`;
+    const waMsg = `*EXPRESS ONLINE ORDER #${orderId}*\n*Customer:* ${name} (${phone})\n*Mode:* ${orderMode}\n*Address:* ${address}\n\n*Items:*\n${itemsText}\n\n*Total Paid:* ₹${total}\n*UPI UTR:* ${utr}`;
     window.open(`https://wa.me/919154339465?text=${encodeURIComponent(waMsg)}`, '_blank');
 
     shopCart = [];
     document.getElementById('custUtr').value = '';
     document.getElementById('custNote').value = '';
     saveAndRenderCart();
-    alert(`✅ Order ${orderId} Submitted Successfully! Use 'Track My Order' at the top anytime to see live verification status.`);
+    alert(`✅ Order ${orderId} Placed! Counter staff will verify UTR #${utr} and pack your order immediately.`);
   }
 
-  // Live Order Tracking Modal
   function openTrackModal() {
     document.getElementById('trackModal').classList.remove('hidden');
     const savedPhone = localStorage.getItem('ab_cust_phone') || '';
@@ -717,11 +819,11 @@
     box.innerHTML = matches.map(o => {
       const isVerified = o.paymentStatus === "VERIFIED";
       return `
-        <div class="border gold-border rounded-xl p-3 bg-stone-50">
+        <div class="border border-stone-200 rounded-xl p-3 bg-stone-50">
           <div class="flex justify-between items-center">
-            <span class="font-extrabold text-stone-900">${o.orderId}</span>
-            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${isVerified ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-              ${isVerified ? '✅ VERIFIED & PACKED' : '⏳ VERIFYING UPI UTR (' + o.utrNumber + ')'}
+            <span class="font-black text-stone-900">${o.orderId}</span>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${isVerified ? 'bg-emerald-100 text-[#0C831F]' : 'bg-amber-100 text-amber-800'}">
+              ${isVerified ? '✅ VERIFIED & PACKED' : '⏳ VERIFYING UTR (' + o.utrNumber + ')'}
             </span>
           </div>
           <p class="text-stone-600 mt-1">${(o.items || []).map(i => `${i.name} (${i.weightG}g)`).join(', ')}</p>
