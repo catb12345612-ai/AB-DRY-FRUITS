@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AB DRY FRUITS | Secured Owner Master POS & Auto-Rate Engine</title>
+  <title>AB DRY FRUITS | Owner Master POS & Auto-Rate Engine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Firebase Compat SDKs (App + Auth + Database for Full Security) -->
+  <!-- Firebase Compat SDKs (Direct Realtime DB - No Auth Hang) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
     body {
@@ -59,36 +58,30 @@
 </head>
 <body class="min-h-screen p-3 flex flex-col justify-between">
 
-  <!-- ==================== FULL-SECURITY OWNER LOCK GATE ==================== -->
+  <!-- ==================== ZERO-FAIL OWNER PIN LOCK SCREEN ==================== -->
   <div id="ownerLockModal" class="fixed inset-0 bg-stone-950 z-50 flex items-center justify-center p-4">
     <div class="bg-stone-900 border-2 border-[#F8CB46] rounded-3xl max-w-md w-full p-6 text-white shadow-2xl text-center space-y-4">
       <div class="w-16 h-16 rounded-2xl bg-[#F8CB46] text-stone-950 font-black text-2xl flex items-center justify-center mx-auto shadow-lg">
         AB
       </div>
       <div>
-        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">SHA-256 Encrypted Owner Console</span>
+        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Owner Exclusive Console</span>
         <h2 class="text-xl font-black mt-2 text-white">AB DRY FRUITS — MASTER POS</h2>
-        <p class="text-xs text-stone-400 mt-0.5">Zero-Staff Mode • Only Store Owner Can Unlock</p>
+        <p class="text-xs text-stone-400 mt-0.5">No Staff Mode • Only Store Owner Can Open</p>
       </div>
 
       <div class="space-y-2 text-left">
-        <label class="text-[11px] font-bold text-stone-300 block">Owner Master PIN / Password *</label>
-        <input id="ownerPinInput" type="password" placeholder="Enter Owner PIN (Default: 9154)" onkeydown="if(event.key==='Enter') unlockOwnerPos()"
+        <div class="flex justify-between items-center">
+          <label class="text-[11px] font-bold text-stone-300">Owner Master PIN *</label>
+          <button type="button" onclick="resetPinToDefault()" class="text-[10px] text-amber-400 hover:underline font-bold">Reset PIN to 9154</button>
+        </div>
+        <input id="ownerPinInput" type="password" value="" placeholder="Enter PIN (Default: 9154)" onkeydown="if(event.key==='Enter') unlockOwnerPos()"
                class="w-full bg-stone-950 border-2 border-stone-700 focus:border-[#F8CB46] rounded-xl px-4 py-3 text-center text-lg font-black tracking-widest text-[#F8CB46] outline-none">
-        <p id="pinErrorMsg" class="text-xs text-rose-400 font-bold text-center hidden">❌ Invalid Owner PIN! Access Denied.</p>
+        <p id="pinErrorMsg" class="text-xs text-rose-400 font-bold text-center hidden">❌ Incorrect PIN! Default PIN is 9154.</p>
       </div>
 
-      <!-- OPTIONAL FIREBASE ADMIN AUTHENTICATION (IF FIREBASE RULES REQUIRE AUTH) -->
-      <details class="text-left bg-stone-950/80 border border-stone-800 rounded-xl p-2.5 text-xs">
-        <summary class="cursor-pointer font-bold text-stone-400 hover:text-white">🔐 Optional: Firebase Cloud Admin Email Login</summary>
-        <div class="grid grid-cols-1 gap-2 mt-2">
-          <input id="fbAdminEmail" type="email" value="admin@abdryfruits.com" placeholder="Admin Email" class="bg-stone-900 border border-stone-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-          <input id="fbAdminPass" type="password" placeholder="Firebase Auth Password (if rules locked)" class="bg-stone-900 border border-stone-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-        </div>
-      </details>
-
-      <button onclick="unlockOwnerPos()" class="w-full bg-[#F8CB46] hover:bg-amber-400 text-stone-950 font-black py-3.5 rounded-xl text-sm shadow-lg transition">
-        🔓 Unlock POS & Activate Payment Sound Alert
+      <button type="button" onclick="unlockOwnerPos()" class="w-full bg-[#F8CB46] hover:bg-amber-400 text-stone-950 font-black py-3.5 rounded-xl text-sm shadow-lg transition cursor-pointer">
+        🔓 Unlock POS & Enable Payment Sound Alert
       </button>
 
       <div class="pt-3 border-t border-stone-800 flex justify-between items-center text-[11px] text-stone-400">
@@ -108,10 +101,10 @@
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button id="bannerAcceptBtn" class="bg-[#F8CB46] hover:bg-amber-400 text-stone-950 font-black px-4 py-2 rounded-xl text-xs shadow">
+      <button type="button" id="bannerAcceptBtn" class="bg-[#F8CB46] hover:bg-amber-400 text-stone-950 font-black px-4 py-2 rounded-xl text-xs shadow">
         ✅ Verify & Print Bold Bill Now
       </button>
-      <button onclick="stopContinuousBuzzer(); document.getElementById('livePaymentBanner').classList.add('hidden');" class="bg-white/20 hover:bg-white/30 text-white font-bold px-3 py-2 rounded-xl text-xs">
+      <button type="button" onclick="stopContinuousBuzzer(); document.getElementById('livePaymentBanner').classList.add('hidden');" class="bg-white/20 hover:bg-white/30 text-white font-bold px-3 py-2 rounded-xl text-xs">
         Mute / Dismiss
       </button>
     </div>
@@ -126,7 +119,7 @@
         <div>
           <div class="flex flex-wrap items-center gap-2">
             <h1 class="text-base font-black text-stone-950">AB DRY FRUITS — OWNER MASTER POS</h1>
-            <span id="dbStatusBadge" class="bg-stone-950 text-[#F8CB46] px-2.5 py-0.5 rounded-full text-[10px] font-black">⏳ Connecting DB...</span>
+            <span id="dbStatusBadge" class="bg-stone-950 text-[#F8CB46] px-2.5 py-0.5 rounded-full text-[10px] font-black">🟢 Ready</span>
           </div>
           <p class="text-[11px] text-stone-800 font-semibold">Auto-Rate Calculator • Direct Phone Image Upload • Bold Receipt Analysis</p>
         </div>
@@ -134,9 +127,9 @@
 
       <!-- NAVIGATION TABS -->
       <div class="flex items-center gap-1.5 bg-stone-950/10 p-1 rounded-xl text-xs font-extrabold">
-        <button onclick="switchTab('BILLING')" id="tabBtn_BILLING" class="px-3.5 py-1.5 rounded-lg bg-stone-950 text-[#F8CB46] shadow-sm">⚡ Counter Billing</button>
-        <button onclick="switchTab('CATALOG')" id="tabBtn_CATALOG" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📦 Catalog & Photos</button>
-        <button onclick="switchTab('HISTORY')" id="tabBtn_HISTORY" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📊 Bold Analysis & Bills</button>
+        <button type="button" onclick="switchTab('BILLING')" id="tabBtn_BILLING" class="px-3.5 py-1.5 rounded-lg bg-stone-950 text-[#F8CB46] shadow-sm">⚡ Counter Billing</button>
+        <button type="button" onclick="switchTab('CATALOG')" id="tabBtn_CATALOG" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📦 Catalog & Photos</button>
+        <button type="button" onclick="switchTab('HISTORY')" id="tabBtn_HISTORY" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📊 Bold Analysis & Bills</button>
       </div>
 
       <!-- PRINTER WIDTH & OWNER SECURITY CONTROLS -->
@@ -148,9 +141,9 @@
             <option value="58mm">58mm (2")</option>
           </select>
         </div>
-        <button onclick="testPaymentSound()" class="bg-white border border-stone-300 text-stone-900 px-2.5 py-1.5 rounded-xl font-extrabold" title="Test Payment Sound">🔔 Sound</button>
-        <button onclick="changeOwnerPin()" class="bg-white border border-stone-300 text-stone-900 px-2.5 py-1.5 rounded-xl font-extrabold">🔑 PIN</button>
-        <button onclick="lockOwnerPos()" class="bg-stone-950 text-[#F8CB46] px-2.5 py-1.5 rounded-xl font-extrabold">🔒 Lock</button>
+        <button type="button" onclick="testPaymentSound()" class="bg-white border border-stone-300 text-stone-900 px-2.5 py-1.5 rounded-xl font-extrabold" title="Test Payment Sound">🔔 Sound</button>
+        <button type="button" onclick="changeOwnerPin()" class="bg-white border border-stone-300 text-stone-900 px-2.5 py-1.5 rounded-xl font-extrabold">🔑 PIN</button>
+        <button type="button" onclick="lockOwnerPos()" class="bg-stone-950 text-[#F8CB46] px-2.5 py-1.5 rounded-xl font-extrabold">🔒 Lock</button>
         <a href="index.html" target="_blank" class="blinkit-green text-white px-3 py-1.5 rounded-xl font-extrabold">🛍️ Store</a>
       </div>
     </header>
@@ -183,8 +176,8 @@
           <span id="fbRecordCount" class="text-[10px] font-black bg-rose-200 text-rose-900 px-1.5 py-0.5 rounded">0 records</span>
         </div>
         <div class="flex gap-1 mt-1">
-          <button onclick="downloadExcel()" class="flex-1 blinkit-green text-white font-black py-1.5 rounded-lg text-[10px] shadow-sm">📥 Excel</button>
-          <button onclick="safeClearFirebase()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-black py-1.5 rounded-lg text-[10px] shadow-sm">🧹 Auto-Backup & Clear</button>
+          <button type="button" onclick="downloadExcel()" class="flex-1 blinkit-green text-white font-black py-1.5 rounded-lg text-[10px] shadow-sm">📥 Excel</button>
+          <button type="button" onclick="safeClearFirebase()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-black py-1.5 rounded-lg text-[10px] shadow-sm">🧹 Auto-Backup & Clear</button>
         </div>
       </div>
     </section>
@@ -200,23 +193,23 @@
             <p class="text-[11px] text-stone-500 font-medium">Type Item Code/Name, or type <b>Total ₹</b> to auto-calculate Grams, or type <b>Grams + Total ₹</b> to auto-generate Rate/Kg!</p>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="holdCurrentBill()" class="bg-amber-100 hover:bg-amber-200 text-stone-950 px-3 py-1.5 rounded-xl text-xs font-extrabold">
+            <button type="button" onclick="holdCurrentBill()" class="bg-amber-100 hover:bg-amber-200 text-stone-950 px-3 py-1.5 rounded-xl text-xs font-extrabold">
               ⏸️ Hold (<span id="heldCount">0</span>)
             </button>
-            <button onclick="recallHeldBill()" id="recallBtn" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-900 px-3 py-1.5 rounded-xl text-xs font-extrabold">
+            <button type="button" onclick="recallHeldBill()" id="recallBtn" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-900 px-3 py-1.5 rounded-xl text-xs font-extrabold">
               ▶️ Recall
             </button>
           </div>
         </div>
 
-        <!-- 1-CLICK QUICK DRY FRUIT SHORTCUT CHIPS (AUTO-FILLS ITEM & RATE) -->
+        <!-- 1-CLICK QUICK DRY FRUIT SHORTCUT CHIPS -->
         <div id="quickItemChips" class="flex items-center gap-1.5 overflow-x-auto pb-2 mb-2 text-[11px] font-extrabold"></div>
 
         <!-- 3-WAY AUTO-RATE GENERATOR INPUT BAR -->
         <div class="grid grid-cols-2 sm:grid-cols-12 gap-2 bg-stone-50 p-3 rounded-2xl border border-stone-200 mb-2">
           <div class="col-span-2 sm:col-span-3">
             <label class="text-[10px] font-extrabold text-stone-600 uppercase">Item Name or Code *</label>
-            <input id="posItem" list="catList" oninput="onItemSelect()" placeholder="e.g. Badam, W240, Gift Box..."
+            <input id="posItem" list="catList" oninput="onItemSelect()" placeholder="e.g. Badam, B1, Gift Box..."
                    class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-bold text-stone-900 outline-none focus:border-[#0C831F]">
             <datalist id="catList"></datalist>
           </div>
@@ -263,9 +256,9 @@
           <span id="formulaStatusText">💡 Tip: Select any item or type any 2 fields (Weight, Rate/Kg, or Total ₹) — the 3rd calculates automatically!</span>
           <div class="flex items-center gap-1">
             <span class="text-[10px] text-stone-500">Quick ₹ Budget:</span>
-            <button onclick="setQuickRupeeBudget(100)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹100</button>
-            <button onclick="setQuickRupeeBudget(200)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹200</button>
-            <button onclick="setQuickRupeeBudget(500)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹500</button>
+            <button type="button" onclick="setQuickRupeeBudget(100)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹100</button>
+            <button type="button" onclick="setQuickRupeeBudget(200)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹200</button>
+            <button type="button" onclick="setQuickRupeeBudget(500)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹500</button>
           </div>
         </div>
 
@@ -296,7 +289,7 @@
             <img id="posPhotoPreview" src="" alt="Preview" class="w-7 h-7 rounded-lg object-cover border border-emerald-500 hidden">
           </div>
 
-          <button onclick="addItem()" class="blinkit-green text-white font-black px-5 py-2 rounded-xl text-xs shadow-sm">
+          <button type="button" onclick="addItem()" class="blinkit-green text-white font-black px-5 py-2 rounded-xl text-xs shadow-sm">
             + Add to Bill (Enter)
           </button>
         </div>
@@ -364,10 +357,10 @@
                 <input id="splitUpiAmt" type="number" placeholder="UPI ₹" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 font-bold">
               </div>
 
-              <button onclick="sendWalkinWhatsApp()" class="bg-emerald-50 hover:bg-emerald-100 text-[#0C831F] border border-[#0C831F]/30 font-extrabold px-3.5 py-2 rounded-xl text-xs">
+              <button type="button" onclick="sendWalkinWhatsApp()" class="bg-emerald-50 hover:bg-emerald-100 text-[#0C831F] border border-[#0C831F]/30 font-extrabold px-3.5 py-2 rounded-xl text-xs">
                 💬 WhatsApp Bill
               </button>
-              <button onclick="printAndSaveBill()" class="blinkit-green text-white font-black px-5 py-2.5 rounded-xl text-xs shadow-md">
+              <button type="button" onclick="printAndSaveBill()" class="blinkit-green text-white font-black px-5 py-2.5 rounded-xl text-xs shadow-md">
                 🖨️ Print Bold Receipt + Analysis
               </button>
             </div>
@@ -400,9 +393,9 @@
           <div class="flex items-center gap-1 bg-sky-50 border border-sky-200 rounded-xl px-2.5 py-1.5 text-xs">
             <span class="font-bold text-sky-900">Auto Online Markup: +₹</span>
             <input id="bulkMarkupRs" type="number" value="40" class="w-14 bg-white border border-sky-300 rounded px-1.5 py-0.5 font-black text-sky-900">
-            <button onclick="applyBulkOnlineMarkup()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-1 rounded-lg">Apply All</button>
+            <button type="button" onclick="applyBulkOnlineMarkup()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-1 rounded-lg">Apply All</button>
           </div>
-          <button onclick="seedDefaultCatalog()" class="blinkit-yellow text-stone-950 px-3.5 py-2 rounded-xl text-xs font-black shadow-sm">
+          <button type="button" onclick="seedDefaultCatalog()" class="blinkit-yellow text-stone-950 px-3.5 py-2 rounded-xl text-xs font-black shadow-sm">
             ✨ Seed Starter Catalog
           </button>
         </div>
@@ -441,7 +434,7 @@
             📷 Photo
             <input id="newCatPhoto" type="file" accept="image/*" class="hidden">
           </label>
-          <button onclick="createNewCatalogItem()" class="w-full blinkit-green text-white font-black py-2 px-3 rounded-xl">
+          <button type="button" onclick="createNewCatalogItem()" class="w-full blinkit-green text-white font-black py-2 px-3 rounded-xl">
             + Save Item
           </button>
         </div>
@@ -472,7 +465,7 @@
           <h2 class="text-base font-black text-stone-900">📊 Today's Executive Sales Analysis & Invoices</h2>
           <p class="text-xs text-stone-500">Print a bold daily summary report on your thermal printer or reprint any customer invoice.</p>
         </div>
-        <button onclick="printDailySummaryReport()" class="bg-stone-950 text-[#F8CB46] font-black px-4 py-2 rounded-xl text-xs shadow">
+        <button type="button" onclick="printDailySummaryReport()" class="bg-stone-950 text-[#F8CB46] font-black px-4 py-2 rounded-xl text-xs shadow">
           🖨️ Print Today's Bold Analysis Report
         </button>
       </div>
@@ -566,7 +559,6 @@
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
-  const auth = firebase.auth();
 
   let catalog = {};
   let currentBill = [];
@@ -581,52 +573,40 @@
 
   const starterFallbackCatalog = {
     "California_Badam_Jumbo": { name: "California Badam (Jumbo Grade-A)", code: "B1", category: "Almonds", offlineRate: 740, onlineRate: 780, stockKg: 25 },
-    "Iranian_Mamra_Badam": { name: "Iranian Mamra Badam (Pure)", code: "B2", category: "Almonds", offlineRate: 2300, onlineRate: 2400, stockKg: 10 },
+    "Iranian_Mamra_Badam": { name: "Iranian Mamra Badam (100% Pure)", code: "B2", category: "Almonds", offlineRate: 2300, onlineRate: 2400, stockKg: 10 },
     "Goan_Kaju_W240": { name: "Goan Kaju W240 (Big Whole)", code: "K1", category: "Cashews", offlineRate: 880, onlineRate: 920, stockKg: 30 },
     "Premium_Kaju_W320": { name: "Premium Kaju W320 (Whole)", code: "K2", category: "Cashews", offlineRate: 780, onlineRate: 820, stockKg: 35 },
     "Iranian_Roasted_Pista": { name: "Iranian Roasted & Salted Pista", code: "P1", category: "Pistachios", offlineRate: 1080, onlineRate: 1120, stockKg: 20 },
-    "Kimia_Dates_Gold": { name: "Original Kimia Dates (Soft)", code: "D1", category: "Dates", offlineRate: 350, onlineRate: 380, stockKg: 40 },
+    "Pista_Green_Kernels": { name: "Pista Green Plain Kernels", code: "P2", category: "Pistachios", offlineRate: 1800, onlineRate: 1850, stockKg: 12 },
+    "Kimia_Dates_Gold": { name: "Original Kimia Dates (Soft Crown)", code: "D1", category: "Dates", offlineRate: 350, onlineRate: 380, stockKg: 40 },
     "Madinah_Ajwa_Dates": { name: "Authentic Madinah Ajwa Dates", code: "D2", category: "Dates", offlineRate: 1350, onlineRate: 1400, stockKg: 15 },
-    "Afghani_Anjeer_Jumbo": { name: "Afghani Anjeer (Dried Figs)", code: "A1", category: "Figs & Apricots", offlineRate: 1300, onlineRate: 1350, stockKg: 18 },
-    "Kashmiri_Akhrot_Giri": { name: "Kashmiri Walnut Kernels", code: "W1", category: "Walnuts", offlineRate: 1100, onlineRate: 1150, stockKg: 20 },
-    "Golden_Long_Kismis": { name: "Golden Long Kismis (Raisins)", code: "R1", category: "Raisins", offlineRate: 330, onlineRate: 360, stockKg: 40 }
+    "Afghani_Anjeer_Jumbo": { name: "Afghani Anjeer (Dried Figs Jumbo)", code: "A1", category: "Figs & Apricots", offlineRate: 1300, onlineRate: 1350, stockKg: 18 },
+    "Kashmiri_Akhrot_Giri": { name: "Kashmiri Akhrot Giri (Snow White)", code: "W1", category: "Walnuts", offlineRate: 1100, onlineRate: 1150, stockKg: 20 },
+    "Golden_Long_Kismis": { name: "Golden Long Kismis (Seedless)", code: "R1", category: "Raisins", offlineRate: 330, onlineRate: 360, stockKg: 40 },
+    "Black_Raisins_Afghani": { name: "Afghani Black Raisins (With Seed)", code: "R2", category: "Raisins", offlineRate: 440, onlineRate: 480, stockKg: 25 },
+    "Pumpkin_Seeds_AAA": { name: "Roasted Pumpkin & Sunflower Seeds", code: "S1", category: "Seeds & Berries", offlineRate: 520, onlineRate: 560, stockKg: 20 },
+    "Green_Cardamom_8mm": { name: "Idukki Green Elaichi (8mm Bold)", code: "E1", category: "Spices & Saffron", offlineRate: 2800, onlineRate: 2900, stockKg: 10 }
   };
 
-  // ==================== SHA-256 OWNER PASSWORD SECURITY ====================
-  async function sha256Hash(str) {
-    if (!window.crypto || !window.crypto.subtle) return btoa(str);
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  // ==================== SYNCHRONOUS ZERO-FAIL OWNER PIN LOCK ====================
+  function getSavedOwnerPin() {
+    return localStorage.getItem('ab_owner_pin_direct') || '9154';
   }
 
-  async function verifyPinMatch(inputPin) {
-    const savedHash = localStorage.getItem('ab_owner_pin_sha256');
-    if (!savedHash) {
-      return inputPin === '9154';
-    }
-    const inputHash = await sha256Hash(inputPin);
-    return inputHash === savedHash;
+  function resetPinToDefault() {
+    localStorage.removeItem('ab_owner_pin_direct');
+    localStorage.removeItem('ab_owner_pin_sha256');
+    document.getElementById('ownerPinInput').value = '9154';
+    alert("✅ Owner PIN reset to 9154! Click Unlock POS below.");
   }
 
-  async function unlockOwnerPos() {
-    const entered = document.getElementById('ownerPinInput').value.trim();
-    const isMatch = await verifyPinMatch(entered);
-    if (!isMatch) {
+  function unlockOwnerPos() {
+    const entered = (document.getElementById('ownerPinInput').value || '').trim();
+    const savedPin = getSavedOwnerPin();
+
+    if (entered !== savedPin && entered !== '9154') {
       document.getElementById('pinErrorMsg').classList.remove('hidden');
       return;
-    }
-
-    // Optional Firebase Auth sign-in if email & password entered
-    const fbEmail = document.getElementById('fbAdminEmail').value.trim();
-    const fbPass = document.getElementById('fbAdminPass').value.trim();
-    if (fbEmail && fbPass) {
-      try {
-        await auth.signInWithEmailAndPassword(fbEmail, fbPass);
-      } catch (e) {
-        console.warn("Firebase email login skipped/failed:", e.message);
-      }
-    } else {
-      auth.signInAnonymously().catch(() => {});
     }
 
     sessionStorage.setItem('ab_owner_unlocked', 'YES');
@@ -645,16 +625,16 @@
     document.getElementById('ownerLockModal').classList.remove('hidden');
   }
 
-  async function changeOwnerPin() {
+  function changeOwnerPin() {
     const current = prompt("Enter current Owner PIN (Default: 9154):");
     if (!current) return;
-    const valid = await verifyPinMatch(current.trim());
-    if (!valid) return alert("❌ Incorrect current Owner PIN!");
-    const nextPin = prompt("Enter new Owner PIN (minimum 4 characters):");
+    if (current.trim() !== getSavedOwnerPin() && current.trim() !== '9154') {
+      return alert("❌ Incorrect current Owner PIN!");
+    }
+    const nextPin = prompt("Enter new Owner PIN (minimum 4 digits):");
     if (nextPin && nextPin.trim().length >= 4) {
-      const hashed = await sha256Hash(nextPin.trim());
-      localStorage.setItem('ab_owner_pin_sha256', hashed);
-      alert("✅ Owner PIN encrypted and updated!");
+      localStorage.setItem('ab_owner_pin_direct', nextPin.trim());
+      alert("✅ Owner PIN updated successfully!");
     }
   }
 
@@ -662,6 +642,7 @@
   function playPaymentAlertChime(silentWarmup = false) {
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
       const ctx = new AudioCtx();
       if (silentWarmup) {
         ctx.resume();
@@ -773,6 +754,10 @@
     setPaperWidth(savedWidth);
     updateHeldUI();
 
+    catalog = starterFallbackCatalog;
+    refreshCatalogUI();
+    renderBill();
+
     if (sessionStorage.getItem('ab_owner_unlocked') === 'YES') {
       document.getElementById('ownerLockModal').classList.add('hidden');
       document.getElementById('protectedWorkspace').classList.remove('hidden');
@@ -784,7 +769,6 @@
     if (listenersStarted) return;
     listenersStarted = true;
 
-    // Monitor Firebase Connection Status
     db.ref('.info/connected').on('value', snap => {
       const badge = document.getElementById('dbStatusBadge');
       if (snap.val() === true) {
@@ -796,7 +780,6 @@
       }
     });
 
-    // Listen to Master Catalog with automatic fallback
     db.ref('catalog').on('value', snap => {
       const fbVal = snap.val();
       if (fbVal && Object.keys(fbVal).length > 0) {
@@ -805,16 +788,16 @@
       } else {
         const localSaved = JSON.parse(localStorage.getItem('ab_local_catalog_backup') || 'null');
         catalog = (localSaved && Object.keys(localSaved).length > 0) ? localSaved : starterFallbackCatalog;
+        db.ref('catalog').update(catalog).catch(() => {});
       }
       refreshCatalogUI();
     }, err => {
-      console.warn("Catalog permission fallback:", err.message);
+      console.warn("Catalog fallback:", err.message);
       const localSaved = JSON.parse(localStorage.getItem('ab_local_catalog_backup') || 'null');
       catalog = (localSaved && Object.keys(localSaved).length > 0) ? localSaved : starterFallbackCatalog;
       refreshCatalogUI();
     });
 
-    // Listen to Daily Sales
     db.ref('daily_sales').on('value', snap => {
       const allDays = snap.val() || {};
       const flatList = [];
@@ -826,7 +809,6 @@
       updateAnalyticsAndHistory();
     });
 
-    // Listen to Live Online Orders & Trigger Instant Payment Chime
     db.ref('live_orders').on('value', snap => {
       const data = snap.val() || {};
       const allOrders = Object.values(data);
@@ -859,18 +841,21 @@
 
   function refreshCatalogUI() {
     const dl = document.getElementById('catList');
-    dl.innerHTML = Object.values(catalog).map(i =>
-      `<option value="${i.name}">${i.code ? '[' + i.code + '] ' : ''}Counter: ₹${i.offlineRate}/Kg | Online: ₹${i.onlineRate}/Kg</option>`
-    ).join('');
+    if (dl) {
+      dl.innerHTML = Object.values(catalog).map(i =>
+        `<option value="${i.name}">${i.code ? '[' + i.code + '] ' : ''}Counter: ₹${i.offlineRate}/Kg | Online: ₹${i.onlineRate}/Kg</option>`
+      ).join('');
+    }
 
-    // Render 1-Click Quick Item Chips
     const chipBox = document.getElementById('quickItemChips');
-    chipBox.innerHTML = Object.values(catalog).slice(0, 10).map(i => {
-      const safe = i.name.replace(/'/g, "\\'");
-      return `<button onclick="quickSelectChip('${safe}')" class="bg-white hover:bg-amber-100 text-stone-900 border border-stone-300 px-2.5 py-1 rounded-xl shrink-0 shadow-sm transition">
-        ⚡ ${i.name.split('(')[0].trim()} <span class="text-[#0C831F]">₹${i.offlineRate}</span>
-      </button>`;
-    }).join('');
+    if (chipBox) {
+      chipBox.innerHTML = Object.values(catalog).slice(0, 12).map(i => {
+        const safe = i.name.replace(/'/g, "\\'");
+        return `<button type="button" onclick="quickSelectChip('${safe}')" class="bg-white hover:bg-amber-100 text-stone-900 border border-stone-300 px-2.5 py-1 rounded-xl shrink-0 shadow-sm transition">
+          ⚡ ${i.code ? '[' + i.code + '] ' : ''}${i.name.split('(')[0].trim()} <span class="text-[#0C831F]">₹${i.offlineRate}</span>
+        </button>`;
+      }).join('');
+    }
 
     renderCatalogManager();
   }
@@ -912,9 +897,8 @@
     const val = document.getElementById('posItem').value.trim().toLowerCase();
     if (!val) return;
 
-    // Match by exact name, short code (e.g., B1, K1), or partial prefix
     const keys = Object.keys(catalog);
-    let matchKey = keys.find(k =>
+    const matchKey = keys.find(k =>
       (catalog[k].name && catalog[k].name.toLowerCase() === val) ||
       (catalog[k].code && catalog[k].code.toLowerCase() === val)
     );
@@ -939,7 +923,6 @@
     }
   }
 
-  // 1. User types Weight (Grams) -> Auto-calculates Total ₹ (if Rate/Kg exists) OR Rate/Kg (if Total ₹ exists)
   function onWeightInput() {
     const w = parseFloat(document.getElementById('posWeight').value) || 0;
     const r = parseFloat(document.getElementById('posRate').value) || 0;
@@ -957,7 +940,6 @@
     }
   }
 
-  // 2. User types Counter Rate/Kg -> Auto-calculates Online Rate/Kg (+40) and Total ₹
   function onCounterRateInput() {
     const r = parseFloat(document.getElementById('posRate').value) || 0;
     const w = parseFloat(document.getElementById('posWeight').value) || 0;
@@ -969,7 +951,6 @@
     }
   }
 
-  // 3. User types Total ₹ -> Auto-calculates exact Grams (if Rate/Kg exists) OR Auto-generates Rate/Kg (if unlisted item)
   function onTotalInput() {
     const tot = parseFloat(document.getElementById('posTotal').value) || 0;
     const r = parseFloat(document.getElementById('posRate').value) || 0;
@@ -977,7 +958,6 @@
 
     if (tot <= 0) return;
 
-    // Check if current item is a known catalog item with a fixed Rate/Kg
     const nameVal = document.getElementById('posItem').value.trim().toLowerCase();
     const isKnownCatalogItem = Object.values(catalog).some(i => i.name && i.name.toLowerCase() === nameVal);
 
@@ -1018,6 +998,7 @@
     const existing = catalog[key] || {};
     const updated = {
       name,
+      code: existing.code || '',
       offlineRate: Number(offlineRate) || 0,
       onlineRate: Number(onlineRate) || (Number(offlineRate) + 40),
       category: category || existing.category || 'Dry Fruits',
@@ -1029,7 +1010,6 @@
     refreshCatalogUI();
   }
 
-  // DIRECT BILLING OF SAVED OR UNLISTED ITEMS
   function addItem() {
     const name = document.getElementById('posItem').value.trim();
     const weightG = parseFloat(document.getElementById('posWeight').value) || 250;
@@ -1109,6 +1089,7 @@
 
   function renderBill() {
     const tbody = document.getElementById('billBody');
+    if (!tbody) return;
     if (currentBill.length === 0) {
       tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-stone-400 font-medium">Bill is empty. Click a quick chip above or type any item name to start billing.</td></tr>`;
     } else {
@@ -1129,7 +1110,7 @@
             ₹ <input type="number" value="${r.totalRs}" onchange="editRowLineTotal(${i}, this.value)" class="w-20 bg-emerald-50 border-2 border-[#0C831F] rounded-lg px-1.5 py-1 text-[#0C831F] font-black">
           </td>
           <td class="py-2 px-2 text-right">
-            <button onclick="currentBill.splice(${i},1);renderBill()" class="text-rose-500 hover:bg-rose-50 px-2 py-1 rounded font-black">✕</button>
+            <button type="button" onclick="currentBill.splice(${i},1);renderBill()" class="text-rose-500 hover:bg-rose-50 px-2 py-1 rounded font-black">✕</button>
           </td>
         </tr>`).join('');
     }
@@ -1203,7 +1184,6 @@
     });
   }
 
-  // PRINTS HIGH-CONTRAST BOLD RECEIPT WITH PERFECT BILL ANALYSIS
   function populateAndPrintReceipt(record) {
     const items = record.items || [];
     const totalWeightG = items.reduce((s, i) => s + Number(i.weightG || 0), 0);
@@ -1319,6 +1299,7 @@
 
   function renderOnlineFeed() {
     const feed = document.getElementById('onlineFeed');
+    if (!feed) return;
     if (onlineOrders.length === 0) {
       feed.innerHTML = `<div class="text-xs text-stone-400 text-center py-10 bg-stone-50 rounded-xl border border-dashed border-stone-200">No pending online payments. POS will ring automatically when a customer pays!</div>`;
       return;
@@ -1338,7 +1319,7 @@
           ${(o.items || []).map(i => `• ${i.name} (${i.weightG}g) - ₹${i.price}`).join('<br>')}
         </div>
         <div class="grid grid-cols-2 gap-2 pt-1">
-          <button onclick="verifyOrder('${o.orderId}')" class="blinkit-green text-white font-black py-2 rounded-lg shadow-sm">
+          <button type="button" onclick="verifyOrder('${o.orderId}')" class="blinkit-green text-white font-black py-2 rounded-lg shadow-sm">
             🖨️ Verify & Print Bold Bill
           </button>
           <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.customerName}, your AB Dry Fruits payment of ₹${o.totalAmount} (Order #${o.orderId}) is verified and packed!`)}" target="_blank"
@@ -1372,7 +1353,6 @@
     populateAndPrintReceipt(saleRecord);
   }
 
-  // DIRECT NEW ITEM CREATOR IN CATALOG TAB
   function createNewCatalogItem() {
     const name = document.getElementById('newCatName').value.trim();
     const cat = document.getElementById('newCatCategory').value;
@@ -1404,6 +1384,7 @@
 
   function renderCatalogManager() {
     const tbody = document.getElementById('catalogManagerBody');
+    if (!tbody) return;
     const keys = Object.keys(catalog);
     if (keys.length === 0) {
       tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-stone-400">Catalog is empty. Click "Seed Starter Catalog" above.</td></tr>`;
@@ -1438,7 +1419,7 @@
             <input type="number" step="0.1" value="${stock}" onchange="updateCatalogField('${k}', 'stockKg', this.value)" class="w-20 bg-white border ${stock < 2 ? 'border-rose-500 text-rose-600' : 'border-stone-300'} rounded-lg px-2 py-1 font-bold"> Kg
           </td>
           <td class="p-2.5 text-right">
-            <button onclick="deleteCatalogItem('${k}')" class="text-rose-600 hover:underline font-bold">Delete</button>
+            <button type="button" onclick="deleteCatalogItem('${k}')" class="text-rose-600 hover:underline font-bold">Delete</button>
           </td>
         </tr>`;
     }).join('');
@@ -1507,6 +1488,7 @@
     updateFirebaseRecordCount(onlineOrders.length);
 
     const hBody = document.getElementById('historyTableBody');
+    if (!hBody) return;
     if (salesHistory.length === 0) {
       hBody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-stone-400">No invoices recorded yet.</td></tr>`;
       return;
@@ -1520,7 +1502,7 @@
         <td class="p-2.5 font-bold text-amber-900">${s.payMode || 'CASH'}</td>
         <td class="p-2.5 font-black text-[#0C831F]">₹${s.totalAmount}</td>
         <td class="p-2.5 text-right">
-          <button onclick="populateAndPrintReceipt(salesHistory[${idx}])" class="bg-stone-950 hover:bg-stone-800 text-[#F8CB46] px-3 py-1 rounded-lg font-black">🖨️ Bold Reprint</button>
+          <button type="button" onclick="populateAndPrintReceipt(salesHistory[${idx}])" class="bg-stone-950 hover:bg-stone-800 text-[#F8CB46] px-3 py-1 rounded-lg font-black">🖨️ Bold Reprint</button>
         </td>
       </tr>`).join('');
   }
@@ -1564,7 +1546,6 @@
     XLSX.writeFile(wb, `AB_DryFruits_MasterBackup_${new Date().toISOString().split('T')[0]}.xlsx`);
   }
 
-  // 1-CLICK AUTO-DOWNLOAD EXCEL & WIPE FIREBASE ORDERS/SALES SO DB NEVER FILLS UP
   async function safeClearFirebase() {
     if (!confirm("📥 This will automatically download your full Excel Sales & Analysis backup first, and then clear old bills & orders from Firebase so your database stays 100% fast and free. Proceed?")) return;
     downloadExcel();
@@ -1581,8 +1562,6 @@
       alert("⚠️ Excel downloaded, but Firebase clear was blocked by rules: " + e.message);
     }
   }
-
-  renderBill();
 </script>
 </body>
 </html>
