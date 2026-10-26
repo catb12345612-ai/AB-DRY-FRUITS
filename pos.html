@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AB DRY FRUITS | Owner Master POS, Live Payment Alert & Image Controller</title>
+  <title>AB DRY FRUITS | Secured Owner Master POS & Auto-Rate Engine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Firebase Compat SDKs -->
+  <!-- Firebase Compat SDKs (App + Auth + Database for Full Security) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
     body {
@@ -28,215 +29,394 @@
     /* ULTRA-BOLD HIGH-CONTRAST 58MM & 80MM THERMAL RECEIPT PRINT ENGINE */
     @media print {
       @page { margin: 0; }
-      body * { visibility: hidden; }
+      body * { visibility: hidden !important; }
       #thermalReceipt, #thermalReceipt * {
-        visibility: visible;
+        visibility: visible !important;
         color: #000000 !important;
-        font-weight: 800 !important;
+        font-weight: 900 !important;
       }
       #thermalReceipt {
-        position: absolute;
-        left: 0;
-        top: 0;
+        display: block !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
         background: #FFFFFF !important;
-        font-family: 'Courier New', Courier, monospace;
-        margin: 0;
+        font-family: 'Courier New', Courier, monospace !important;
+        margin: 0 !important;
       }
       #thermalReceipt.paper-80mm {
-        width: 72mm;
-        padding: 3mm;
-        font-size: 12px;
+        width: 72mm !important;
+        padding: 3mm !important;
+        font-size: 12px !important;
       }
       #thermalReceipt.paper-58mm {
-        width: 48mm;
-        padding: 1.5mm;
-        font-size: 10.5px;
+        width: 48mm !important;
+        padding: 1.5mm !important;
+        font-size: 10.5px !important;
       }
     }
   </style>
 </head>
 <body class="min-h-screen p-3 flex flex-col justify-between">
 
-  <!-- ==================== OWNER-ONLY PASSWORD LOCK SCREEN ==================== -->
+  <!-- ==================== FULL-SECURITY OWNER LOCK GATE ==================== -->
   <div id="ownerLockModal" class="fixed inset-0 bg-stone-950 z-50 flex items-center justify-center p-4">
-    <div class="bg-stone-900 border-2 border-[#F8CB46] rounded-3xl max-w-sm w-full p-6 text-white shadow-2xl text-center space-y-4">
+    <div class="bg-stone-900 border-2 border-[#F8CB46] rounded-3xl max-w-md w-full p-6 text-white shadow-2xl text-center space-y-4">
       <div class="w-16 h-16 rounded-2xl bg-[#F8CB46] text-stone-950 font-black text-2xl flex items-center justify-center mx-auto shadow-lg">
         AB
       </div>
       <div>
-        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Owner Exclusive Access</span>
+        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">SHA-256 Encrypted Owner Console</span>
         <h2 class="text-xl font-black mt-2 text-white">AB DRY FRUITS — MASTER POS</h2>
-        <p class="text-xs text-stone-400 mt-0.5">Protected Admin Console • Enter Owner PIN to Unlock</p>
+        <p class="text-xs text-stone-400 mt-0.5">Zero-Staff Mode • Only Store Owner Can Unlock</p>
       </div>
-      <div>
+
+      <div class="space-y-2 text-left">
+        <label class="text-[11px] font-bold text-stone-300 block">Owner Master PIN / Password *</label>
         <input id="ownerPinInput" type="password" placeholder="Enter Owner PIN (Default: 9154)" onkeydown="if(event.key==='Enter') unlockOwnerPos()"
                class="w-full bg-stone-950 border-2 border-stone-700 focus:border-[#F8CB46] rounded-xl px-4 py-3 text-center text-lg font-black tracking-widest text-[#F8CB46] outline-none">
-        <p id="pinErrorMsg" class="text-xs text-rose-400 font-bold mt-1.5 hidden">❌ Incorrect Owner Password / PIN!</p>
+        <p id="pinErrorMsg" class="text-xs text-rose-400 font-bold text-center hidden">❌ Invalid Owner PIN! Access Denied.</p>
       </div>
-      <button onclick="unlockOwnerPos()" class="w-full bg-[#F8CB46] hover:bg-amber-400 text-stone-950 font-black py-3 rounded-xl text-sm shadow-lg transition">
-        🔓 Unlock Owner POS & Enable Sound Alerts
+
+      <!-- OPTIONAL FIREBASE ADMIN AUTHENTICATION (IF FIREBASE RULES REQUIRE AUTH) -->
+      <details class="text-left bg-stone-950/80 border border-stone-800 rounded-xl p-2.5 text-xs">
+        <summary class="cursor-pointer font-bold text-stone-400 hover:text-white">🔐 Optional: Firebase Cloud Admin Email Login</summary>
+        <div class="grid grid-cols-1 gap-2 mt-2">
+          <input id="fbAdminEmail" type="email" value="admin@abdryfruits.com" placeholder="Admin Email" class="bg-stone-900 border border-stone-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+          <input id="fbAdminPass" type="password" placeholder="Firebase Auth Password (if rules locked)" class="bg-stone-900 border border-stone-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+        </div>
+      </details>
+
+      <button onclick="unlockOwnerPos()" class="w-full bg-[#F8CB46] hover:bg-amber-400 text-stone-950 font-black py-3.5 rounded-xl text-sm shadow-lg transition">
+        🔓 Unlock POS & Activate Payment Sound Alert
       </button>
-      <div class="pt-3 border-t border-stone-800 text-[11px] text-stone-400">
-        Engineered by <a href="https://catb12345612-ai.github.io/Syed-Zeeshaan-Ali-High-Fledged-Engineering-And-Digital-Tech-Solutions-Site/" target="_blank" class="text-[#F8CB46] font-bold underline">Syed Zeeshaan Ali</a>
+
+      <div class="pt-3 border-t border-stone-800 flex justify-between items-center text-[11px] text-stone-400">
+        <a href="https://catb12345612-ai.github.io/Syed-Zeeshaan-Ali-High-Fledged-Engineering-And-Digital-Tech-Solutions-Site/" target="_blank" class="text-[#F8CB46] font-bold hover:underline">🌐 Syed Zeeshaan Ali Tech</a>
+        <a href="https://www.instagram.com/syedzeeshaanali07/" target="_blank" class="text-pink-400 font-bold hover:underline">📸 @syedzeeshaanali07</a>
       </div>
     </div>
   </div>
 
   <!-- ==================== INSTANT LIVE PAYMENT NOTIFICATION BANNER ==================== -->
-  <div id="livePaymentBanner" class="hidden fixed top-3 inset-x-3 z-40 bg-[#0C831F] text-white rounded-2xl p-3.5 shadow-2xl border-2 border-[#F8CB46] flex flex-wrap justify-between items-center gap-3 animate-bounce">
+  <div id="livePaymentBanner" class="hidden fixed top-3 inset-x-3 z-40 bg-[#0C831F] text-white rounded-2xl p-4 shadow-2xl border-2 border-[#F8CB46] flex flex-wrap justify-between items-center gap-3">
     <div class="flex items-center gap-3">
-      <span class="text-3xl">🔔</span>
+      <span class="text-3xl animate-bounce">🔔</span>
       <div>
-        <p class="text-xs uppercase font-black text-[#F8CB46]">Instant Online Payment Alert Received!</p>
+        <p class="text-xs uppercase font-black text-[#F8CB46]">Instant Online UPI Payment Received!</p>
         <p id="bannerOrderText" class="text-sm sm:text-base font-black">New Order Paid via UPI</p>
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button id="bannerAcceptBtn" class="bg-[#F8CB46] text-stone-950 font-black px-4 py-2 rounded-xl text-xs shadow">
-        ✅ Verify & Print Receipt Now
+      <button id="bannerAcceptBtn" class="bg-[#F8CB46] hover:bg-amber-400 text-stone-950 font-black px-4 py-2 rounded-xl text-xs shadow">
+        ✅ Verify & Print Bold Bill Now
       </button>
-      <button onclick="document.getElementById('livePaymentBanner').classList.add('hidden')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-3 py-2 rounded-xl text-xs">
-        Dismiss
+      <button onclick="stopContinuousBuzzer(); document.getElementById('livePaymentBanner').classList.add('hidden');" class="bg-white/20 hover:bg-white/30 text-white font-bold px-3 py-2 rounded-xl text-xs">
+        Mute / Dismiss
       </button>
     </div>
   </div>
 
-<div>
-  <!-- TOP OWNER COMMAND BAR -->
-  <header class="blinkit-yellow rounded-2xl p-3 mb-3 flex flex-wrap justify-between items-center gap-3 shadow-sm border border-amber-400">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-stone-950 text-[#F8CB46] flex items-center justify-center font-black text-xl shadow">AB</div>
-      <div>
-        <div class="flex items-center gap-2">
-          <h1 class="text-base font-black text-stone-950">AB DRY FRUITS — OWNER MASTER POS</h1>
-          <span class="bg-stone-950 text-[#F8CB46] px-2.5 py-0.5 rounded-full text-[10px] font-black">👑 Owner Unlocked</span>
-        </div>
-        <p class="text-[11px] text-stone-800 font-semibold">Instant Payment Sound Alert • Phone Image Upload • Direct Unlisted Item Billing</p>
-      </div>
-    </div>
-
-    <!-- NAVIGATION TABS -->
-    <div class="flex items-center gap-1.5 bg-stone-950/10 p-1 rounded-xl text-xs font-extrabold">
-      <button onclick="switchTab('BILLING')" id="tabBtn_BILLING" class="px-3.5 py-1.5 rounded-lg bg-stone-950 text-[#F8CB46] shadow-sm">⚡ Counter Billing</button>
-      <button onclick="switchTab('CATALOG')" id="tabBtn_CATALOG" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📦 Catalog & Product Photos</button>
-      <button onclick="switchTab('HISTORY')" id="tabBtn_HISTORY" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📊 Bold Analysis & Invoices</button>
-    </div>
-
-    <!-- PRINTER WIDTH & OWNER CONTROLS -->
-    <div class="flex flex-wrap items-center gap-2 text-xs">
-      <div class="flex items-center gap-1 bg-white border border-stone-300 rounded-xl px-2.5 py-1.5">
-        <span class="text-[11px] font-extrabold text-stone-700">🖨️ Roll:</span>
-        <select id="paperWidthSelect" onchange="setPaperWidth(this.value)" class="bg-transparent font-black text-stone-950 outline-none">
-          <option value="80mm">80mm (3")</option>
-          <option value="58mm">58mm (2")</option>
-        </select>
-      </div>
-      <button onclick="testPaymentSound()" class="bg-white border border-stone-300 text-stone-900 px-2.5 py-1.5 rounded-xl font-extrabold" title="Test Payment Alert Sound">🔔 Test Sound</button>
-      <button onclick="changeOwnerPin()" class="bg-white border border-stone-300 text-stone-900 px-2.5 py-1.5 rounded-xl font-extrabold">🔑 Change PIN</button>
-      <button onclick="lockOwnerPos()" class="bg-stone-950 text-[#F8CB46] px-2.5 py-1.5 rounded-xl font-extrabold">🔒 Lock</button>
-      <a href="index.html" target="_blank" class="blinkit-green text-white px-3 py-1.5 rounded-xl font-extrabold">🛍️ Storefront</a>
-    </div>
-  </header>
-
-  <!-- KPI ANALYTICS & 1-CLICK FIREBASE STORAGE CLEANER RIBBON -->
-  <section class="grid grid-cols-2 sm:grid-cols-6 gap-2.5 mb-3">
-    <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-bold">Today's Total Sales</p>
-      <p id="kpiTodayRevenue" class="text-xl font-black text-stone-900">₹0</p>
-    </div>
-    <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-bold">Cash vs UPI Split</p>
-      <p id="kpiPaySplit" class="text-xs font-extrabold text-[#0C831F] mt-1">Cash: ₹0 | UPI: ₹0</p>
-    </div>
-    <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-bold">Total Weight Sold Today</p>
-      <p id="kpiWeightSold" class="text-xl font-black text-emerald-700">0 Kg</p>
-    </div>
-    <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-bold">Invoices Printed</p>
-      <p id="kpiBillCount" class="text-xl font-black text-amber-600">0</p>
-    </div>
-    <div class="panel-card rounded-xl p-3">
-      <p class="text-[11px] text-stone-500 font-bold">Live Online Orders</p>
-      <p id="kpiPendingOnline" class="text-xl font-black text-sky-600">0</p>
-    </div>
-    <div class="panel-card rounded-xl p-2.5 flex flex-col justify-between bg-rose-50/50 border-rose-200">
-      <div class="flex justify-between items-center">
-        <span class="text-[10px] font-black text-rose-800 uppercase">Firebase Memory Guard</span>
-        <span id="fbRecordCount" class="text-[10px] font-black bg-rose-200 text-rose-900 px-1.5 py-0.5 rounded">0 records</span>
-      </div>
-      <div class="flex gap-1 mt-1">
-        <button onclick="downloadExcel()" class="flex-1 blinkit-green text-white font-black py-1.5 rounded-lg text-[10px] shadow-sm">📥 Excel</button>
-        <button onclick="safeClearFirebase()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-black py-1.5 rounded-lg text-[10px] shadow-sm">🧹 Backup & Clear DB</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== TAB 1: COUNTER BILLING & UNLISTED ITEM ADDITION ==================== -->
-  <div id="tab_BILLING" class="grid grid-cols-1 lg:grid-cols-12 gap-3">
-
-    <!-- LEFT 8 COLS: COUNTER BILLING & DIRECT UNLISTED ITEM CREATOR -->
-    <div class="lg:col-span-8 panel-card rounded-2xl p-4">
-      <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+  <!-- ==================== PROTECTED MAIN WORKSPACE ==================== -->
+  <div id="protectedWorkspace" class="hidden">
+    <!-- TOP OWNER COMMAND BAR -->
+    <header class="blinkit-yellow rounded-2xl p-3 mb-3 flex flex-wrap justify-between items-center gap-3 shadow-sm border border-amber-400">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-stone-950 text-[#F8CB46] flex items-center justify-center font-black text-xl shadow">AB</div>
         <div>
-          <h2 class="text-base font-black text-stone-900">⚡ Instant Counter Billing (Saved or Any Unlisted Custom Item)</h2>
-          <p class="text-[11px] text-stone-500 font-medium">Type any item name (even if not in catalog), upload a photo from your phone if needed, or enter direct ₹ price!</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button onclick="holdCurrentBill()" class="bg-amber-100 hover:bg-amber-200 text-stone-950 px-3 py-1.5 rounded-xl text-xs font-extrabold">
-            ⏸️ Hold Bill (<span id="heldCount">0</span>)
-          </button>
-          <button onclick="recallHeldBill()" id="recallBtn" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-900 px-3 py-1.5 rounded-xl text-xs font-extrabold">
-            ▶️ Recall Held
-          </button>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="text-base font-black text-stone-950">AB DRY FRUITS — OWNER MASTER POS</h1>
+            <span id="dbStatusBadge" class="bg-stone-950 text-[#F8CB46] px-2.5 py-0.5 rounded-full text-[10px] font-black">⏳ Connecting DB...</span>
+          </div>
+          <p class="text-[11px] text-stone-800 font-semibold">Auto-Rate Calculator • Direct Phone Image Upload • Bold Receipt Analysis</p>
         </div>
       </div>
 
-      <!-- ENTRY ROW WITH PHOTO UPLOAD + UNLISTED ITEM SUPPORT -->
-      <div class="grid grid-cols-2 sm:grid-cols-12 gap-2 bg-stone-50 p-3 rounded-2xl border border-stone-200 mb-3">
-        <div class="col-span-2 sm:col-span-3">
-          <label class="text-[10px] font-extrabold text-stone-600 uppercase">Item Name (Saved or New)</label>
-          <input id="posItem" list="catList" oninput="onItemSelect()" placeholder="Type any item name..."
-                 class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-bold text-stone-900 outline-none focus:border-[#0C831F]">
-          <datalist id="catList"></datalist>
-        </div>
-        <div class="col-span-1 sm:col-span-2">
-          <label class="text-[10px] font-extrabold text-stone-600 uppercase">Pack</label>
-          <select id="posPack" onchange="onPackChange()" class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-bold">
-            <option value="1000">1 Kg</option>
-            <option value="500">500g</option>
-            <option value="250">250g</option>
-            <option value="100">100g</option>
-            <option value="50">50g</option>
-            <option value="CUSTOM">Custom / Loose</option>
+      <!-- NAVIGATION TABS -->
+      <div class="flex items-center gap-1.5 bg-stone-950/10 p-1 rounded-xl text-xs font-extrabold">
+        <button onclick="switchTab('BILLING')" id="tabBtn_BILLING" class="px-3.5 py-1.5 rounded-lg bg-stone-950 text-[#F8CB46] shadow-sm">⚡ Counter Billing</button>
+        <button onclick="switchTab('CATALOG')" id="tabBtn_CATALOG" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📦 Catalog & Photos</button>
+        <button onclick="switchTab('HISTORY')" id="tabBtn_HISTORY" class="px-3.5 py-1.5 rounded-lg text-stone-900 hover:bg-white/50">📊 Bold Analysis & Bills</button>
+      </div>
+
+      <!-- PRINTER WIDTH & OWNER SECURITY CONTROLS -->
+      <div class="flex flex-wrap items-center gap-1.5 text-xs">
+        <div class="flex items-center gap-1 bg-white border border-stone-300 rounded-xl px-2.5 py-1.5">
+          <span class="text-[11px] font-extrabold text-stone-700">🖨️ Roll:</span>
+          <select id="paperWidthSelect" onchange="setPaperWidth(this.value)" class="bg-transparent font-black text-stone-950 outline-none">
+            <option value="80mm">80mm (3")</option>
+            <option value="58mm">58mm (2")</option>
           </select>
         </div>
-        <div class="col-span-1 sm:col-span-2">
-          <label class="text-[10px] font-extrabold text-stone-600 uppercase">Grams (g)</label>
-          <input id="posWeight" type="number" value="1000" oninput="recalc()" class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-black">
+        <button onclick="testPaymentSound()" class="bg-white border border-stone-300 text-stone-900 px-2.5 py-1.5 rounded-xl font-extrabold" title="Test Payment Sound">🔔 Sound</button>
+        <button onclick="changeOwnerPin()" class="bg-white border border-stone-300 text-stone-900 px-2.5 py-1.5 rounded-xl font-extrabold">🔑 PIN</button>
+        <button onclick="lockOwnerPos()" class="bg-stone-950 text-[#F8CB46] px-2.5 py-1.5 rounded-xl font-extrabold">🔒 Lock</button>
+        <a href="index.html" target="_blank" class="blinkit-green text-white px-3 py-1.5 rounded-xl font-extrabold">🛍️ Store</a>
+      </div>
+    </header>
+
+    <!-- KPI ANALYTICS & 1-CLICK FIREBASE STORAGE CLEANER RIBBON -->
+    <section class="grid grid-cols-2 sm:grid-cols-6 gap-2.5 mb-3">
+      <div class="panel-card rounded-xl p-3">
+        <p class="text-[11px] text-stone-500 font-bold">Today's Total Sales</p>
+        <p id="kpiTodayRevenue" class="text-xl font-black text-stone-900">₹0</p>
+      </div>
+      <div class="panel-card rounded-xl p-3">
+        <p class="text-[11px] text-stone-500 font-bold">Cash vs UPI Split</p>
+        <p id="kpiPaySplit" class="text-xs font-extrabold text-[#0C831F] mt-1">Cash: ₹0 | UPI: ₹0</p>
+      </div>
+      <div class="panel-card rounded-xl p-3">
+        <p class="text-[11px] text-stone-500 font-bold">Total Weight Sold Today</p>
+        <p id="kpiWeightSold" class="text-xl font-black text-emerald-700">0 Kg</p>
+      </div>
+      <div class="panel-card rounded-xl p-3">
+        <p class="text-[11px] text-stone-500 font-bold">Invoices Printed</p>
+        <p id="kpiBillCount" class="text-xl font-black text-amber-600">0</p>
+      </div>
+      <div class="panel-card rounded-xl p-3">
+        <p class="text-[11px] text-stone-500 font-bold">Pending Online Orders</p>
+        <p id="kpiPendingOnline" class="text-xl font-black text-sky-600">0</p>
+      </div>
+      <div class="panel-card rounded-xl p-2.5 flex flex-col justify-between bg-rose-50/60 border-rose-200">
+        <div class="flex justify-between items-center">
+          <span class="text-[10px] font-black text-rose-800 uppercase">Firebase Cleaner</span>
+          <span id="fbRecordCount" class="text-[10px] font-black bg-rose-200 text-rose-900 px-1.5 py-0.5 rounded">0 records</span>
         </div>
-        <div class="col-span-1 sm:col-span-2">
-          <label class="text-[10px] font-black text-amber-800 uppercase">Counter ₹/Kg</label>
-          <input id="posRate" type="number" placeholder="₹/Kg (Opt)" oninput="onCounterRateInput()" class="w-full bg-amber-50 border-2 border-amber-400 rounded-xl p-2 text-xs font-black text-stone-900">
+        <div class="flex gap-1 mt-1">
+          <button onclick="downloadExcel()" class="flex-1 blinkit-green text-white font-black py-1.5 rounded-lg text-[10px] shadow-sm">📥 Excel</button>
+          <button onclick="safeClearFirebase()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-black py-1.5 rounded-lg text-[10px] shadow-sm">🧹 Auto-Backup & Clear</button>
         </div>
-        <div class="col-span-1 sm:col-span-1">
-          <label class="text-[10px] font-black text-sky-700 uppercase">Online ₹</label>
-          <input id="posOnlineRate" type="number" placeholder="Online" class="w-full bg-sky-50 border border-sky-400 rounded-xl p-2 text-xs font-black text-sky-900">
+      </div>
+    </section>
+
+    <!-- ==================== TAB 1: COUNTER BILLING & 3-WAY AUTO-RATE ENGINE ==================== -->
+    <div id="tab_BILLING" class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+
+      <!-- LEFT 8 COLS: COUNTER BILLING & AUTO-RATE GENERATOR -->
+      <div class="lg:col-span-8 panel-card rounded-2xl p-4">
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+          <div>
+            <h2 class="text-base font-black text-stone-900">⚡ Smart Auto-Rate Counter Billing (Saved or Any Unlisted Item)</h2>
+            <p class="text-[11px] text-stone-500 font-medium">Type Item Code/Name, or type <b>Total ₹</b> to auto-calculate Grams, or type <b>Grams + Total ₹</b> to auto-generate Rate/Kg!</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="holdCurrentBill()" class="bg-amber-100 hover:bg-amber-200 text-stone-950 px-3 py-1.5 rounded-xl text-xs font-extrabold">
+              ⏸️ Hold (<span id="heldCount">0</span>)
+            </button>
+            <button onclick="recallHeldBill()" id="recallBtn" class="hidden bg-sky-100 hover:bg-sky-200 text-sky-900 px-3 py-1.5 rounded-xl text-xs font-extrabold">
+              ▶️ Recall
+            </button>
+          </div>
         </div>
-        <div class="col-span-2 sm:col-span-2">
-          <label class="text-[10px] font-black text-[#0C831F] uppercase">Total (₹) *</label>
-          <input id="posTotal" type="number" placeholder="Direct ₹ Amt" oninput="reverseCalc()" onkeydown="if(event.key==='Enter') addItem()" class="w-full bg-emerald-50 border-2 border-[#0C831F] rounded-xl p-2 text-xs font-black text-[#0C831F]">
+
+        <!-- 1-CLICK QUICK DRY FRUIT SHORTCUT CHIPS (AUTO-FILLS ITEM & RATE) -->
+        <div id="quickItemChips" class="flex items-center gap-1.5 overflow-x-auto pb-2 mb-2 text-[11px] font-extrabold"></div>
+
+        <!-- 3-WAY AUTO-RATE GENERATOR INPUT BAR -->
+        <div class="grid grid-cols-2 sm:grid-cols-12 gap-2 bg-stone-50 p-3 rounded-2xl border border-stone-200 mb-2">
+          <div class="col-span-2 sm:col-span-3">
+            <label class="text-[10px] font-extrabold text-stone-600 uppercase">Item Name or Code *</label>
+            <input id="posItem" list="catList" oninput="onItemSelect()" placeholder="e.g. Badam, W240, Gift Box..."
+                   class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-bold text-stone-900 outline-none focus:border-[#0C831F]">
+            <datalist id="catList"></datalist>
+          </div>
+
+          <div class="col-span-1 sm:col-span-2">
+            <label class="text-[10px] font-extrabold text-stone-600 uppercase">Quick Pack</label>
+            <select id="posPack" onchange="onPackChange()" class="w-full bg-white border border-stone-300 rounded-xl p-2 text-xs font-bold">
+              <option value="1000">1 Kg (1000g)</option>
+              <option value="500">500g (Half Kg)</option>
+              <option value="250" selected>250g (Quarter)</option>
+              <option value="100">100g</option>
+              <option value="50">50g</option>
+              <option value="CUSTOM">Custom Weight</option>
+            </select>
+          </div>
+
+          <div class="col-span-1 sm:col-span-2">
+            <label class="text-[10px] font-extrabold text-stone-600 uppercase">Weight (Grams)</label>
+            <input id="posWeight" type="number" value="250" oninput="onWeightInput()" onkeydown="if(event.key==='Enter') addItem()"
+                   class="w-full bg-white border-2 border-stone-300 focus:border-[#0C831F] rounded-xl p-2 text-xs font-black">
+          </div>
+
+          <div class="col-span-1 sm:col-span-2">
+            <label class="text-[10px] font-black text-amber-800 uppercase">Counter ₹/Kg</label>
+            <input id="posRate" type="number" placeholder="Auto / Type" oninput="onCounterRateInput()" onkeydown="if(event.key==='Enter') addItem()"
+                   class="w-full bg-amber-50 border-2 border-amber-400 rounded-xl p-2 text-xs font-black text-stone-900">
+          </div>
+
+          <div class="col-span-1 sm:col-span-1">
+            <label class="text-[10px] font-black text-sky-700 uppercase">Online ₹/Kg</label>
+            <input id="posOnlineRate" type="number" placeholder="Auto" onkeydown="if(event.key==='Enter') addItem()"
+                   class="w-full bg-sky-50 border border-sky-400 rounded-xl p-2 text-xs font-black text-sky-900">
+          </div>
+
+          <div class="col-span-2 sm:col-span-2">
+            <label class="text-[10px] font-black text-[#0C831F] uppercase">Total Price (₹) *</label>
+            <input id="posTotal" type="number" placeholder="Type ₹ or Auto" oninput="onTotalInput()" onkeydown="if(event.key==='Enter') addItem()"
+                   class="w-full bg-emerald-50 border-2 border-[#0C831F] rounded-xl p-2 text-xs font-black text-[#0C831F]">
+          </div>
+        </div>
+
+        <!-- LIVE AUTO-RATE FORMULA FEEDBACK BANNER -->
+        <div id="autoRateFormulaBar" class="text-[11px] font-bold text-stone-600 bg-amber-50/60 border border-amber-200 rounded-xl px-3 py-1.5 mb-2.5 flex flex-wrap justify-between items-center gap-2">
+          <span id="formulaStatusText">💡 Tip: Select any item or type any 2 fields (Weight, Rate/Kg, or Total ₹) — the 3rd calculates automatically!</span>
+          <div class="flex items-center gap-1">
+            <span class="text-[10px] text-stone-500">Quick ₹ Budget:</span>
+            <button onclick="setQuickRupeeBudget(100)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹100</button>
+            <button onclick="setQuickRupeeBudget(200)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹200</button>
+            <button onclick="setQuickRupeeBudget(500)" class="bg-white border border-stone-300 px-2 py-0.5 rounded text-[10px] font-black hover:bg-amber-100">₹500</button>
+          </div>
+        </div>
+
+        <!-- PHOTO UPLOAD + AUTO-SAVE BAR FOR NEW/UNLISTED ITEMS -->
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-3 text-xs bg-stone-100/80 px-3 py-2 rounded-xl border border-stone-200">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <label class="flex items-center gap-1.5 cursor-pointer font-extrabold text-stone-800">
+              <input id="saveMaster" type="checkbox" checked class="accent-[#0C831F] w-4 h-4">
+              <span>🔄 Auto-Save Item, Rate & Photo to Online/Offline Store</span>
+            </label>
+            <select id="posNewCat" class="bg-white border border-stone-300 rounded-lg px-2 py-1 text-[11px] font-bold">
+              <option value="Almonds">Almonds</option>
+              <option value="Cashews">Cashews</option>
+              <option value="Pistachios">Pistachios</option>
+              <option value="Dates">Dates</option>
+              <option value="Raisins">Raisins</option>
+              <option value="Figs & Apricots">Figs & Apricots</option>
+              <option value="Walnuts">Walnuts</option>
+              <option value="Seeds & Berries">Seeds & Berries</option>
+              <option value="Spices & Saffron">Spices & Gift Boxes</option>
+            </select>
+
+            <!-- DIRECT PHONE CAMERA / GALLERY UPLOAD -->
+            <label class="cursor-pointer bg-white hover:bg-amber-50 border border-stone-300 px-2.5 py-1 rounded-lg font-extrabold text-[11px] flex items-center gap-1 shadow-sm">
+              <span>📷 Add Photo (Phone/PC)</span>
+              <input id="posItemPhotoInput" type="file" accept="image/*" onchange="previewPosPhoto(this)" class="hidden">
+            </label>
+            <img id="posPhotoPreview" src="" alt="Preview" class="w-7 h-7 rounded-lg object-cover border border-emerald-500 hidden">
+          </div>
+
+          <button onclick="addItem()" class="blinkit-green text-white font-black px-5 py-2 rounded-xl text-xs shadow-sm">
+            + Add to Bill (Enter)
+          </button>
+        </div>
+
+        <!-- LIVE EDITABLE BILL TABLE -->
+        <div class="border border-stone-200 rounded-xl overflow-x-auto mb-3">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-stone-100 text-stone-700 uppercase text-[10px] font-black">
+              <tr>
+                <th class="py-2.5 px-2">#</th>
+                <th class="py-2.5 px-2">Item</th>
+                <th class="py-2.5 px-2">Weight (g)</th>
+                <th class="py-2.5 px-2">Counter ₹/Kg</th>
+                <th class="py-2.5 px-2">Online ₹/Kg</th>
+                <th class="py-2.5 px-2">Line Total ₹</th>
+                <th class="py-2.5 px-2 text-right">✕</th>
+              </tr>
+            </thead>
+            <tbody id="billBody" class="divide-y divide-stone-200 bg-white"></tbody>
+          </table>
+        </div>
+
+        <!-- LIVE BILL ANALYSIS SUMMARY BOX -->
+        <div class="bg-amber-50/70 border border-amber-300 rounded-xl p-2.5 mb-3 flex flex-wrap justify-between items-center gap-2 text-xs">
+          <span class="font-black text-stone-900">📊 Live Bill Analysis:</span>
+          <span id="liveBillAnalysisText" class="font-extrabold text-stone-800">0 Packs • 0g Total Weight • Avg ₹0/Kg</span>
+        </div>
+
+        <!-- CHECKOUT & PRINT CONTROLS -->
+        <div class="bg-stone-50 p-3.5 rounded-2xl border border-stone-200 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
+            <input id="walkinName" placeholder="Customer Name (Optional)" class="bg-white border border-stone-300 rounded-xl px-3 py-2 font-medium">
+            <input id="walkinPhone" placeholder="Customer WhatsApp (10 digits)" maxlength="10" class="bg-white border border-stone-300 rounded-xl px-3 py-2 font-medium">
+            <div class="flex items-center bg-white border border-stone-300 rounded-xl px-2">
+              <span class="text-stone-500 text-[11px] font-bold mr-1">Disc:</span>
+              <input id="billDiscount" type="number" value="0" oninput="renderBillTotalsOnly()" class="w-full py-2 text-xs font-black outline-none">
+              <select id="discountType" onchange="renderBillTotalsOnly()" class="text-[11px] font-black bg-stone-100 rounded px-1 py-0.5">
+                <option value="RS">₹</option>
+                <option value="PCT">%</option>
+              </select>
+            </div>
+            <div class="flex items-center bg-white border border-stone-300 rounded-xl px-2">
+              <span class="text-stone-500 text-[11px] font-bold mr-1">Cash:</span>
+              <input id="cashTendered" type="number" placeholder="₹ Given" oninput="calcChange()" class="w-full py-2 text-xs font-black outline-none">
+              <span id="changeDueText" class="text-[10px] font-black text-[#0C831F] shrink-0"></span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap justify-between items-center gap-3 pt-2 border-t border-stone-200">
+            <div>
+              <span class="text-xs text-stone-500 font-bold">Net Payable:</span>
+              <span id="grandTotal" class="text-3xl font-black text-[#0C831F] ml-2">₹0</span>
+              <span id="totalWeightBadge" class="ml-2 text-xs bg-[#F8CB46] text-stone-950 font-black px-2.5 py-0.5 rounded-full">0g</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="payMode" onchange="toggleSplitBox()" class="bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-extrabold">
+                <option value="PHONEPE">📲 PhonePe / UPI (91543 39465)</option>
+                <option value="CASH">💵 Cash</option>
+                <option value="SPLIT">⚖️ Split (Cash + UPI)</option>
+              </select>
+
+              <div id="splitInputs" class="hidden flex items-center gap-1 text-xs">
+                <input id="splitCashAmt" type="number" placeholder="Cash ₹" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 font-bold">
+                <input id="splitUpiAmt" type="number" placeholder="UPI ₹" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 font-bold">
+              </div>
+
+              <button onclick="sendWalkinWhatsApp()" class="bg-emerald-50 hover:bg-emerald-100 text-[#0C831F] border border-[#0C831F]/30 font-extrabold px-3.5 py-2 rounded-xl text-xs">
+                💬 WhatsApp Bill
+              </button>
+              <button onclick="printAndSaveBill()" class="blinkit-green text-white font-black px-5 py-2.5 rounded-xl text-xs shadow-md">
+                🖨️ Print Bold Receipt + Analysis
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- PHOTO UPLOAD + AUTO-SAVE BAR FOR NEW/UNLISTED ITEMS -->
-      <div class="flex flex-wrap justify-between items-center gap-2 mb-3 text-xs bg-stone-100/80 px-3 py-2 rounded-xl border border-stone-200">
-        <div class="flex flex-wrap items-center gap-3">
-          <label class="flex items-center gap-1.5 cursor-pointer font-extrabold text-stone-800">
-            <input id="saveMaster" type="checkbox" checked class="accent-[#0C831F] w-4 h-4">
-            <span>🔄 Auto-Save Item & Rate to Online/Offline Catalog</span>
-          </label>
-          <select id="posNewCat" class="bg-white border border-stone-300 rounded-lg px-2 py-1 text-[11px] font-bold">
+      <!-- RIGHT 4 COLS: LIVE ONLINE ORDERS & INSTANT PAYMENT ALERTS -->
+      <div class="lg:col-span-4 panel-card rounded-2xl p-4">
+        <div class="flex justify-between items-center mb-2">
+          <div>
+            <h2 class="text-base font-black text-stone-900">🔔 Live Online Payment Queue</h2>
+            <p class="text-[11px] text-stone-500">Loud chime rings when customer pays via UPI</p>
+          </div>
+          <span id="orderCount" class="blinkit-green text-white text-xs font-black px-3 py-1 rounded-full">0</span>
+        </div>
+        <div id="onlineFeed" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1 mt-3"></div>
+      </div>
+
+    </div>
+
+    <!-- ==================== TAB 2: MASTER CATALOG, DIRECT ITEM ADDER & PHONE IMAGE UPLOADER ==================== -->
+    <div id="tab_CATALOG" class="hidden panel-card rounded-2xl p-4 space-y-4">
+      <div class="flex flex-wrap justify-between items-center gap-3">
+        <div>
+          <h2 class="text-base font-black text-stone-900">📦 Master Catalog, Auto-Rate Markup & Direct Phone Image Uploader</h2>
+          <p class="text-xs text-stone-500">Add new items or upload product photos directly from your phone gallery/camera to both Online Store & POS.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-center gap-1 bg-sky-50 border border-sky-200 rounded-xl px-2.5 py-1.5 text-xs">
+            <span class="font-bold text-sky-900">Auto Online Markup: +₹</span>
+            <input id="bulkMarkupRs" type="number" value="40" class="w-14 bg-white border border-sky-300 rounded px-1.5 py-0.5 font-black text-sky-900">
+            <button onclick="applyBulkOnlineMarkup()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-1 rounded-lg">Apply All</button>
+          </div>
+          <button onclick="seedDefaultCatalog()" class="blinkit-yellow text-stone-950 px-3.5 py-2 rounded-xl text-xs font-black shadow-sm">
+            ✨ Seed Starter Catalog
+          </button>
+        </div>
+      </div>
+
+      <!-- DIRECT NEW CATALOG ITEM CREATOR BAR -->
+      <div class="bg-stone-50 border border-stone-200 rounded-2xl p-3 grid grid-cols-1 sm:grid-cols-6 gap-2 text-xs items-end">
+        <div class="sm:col-span-2">
+          <label class="text-[10px] font-black text-stone-600 uppercase">New Item Name *</label>
+          <input id="newCatName" placeholder="e.g. Royal Dry Fruit Gift Box 1Kg" class="w-full bg-white border border-stone-300 rounded-xl p-2 font-bold">
+        </div>
+        <div>
+          <label class="text-[10px] font-black text-stone-600 uppercase">Category</label>
+          <select id="newCatCategory" class="w-full bg-white border border-stone-300 rounded-xl p-2 font-bold">
             <option value="Almonds">Almonds</option>
             <option value="Cashews">Cashews</option>
             <option value="Pistachios">Pistachios</option>
@@ -247,187 +427,86 @@
             <option value="Seeds & Berries">Seeds & Berries</option>
             <option value="Spices & Saffron">Spices & Gift Boxes</option>
           </select>
-
-          <!-- DIRECT PHONE CAMERA / GALLERY UPLOAD FOR CURRENT ITEM -->
-          <label class="cursor-pointer bg-white hover:bg-amber-50 border border-stone-300 px-2.5 py-1 rounded-lg font-extrabold text-[11px] flex items-center gap-1 shadow-sm">
-            <span>📷 Add Photo (Phone/PC)</span>
-            <input id="posItemPhotoInput" type="file" accept="image/*" capture="environment" onchange="previewPosPhoto(this)" class="hidden">
-          </label>
-          <img id="posPhotoPreview" src="" alt="Preview" class="w-7 h-7 rounded-lg object-cover border border-emerald-500 hidden">
         </div>
-
-        <button onclick="addItem()" class="blinkit-green text-white font-black px-5 py-2 rounded-xl text-xs shadow-sm">
-          + Add to Bill (Enter)
-        </button>
+        <div>
+          <label class="text-[10px] font-black text-amber-800 uppercase">Counter ₹/Kg *</label>
+          <input id="newCatOffline" type="number" placeholder="e.g. 850" oninput="document.getElementById('newCatOnline').value = (Number(this.value)||0) + 40" class="w-full bg-amber-50 border border-amber-400 rounded-xl p-2 font-black">
+        </div>
+        <div>
+          <label class="text-[10px] font-black text-sky-800 uppercase">Online ₹/Kg *</label>
+          <input id="newCatOnline" type="number" placeholder="e.g. 890" class="w-full bg-sky-50 border border-sky-400 rounded-xl p-2 font-black">
+        </div>
+        <div class="flex items-center gap-1.5">
+          <label class="cursor-pointer bg-white border border-stone-300 px-2.5 py-2 rounded-xl font-bold text-[11px] shrink-0">
+            📷 Photo
+            <input id="newCatPhoto" type="file" accept="image/*" class="hidden">
+          </label>
+          <button onclick="createNewCatalogItem()" class="w-full blinkit-green text-white font-black py-2 px-3 rounded-xl">
+            + Save Item
+          </button>
+        </div>
       </div>
 
-      <!-- LIVE EDITABLE BILL TABLE -->
-      <div class="border border-stone-200 rounded-xl overflow-x-auto mb-4">
-        <table class="w-full text-xs text-left">
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left border border-stone-200 rounded-xl">
           <thead class="bg-stone-100 text-stone-700 uppercase text-[10px] font-black">
             <tr>
-              <th class="py-2.5 px-2">#</th>
-              <th class="py-2.5 px-2">Item</th>
-              <th class="py-2.5 px-2">Weight (g)</th>
-              <th class="py-2.5 px-2">Counter ₹/Kg</th>
-              <th class="py-2.5 px-2">Online ₹/Kg</th>
-              <th class="py-2.5 px-2">Line Total ₹</th>
-              <th class="py-2.5 px-2 text-right">✕</th>
+              <th class="p-2.5">Photo (Online & POS)</th>
+              <th class="p-2.5">Item Name</th>
+              <th class="p-2.5">Category</th>
+              <th class="p-2.5">Counter Rate (₹/Kg)</th>
+              <th class="p-2.5">Online Store Rate (₹/Kg)</th>
+              <th class="p-2.5">Stock (Kg)</th>
+              <th class="p-2.5 text-right">Action</th>
             </tr>
           </thead>
-          <tbody id="billBody" class="divide-y divide-stone-200 bg-white"></tbody>
+          <tbody id="catalogManagerBody" class="divide-y divide-stone-200"></tbody>
         </table>
       </div>
-
-      <!-- LIVE BILL ANALYSIS SUMMARY BOX -->
-      <div class="bg-amber-50/70 border border-amber-300 rounded-xl p-2.5 mb-3 flex flex-wrap justify-between items-center gap-2 text-xs">
-        <span class="font-black text-stone-900">📊 Live Bill Analysis:</span>
-        <span id="liveBillAnalysisText" class="font-extrabold text-stone-800">0 Packs • 0g Total Weight • Avg ₹0/Kg</span>
-      </div>
-
-      <!-- CHECKOUT & PRINT CONTROLS -->
-      <div class="bg-stone-50 p-3.5 rounded-2xl border border-stone-200 space-y-3">
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
-          <input id="walkinName" placeholder="Customer Name (Optional)" class="bg-white border border-stone-300 rounded-xl px-3 py-2 font-medium">
-          <input id="walkinPhone" placeholder="Customer WhatsApp (10 digits)" maxlength="10" class="bg-white border border-stone-300 rounded-xl px-3 py-2 font-medium">
-          <div class="flex items-center bg-white border border-stone-300 rounded-xl px-2">
-            <span class="text-stone-500 text-[11px] font-bold mr-1">Disc:</span>
-            <input id="billDiscount" type="number" value="0" oninput="renderBillTotalsOnly()" class="w-full py-2 text-xs font-black outline-none">
-            <select id="discountType" onchange="renderBillTotalsOnly()" class="text-[11px] font-black bg-stone-100 rounded px-1 py-0.5">
-              <option value="RS">₹</option>
-              <option value="PCT">%</option>
-            </select>
-          </div>
-          <div class="flex items-center bg-white border border-stone-300 rounded-xl px-2">
-            <span class="text-stone-500 text-[11px] font-bold mr-1">Cash:</span>
-            <input id="cashTendered" type="number" placeholder="₹ Given" oninput="calcChange()" class="w-full py-2 text-xs font-black outline-none">
-            <span id="changeDueText" class="text-[10px] font-black text-[#0C831F] shrink-0"></span>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap justify-between items-center gap-3 pt-2 border-t border-stone-200">
-          <div>
-            <span class="text-xs text-stone-500 font-bold">Net Payable:</span>
-            <span id="grandTotal" class="text-3xl font-black text-[#0C831F] ml-2">₹0</span>
-            <span id="totalWeightBadge" class="ml-2 text-xs bg-[#F8CB46] text-stone-950 font-black px-2.5 py-0.5 rounded-full">0g</span>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-2">
-            <select id="payMode" onchange="toggleSplitBox()" class="bg-white border border-stone-300 rounded-xl px-3 py-2 text-xs font-extrabold">
-              <option value="PHONEPE">📲 PhonePe / UPI (91543 39465)</option>
-              <option value="CASH">💵 Cash</option>
-              <option value="SPLIT">⚖️ Split (Cash + UPI)</option>
-            </select>
-
-            <div id="splitInputs" class="hidden flex items-center gap-1 text-xs">
-              <input id="splitCashAmt" type="number" placeholder="Cash ₹" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 font-bold">
-              <input id="splitUpiAmt" type="number" placeholder="UPI ₹" class="w-20 bg-white border border-stone-300 rounded-lg px-2 py-1.5 font-bold">
-            </div>
-
-            <button onclick="sendWalkinWhatsApp()" class="bg-emerald-50 hover:bg-emerald-100 text-[#0C831F] border border-[#0C831F]/30 font-extrabold px-3.5 py-2 rounded-xl text-xs">
-              💬 WhatsApp Bill
-            </button>
-            <button onclick="printAndSaveBill()" class="blinkit-green text-white font-black px-5 py-2.5 rounded-xl text-xs shadow-md">
-              🖨️ Print Bold Receipt + Analysis
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- RIGHT 4 COLS: LIVE ONLINE ORDERS & INSTANT PAYMENT ALERTS -->
-    <div class="lg:col-span-4 panel-card rounded-2xl p-4">
-      <div class="flex justify-between items-center mb-2">
+    <!-- ==================== TAB 3: TODAY'S INVOICES & ITEM-WISE ANALYSIS ==================== -->
+    <div id="tab_HISTORY" class="hidden panel-card rounded-2xl p-4 space-y-4">
+      <div class="flex flex-wrap justify-between items-center gap-2">
         <div>
-          <h2 class="text-base font-black text-stone-900">🔔 Live Online Payment Queue</h2>
-          <p class="text-[11px] text-stone-500">Auto-rings when a customer pays via UPI</p>
+          <h2 class="text-base font-black text-stone-900">📊 Today's Executive Sales Analysis & Invoices</h2>
+          <p class="text-xs text-stone-500">Print a bold daily summary report on your thermal printer or reprint any customer invoice.</p>
         </div>
-        <span id="orderCount" class="blinkit-green text-white text-xs font-black px-3 py-1 rounded-full">0</span>
-      </div>
-      <div id="onlineFeed" class="space-y-2.5 max-h-[540px] overflow-y-auto pr-1 mt-3"></div>
-    </div>
-
-  </div>
-
-  <!-- ==================== TAB 2: MASTER CATALOG & PHONE CAMERA IMAGE CONTROLLER ==================== -->
-  <div id="tab_CATALOG" class="hidden panel-card rounded-2xl p-4">
-    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
-      <div>
-        <h2 class="text-base font-black text-stone-900">📦 Master Catalog, Live Rates & Direct Phone Image Uploader</h2>
-        <p class="text-xs text-stone-500">Tap <b>📷 Upload Photo</b> on any row to snap/upload a picture directly from your phone or PC to the live store!</p>
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <div class="flex items-center gap-1 bg-sky-50 border border-sky-200 rounded-xl px-2.5 py-1.5 text-xs">
-          <span class="font-bold text-sky-900">Bulk Online Markup: +₹</span>
-          <input id="bulkMarkupRs" type="number" value="40" class="w-14 bg-white border border-sky-300 rounded px-1.5 py-0.5 font-black text-sky-900">
-          <button onclick="applyBulkOnlineMarkup()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-2.5 py-1 rounded-lg">Apply All</button>
-        </div>
-        <button onclick="seedDefaultCatalog()" class="blinkit-yellow text-stone-950 px-3.5 py-2 rounded-xl text-xs font-black shadow-sm">
-          ✨ Seed Starter Catalog
+        <button onclick="printDailySummaryReport()" class="bg-stone-950 text-[#F8CB46] font-black px-4 py-2 rounded-xl text-xs shadow">
+          🖨️ Print Today's Bold Analysis Report
         </button>
       </div>
-    </div>
 
-    <div class="overflow-x-auto">
-      <table class="w-full text-xs text-left border border-stone-200 rounded-xl">
-        <thead class="bg-stone-100 text-stone-700 uppercase text-[10px] font-black">
-          <tr>
-            <th class="p-2.5">Photo (Online & POS)</th>
-            <th class="p-2.5">Item Name</th>
-            <th class="p-2.5">Category</th>
-            <th class="p-2.5">Counter Rate (₹/Kg)</th>
-            <th class="p-2.5">Online Store Rate (₹/Kg)</th>
-            <th class="p-2.5">Stock (Kg)</th>
-            <th class="p-2.5 text-right">Action</th>
-          </tr>
-        </thead>
-        <tbody id="catalogManagerBody" class="divide-y divide-stone-200"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ==================== TAB 3: TODAY'S INVOICES & ITEM-WISE ANALYSIS ==================== -->
-  <div id="tab_HISTORY" class="hidden panel-card rounded-2xl p-4 space-y-4">
-    <div class="flex flex-wrap justify-between items-center gap-2">
-      <div>
-        <h2 class="text-base font-black text-stone-900">📊 Today's Executive Sales Analysis & Invoices</h2>
-        <p class="text-xs text-stone-500">Print a bold daily summary report on your thermal printer or reprint any customer invoice.</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left border border-stone-200 rounded-xl">
+          <thead class="bg-stone-100 text-stone-700 uppercase text-[10px] font-black">
+            <tr>
+              <th class="p-2.5">Invoice ID</th>
+              <th class="p-2.5">Time</th>
+              <th class="p-2.5">Customer</th>
+              <th class="p-2.5">Items & Weight</th>
+              <th class="p-2.5">Mode</th>
+              <th class="p-2.5">Net Total</th>
+              <th class="p-2.5 text-right">Reprint</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody" class="divide-y divide-stone-200"></tbody>
+        </table>
       </div>
-      <button onclick="printDailySummaryReport()" class="bg-stone-950 text-[#F8CB46] font-black px-4 py-2 rounded-xl text-xs shadow">
-        🖨️ Print Today's Bold Analysis Report
-      </button>
-    </div>
-
-    <div class="overflow-x-auto">
-      <table class="w-full text-xs text-left border border-stone-200 rounded-xl">
-        <thead class="bg-stone-100 text-stone-700 uppercase text-[10px] font-black">
-          <tr>
-            <th class="p-2.5">Invoice ID</th>
-            <th class="p-2.5">Time</th>
-            <th class="p-2.5">Customer</th>
-            <th class="p-2.5">Items & Weight</th>
-            <th class="p-2.5">Mode</th>
-            <th class="p-2.5">Net Total</th>
-            <th class="p-2.5 text-right">Reprint</th>
-          </tr>
-        </thead>
-        <tbody id="historyTableBody" class="divide-y divide-stone-200"></tbody>
-      </table>
     </div>
   </div>
-</div>
 
   <!-- OFFICIAL DEVELOPER CREDIT BAR WITH DIRECT WEBSITE & INSTAGRAM LINKS -->
   <footer class="mt-6 bg-stone-950 text-stone-200 rounded-2xl p-3.5 flex flex-wrap justify-between items-center gap-3 text-xs border border-amber-500/40">
     <a href="https://catb12345612-ai.github.io/Syed-Zeeshaan-Ali-High-Fledged-Engineering-And-Digital-Tech-Solutions-Site/" target="_blank" rel="noopener" class="flex items-center gap-2.5 group">
-      <span class="w-8 h-8 rounded-lg bg-[#F8CB46] text-stone-950 font-black flex items-center justify-center shadow">SZA</span>
+      <span class="w-9 h-9 rounded-xl bg-[#F8CB46] text-stone-950 font-black flex items-center justify-center shadow text-sm">SZA</span>
       <div>
-        <span class="text-[10px] text-amber-400 font-bold block uppercase">Official Software Partner (Click to Visit Website)</span>
+        <span class="text-[10px] text-amber-400 font-bold block uppercase">Official Software Partner (Tap to Open Website)</span>
         <b class="text-white group-hover:text-[#F8CB46] underline transition">Syed Zeeshaan Ali High-Fledged Engineering And Digital Tech Solutions</b>
       </div>
     </a>
     <div class="flex flex-wrap items-center gap-2 text-[11px] font-black">
-      <a href="https://catb12345612-ai.github.io/Syed-Zeeshaan-Ali-High-Fledged-Engineering-And-Digital-Tech-Solutions-Site/" target="_blank" rel="noopener" class="bg-[#F8CB46] hover:bg-amber-400 text-stone-950 px-3 py-1.5 rounded-lg">🌐 Official Site</a>
+      <a href="https://catb12345612-ai.github.io/Syed-Zeeshaan-Ali-High-Fledged-Engineering-And-Digital-Tech-Solutions-Site/" target="_blank" rel="noopener" class="bg-[#F8CB46] hover:bg-amber-400 text-stone-950 px-3 py-1.5 rounded-lg">🌐 Official Website</a>
       <a href="https://www.instagram.com/syedzeeshaanali07/" target="_blank" rel="noopener" class="bg-pink-600 hover:bg-pink-500 text-white px-3 py-1.5 rounded-lg">📸 @syedzeeshaanali07</a>
     </div>
   </footer>
@@ -460,8 +539,8 @@
     </div>
 
     <!-- BOLD BILL ANALYSIS SECTION ON RECEIPT -->
-    <div id="rcptAnalysisBox" style="border:2px solid #000; padding:4px; margin:6px 0; font-size:10px; font-weight:900;">
-      <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:2px; margin-bottom:3px;">★ BILL & SAVINGS ANALYSIS ★</div>
+    <div id="rcptAnalysisBox" style="border:2px solid #000; padding:5px; margin:6px 0; font-size:10px; font-weight:900;">
+      <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:2px; margin-bottom:3px;">★ ORDER & SAVINGS ANALYSIS ★</div>
       <div id="rcptAnalysisLines"></div>
     </div>
 
@@ -469,7 +548,7 @@
 
     <div style="text-align:center; border-top:2px dashed #000; padding-top:6px; margin-top:4px; font-size:10px; font-weight:900;">
       <div>Thank You For Shopping at AB Dry Fruits! 🙏</div>
-      <div style="font-size:8.5px; margin-top:3px;">Software by Syed Zeeshaan Ali High-Fledged Digital Tech</div>
+      <div style="font-size:8.5px; margin-top:3px;">Tech by Syed Zeeshaan Ali Solutions</div>
     </div>
   </div>
 
@@ -484,8 +563,10 @@
     appId: "1:987471017129:web:be8aa0f51b5f4784ac65b8",
     measurementId: "G-0QEKNEDXXJ"
   };
+
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
+  const auth = firebase.auth();
 
   let catalog = {};
   let currentBill = [];
@@ -495,41 +576,89 @@
   let knownOrderIds = new Set();
   let initialOrdersLoaded = false;
   let pendingPosPhotoBase64 = "";
+  let listenersStarted = false;
+  let buzzerInterval = null;
 
-  // ==================== OWNER PASSWORD GATE LOGIC ====================
-  function getOwnerPin() {
-    return localStorage.getItem('ab_owner_master_pin') || '9154';
+  const starterFallbackCatalog = {
+    "California_Badam_Jumbo": { name: "California Badam (Jumbo Grade-A)", code: "B1", category: "Almonds", offlineRate: 740, onlineRate: 780, stockKg: 25 },
+    "Iranian_Mamra_Badam": { name: "Iranian Mamra Badam (Pure)", code: "B2", category: "Almonds", offlineRate: 2300, onlineRate: 2400, stockKg: 10 },
+    "Goan_Kaju_W240": { name: "Goan Kaju W240 (Big Whole)", code: "K1", category: "Cashews", offlineRate: 880, onlineRate: 920, stockKg: 30 },
+    "Premium_Kaju_W320": { name: "Premium Kaju W320 (Whole)", code: "K2", category: "Cashews", offlineRate: 780, onlineRate: 820, stockKg: 35 },
+    "Iranian_Roasted_Pista": { name: "Iranian Roasted & Salted Pista", code: "P1", category: "Pistachios", offlineRate: 1080, onlineRate: 1120, stockKg: 20 },
+    "Kimia_Dates_Gold": { name: "Original Kimia Dates (Soft)", code: "D1", category: "Dates", offlineRate: 350, onlineRate: 380, stockKg: 40 },
+    "Madinah_Ajwa_Dates": { name: "Authentic Madinah Ajwa Dates", code: "D2", category: "Dates", offlineRate: 1350, onlineRate: 1400, stockKg: 15 },
+    "Afghani_Anjeer_Jumbo": { name: "Afghani Anjeer (Dried Figs)", code: "A1", category: "Figs & Apricots", offlineRate: 1300, onlineRate: 1350, stockKg: 18 },
+    "Kashmiri_Akhrot_Giri": { name: "Kashmiri Walnut Kernels", code: "W1", category: "Walnuts", offlineRate: 1100, onlineRate: 1150, stockKg: 20 },
+    "Golden_Long_Kismis": { name: "Golden Long Kismis (Raisins)", code: "R1", category: "Raisins", offlineRate: 330, onlineRate: 360, stockKg: 40 }
+  };
+
+  // ==================== SHA-256 OWNER PASSWORD SECURITY ====================
+  async function sha256Hash(str) {
+    if (!window.crypto || !window.crypto.subtle) return btoa(str);
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
   }
 
-  function unlockOwnerPos() {
-    const entered = document.getElementById('ownerPinInput').value.trim();
-    if (entered === getOwnerPin()) {
-      sessionStorage.setItem('ab_owner_unlocked', 'YES');
-      document.getElementById('ownerLockModal').classList.add('hidden');
-      document.getElementById('pinErrorMsg').classList.add('hidden');
-      playPaymentAlertChime(true); // Warm up browser audio engine
-    } else {
-      document.getElementById('pinErrorMsg').classList.remove('hidden');
+  async function verifyPinMatch(inputPin) {
+    const savedHash = localStorage.getItem('ab_owner_pin_sha256');
+    if (!savedHash) {
+      return inputPin === '9154';
     }
+    const inputHash = await sha256Hash(inputPin);
+    return inputHash === savedHash;
+  }
+
+  async function unlockOwnerPos() {
+    const entered = document.getElementById('ownerPinInput').value.trim();
+    const isMatch = await verifyPinMatch(entered);
+    if (!isMatch) {
+      document.getElementById('pinErrorMsg').classList.remove('hidden');
+      return;
+    }
+
+    // Optional Firebase Auth sign-in if email & password entered
+    const fbEmail = document.getElementById('fbAdminEmail').value.trim();
+    const fbPass = document.getElementById('fbAdminPass').value.trim();
+    if (fbEmail && fbPass) {
+      try {
+        await auth.signInWithEmailAndPassword(fbEmail, fbPass);
+      } catch (e) {
+        console.warn("Firebase email login skipped/failed:", e.message);
+      }
+    } else {
+      auth.signInAnonymously().catch(() => {});
+    }
+
+    sessionStorage.setItem('ab_owner_unlocked', 'YES');
+    document.getElementById('ownerLockModal').classList.add('hidden');
+    document.getElementById('protectedWorkspace').classList.remove('hidden');
+    document.getElementById('pinErrorMsg').classList.add('hidden');
+    playPaymentAlertChime(true);
+    startRealtimeListeners();
   }
 
   function lockOwnerPos() {
     sessionStorage.removeItem('ab_owner_unlocked');
+    stopContinuousBuzzer();
     document.getElementById('ownerPinInput').value = '';
+    document.getElementById('protectedWorkspace').classList.add('hidden');
     document.getElementById('ownerLockModal').classList.remove('hidden');
   }
 
-  function changeOwnerPin() {
-    const current = prompt("Enter current Owner PIN (Default is 9154):");
-    if (current !== getOwnerPin()) return alert("❌ Incorrect current PIN!");
-    const nextPin = prompt("Enter new 4+ digit Owner PIN:");
+  async function changeOwnerPin() {
+    const current = prompt("Enter current Owner PIN (Default: 9154):");
+    if (!current) return;
+    const valid = await verifyPinMatch(current.trim());
+    if (!valid) return alert("❌ Incorrect current Owner PIN!");
+    const nextPin = prompt("Enter new Owner PIN (minimum 4 characters):");
     if (nextPin && nextPin.trim().length >= 4) {
-      localStorage.setItem('ab_owner_master_pin', nextPin.trim());
-      alert("✅ Owner PIN updated successfully!");
+      const hashed = await sha256Hash(nextPin.trim());
+      localStorage.setItem('ab_owner_pin_sha256', hashed);
+      alert("✅ Owner PIN encrypted and updated!");
     }
   }
 
-  // ==================== LOUD WEB-AUDIO PAYMENT ALERT CHIME ====================
+  // ==================== LOUD PAYMENT ALERT CHIME + BUZZER ====================
   function playPaymentAlertChime(silentWarmup = false) {
     try {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -538,13 +667,13 @@
         ctx.resume();
         return;
       }
-      const notes = [880, 1174.66, 1318.51, 1760]; // High-clarity cash register bell chime
+      const notes = [880, 1174.66, 1318.51, 1760];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.14);
-        gain.gain.setValueAtTime(0.35, ctx.currentTime + idx * 0.14);
+        gain.gain.setValueAtTime(0.4, ctx.currentTime + idx * 0.14);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.14 + 0.35);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -552,7 +681,28 @@
         osc.stop(ctx.currentTime + idx * 0.14 + 0.36);
       });
     } catch (e) {
-      console.log("Audio alert error:", e);
+      console.log("Audio error:", e);
+    }
+  }
+
+  function startContinuousBuzzer() {
+    stopContinuousBuzzer();
+    playPaymentAlertChime(false);
+    let count = 0;
+    buzzerInterval = setInterval(() => {
+      count++;
+      if (count > 5) {
+        stopContinuousBuzzer();
+        return;
+      }
+      playPaymentAlertChime(false);
+    }, 2800);
+  }
+
+  function stopContinuousBuzzer() {
+    if (buzzerInterval) {
+      clearInterval(buzzerInterval);
+      buzzerInterval = null;
     }
   }
 
@@ -560,7 +710,7 @@
     playPaymentAlertChime(false);
   }
 
-  // ==================== CLIENT-SIDE IMAGE COMPRESSOR (PHONE CAMERA -> BASE64) ====================
+  // ==================== CLIENT-SIDE IMAGE COMPRESSOR ====================
   function compressImageFile(file, callback) {
     if (!file) return;
     const reader = new FileReader();
@@ -568,7 +718,7 @@
       const img = new Image();
       img.onload = function() {
         const canvas = document.createElement('canvas');
-        const MAX_SIZE = 320;
+        const MAX_SIZE = 300;
         let w = img.width;
         let h = img.height;
         if (w > h) {
@@ -580,8 +730,7 @@
         canvas.height = h;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, w, h);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.68); // ~18KB ultra-fast Firebase sync
-        callback(dataUrl);
+        callback(canvas.toDataURL('image/jpeg', 0.68));
       };
       img.src = e.target.result;
     };
@@ -602,20 +751,136 @@
   function uploadCatalogItemPhoto(key, input) {
     if (input.files && input.files[0]) {
       compressImageFile(input.files[0], base64 => {
-        db.ref(`catalog/${key}/imageUrl`).set(base64);
+        catalog[key] = catalog[key] || {};
+        catalog[key].imageUrl = base64;
+        saveCatalogToStorageAndFirebase(key, catalog[key]);
+        renderCatalogManager();
       });
     }
   }
 
+  function saveCatalogToStorageAndFirebase(key, itemObj) {
+    localStorage.setItem('ab_local_catalog_backup', JSON.stringify(catalog));
+    db.ref(`catalog/${key}`).set(itemObj).catch(err => {
+      console.warn("Firebase write warning:", err.message);
+    });
+  }
+
+  // ==================== INITIALIZATION & REALTIME LISTENERS ====================
   window.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem('ab_owner_unlocked') === 'YES') {
-      document.getElementById('ownerLockModal').classList.add('hidden');
-    }
     const savedWidth = localStorage.getItem('pos_receipt_width') || '80mm';
     document.getElementById('paperWidthSelect').value = savedWidth;
     setPaperWidth(savedWidth);
     updateHeldUI();
+
+    if (sessionStorage.getItem('ab_owner_unlocked') === 'YES') {
+      document.getElementById('ownerLockModal').classList.add('hidden');
+      document.getElementById('protectedWorkspace').classList.remove('hidden');
+      startRealtimeListeners();
+    }
   });
+
+  function startRealtimeListeners() {
+    if (listenersStarted) return;
+    listenersStarted = true;
+
+    // Monitor Firebase Connection Status
+    db.ref('.info/connected').on('value', snap => {
+      const badge = document.getElementById('dbStatusBadge');
+      if (snap.val() === true) {
+        badge.innerText = "🟢 Live Cloud Synced";
+        badge.className = "blinkit-green text-white px-2.5 py-0.5 rounded-full text-[10px] font-black";
+      } else {
+        badge.innerText = "🟠 Offline / Local Mode";
+        badge.className = "bg-amber-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-black";
+      }
+    });
+
+    // Listen to Master Catalog with automatic fallback
+    db.ref('catalog').on('value', snap => {
+      const fbVal = snap.val();
+      if (fbVal && Object.keys(fbVal).length > 0) {
+        catalog = fbVal;
+        localStorage.setItem('ab_local_catalog_backup', JSON.stringify(catalog));
+      } else {
+        const localSaved = JSON.parse(localStorage.getItem('ab_local_catalog_backup') || 'null');
+        catalog = (localSaved && Object.keys(localSaved).length > 0) ? localSaved : starterFallbackCatalog;
+      }
+      refreshCatalogUI();
+    }, err => {
+      console.warn("Catalog permission fallback:", err.message);
+      const localSaved = JSON.parse(localStorage.getItem('ab_local_catalog_backup') || 'null');
+      catalog = (localSaved && Object.keys(localSaved).length > 0) ? localSaved : starterFallbackCatalog;
+      refreshCatalogUI();
+    });
+
+    // Listen to Daily Sales
+    db.ref('daily_sales').on('value', snap => {
+      const allDays = snap.val() || {};
+      const flatList = [];
+      Object.keys(allDays).forEach(dateKey => {
+        const dayInvoices = allDays[dateKey] || {};
+        Object.values(dayInvoices).forEach(inv => flatList.push(inv));
+      });
+      salesHistory = flatList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      updateAnalyticsAndHistory();
+    });
+
+    // Listen to Live Online Orders & Trigger Instant Payment Chime
+    db.ref('live_orders').on('value', snap => {
+      const data = snap.val() || {};
+      const allOrders = Object.values(data);
+      onlineOrders = allOrders.filter(o => o.paymentStatus !== "VERIFIED").sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+      onlineOrders.forEach(ord => {
+        if (!knownOrderIds.has(ord.orderId)) {
+          knownOrderIds.add(ord.orderId);
+          if (initialOrdersLoaded) {
+            startContinuousBuzzer();
+            const banner = document.getElementById('livePaymentBanner');
+            document.getElementById('bannerOrderText').innerText = `${ord.customerName} paid ₹${ord.totalAmount} (UTR: ${ord.utrNumber}) • ${ord.orderId}`;
+            document.getElementById('bannerAcceptBtn').onclick = () => {
+              stopContinuousBuzzer();
+              banner.classList.add('hidden');
+              verifyOrder(ord.orderId);
+            };
+            banner.classList.remove('hidden');
+          }
+        }
+      });
+      initialOrdersLoaded = true;
+
+      document.getElementById('orderCount').innerText = onlineOrders.length;
+      document.getElementById('kpiPendingOnline').innerText = onlineOrders.length;
+      updateFirebaseRecordCount(allOrders.length);
+      renderOnlineFeed();
+    });
+  }
+
+  function refreshCatalogUI() {
+    const dl = document.getElementById('catList');
+    dl.innerHTML = Object.values(catalog).map(i =>
+      `<option value="${i.name}">${i.code ? '[' + i.code + '] ' : ''}Counter: ₹${i.offlineRate}/Kg | Online: ₹${i.onlineRate}/Kg</option>`
+    ).join('');
+
+    // Render 1-Click Quick Item Chips
+    const chipBox = document.getElementById('quickItemChips');
+    chipBox.innerHTML = Object.values(catalog).slice(0, 10).map(i => {
+      const safe = i.name.replace(/'/g, "\\'");
+      return `<button onclick="quickSelectChip('${safe}')" class="bg-white hover:bg-amber-100 text-stone-900 border border-stone-300 px-2.5 py-1 rounded-xl shrink-0 shadow-sm transition">
+        ⚡ ${i.name.split('(')[0].trim()} <span class="text-[#0C831F]">₹${i.offlineRate}</span>
+      </button>`;
+    }).join('');
+
+    renderCatalogManager();
+  }
+
+  function quickSelectChip(itemName) {
+    document.getElementById('posItem').value = itemName;
+    onItemSelect();
+    document.getElementById('posWeight').focus();
+    document.getElementById('posWeight').select();
+  }
 
   function setPaperWidth(width) {
     localStorage.setItem('pos_receipt_width', width);
@@ -637,110 +902,114 @@
     return (name || '').trim().replace(/[.#$/[\]]/g, "_");
   }
 
-  // Listen to Master Catalog
-  db.ref('catalog').on('value', snap => {
-    catalog = snap.val() || {};
-    const dl = document.getElementById('catList');
-    dl.innerHTML = Object.values(catalog).map(i => `<option value="${i.name}">Counter: ₹${i.offlineRate}/Kg | Online: ₹${i.onlineRate}/Kg</option>`).join('');
-    renderCatalogManager();
-  });
-
-  // Listen to Sales History
-  db.ref('daily_sales').on('value', snap => {
-    const allDays = snap.val() || {};
-    const flatList = [];
-    Object.keys(allDays).forEach(dateKey => {
-      const dayInvoices = allDays[dateKey] || {};
-      Object.values(dayInvoices).forEach(inv => flatList.push(inv));
-    });
-    salesHistory = flatList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-    updateAnalyticsAndHistory();
-  });
-
-  // Listen to Live Online Orders & Trigger Instant Payment Chime + Top Banner
-  db.ref('live_orders').on('value', snap => {
-    const data = snap.val() || {};
-    const allOrders = Object.values(data);
-    onlineOrders = allOrders.filter(o => o.paymentStatus !== "VERIFIED").sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-    // Check if a brand-new paid order just arrived
-    onlineOrders.forEach(ord => {
-      if (!knownOrderIds.has(ord.orderId)) {
-        knownOrderIds.add(ord.orderId);
-        if (initialOrdersLoaded) {
-          playPaymentAlertChime(false);
-          const banner = document.getElementById('livePaymentBanner');
-          document.getElementById('bannerOrderText').innerText = `${ord.customerName} paid ₹${ord.totalAmount} (UTR: ${ord.utrNumber}) • ${ord.orderId}`;
-          document.getElementById('bannerAcceptBtn').onclick = () => {
-            banner.classList.add('hidden');
-            verifyOrder(ord.orderId);
-          };
-          banner.classList.remove('hidden');
-        }
-      }
-    });
-    initialOrdersLoaded = true;
-
-    document.getElementById('orderCount').innerText = onlineOrders.length;
-    document.getElementById('kpiPendingOnline').innerText = onlineOrders.length;
-    updateFirebaseRecordCount(allOrders.length);
-    renderOnlineFeed();
-  });
-
   function updateFirebaseRecordCount(onlineLen = 0) {
     const totalNodes = salesHistory.length + onlineLen;
     document.getElementById('fbRecordCount').innerText = `${totalNodes} records`;
   }
 
+  // ==================== 3-WAY SMART AUTO-RATE GENERATOR ENGINE ====================
   function onItemSelect() {
-    const val = document.getElementById('posItem').value.trim();
-    const key = Object.keys(catalog).find(k => catalog[k].name && catalog[k].name.toLowerCase() === val.toLowerCase());
-    if (key) {
-      const item = catalog[key];
-      const cRate = item.offlineRate || item.onlineRate || 800;
-      const oRate = item.onlineRate || (cRate + 40);
+    const val = document.getElementById('posItem').value.trim().toLowerCase();
+    if (!val) return;
+
+    // Match by exact name, short code (e.g., B1, K1), or partial prefix
+    const keys = Object.keys(catalog);
+    let matchKey = keys.find(k =>
+      (catalog[k].name && catalog[k].name.toLowerCase() === val) ||
+      (catalog[k].code && catalog[k].code.toLowerCase() === val)
+    );
+
+    if (matchKey) {
+      const item = catalog[matchKey];
+      document.getElementById('posItem').value = item.name;
+      const cRate = Number(item.offlineRate || item.onlineRate || 800);
+      const oRate = Number(item.onlineRate || (cRate + 40));
       document.getElementById('posRate').value = cRate;
       document.getElementById('posOnlineRate').value = oRate;
       if (item.category) document.getElementById('posNewCat').value = item.category;
-      recalc();
+      onWeightInput();
     }
-  }
-
-  function onCounterRateInput() {
-    const r = parseFloat(document.getElementById('posRate').value) || 0;
-    document.getElementById('posOnlineRate').value = r > 0 ? r + 40 : '';
-    recalc();
   }
 
   function onPackChange() {
     const p = document.getElementById('posPack').value;
     if (p !== 'CUSTOM') {
       document.getElementById('posWeight').value = p;
-      recalc();
+      onWeightInput();
     }
   }
 
-  function recalc() {
+  // 1. User types Weight (Grams) -> Auto-calculates Total ₹ (if Rate/Kg exists) OR Rate/Kg (if Total ₹ exists)
+  function onWeightInput() {
     const w = parseFloat(document.getElementById('posWeight').value) || 0;
     const r = parseFloat(document.getElementById('posRate').value) || 0;
-    if (r > 0) {
-      document.getElementById('posTotal').value = Math.round((w / 1000) * r);
-    }
-  }
-
-  function reverseCalc() {
     const tot = parseFloat(document.getElementById('posTotal').value) || 0;
-    const r = parseFloat(document.getElementById('posRate').value) || 0;
-    const w = parseFloat(document.getElementById('posWeight').value) || 1000;
-    if (r > 0) {
-      document.getElementById('posWeight').value = Math.round((tot / r) * 1000);
-      document.getElementById('posPack').value = 'CUSTOM';
-    } else if (w > 0 && tot > 0) {
-      // Unlisted item with direct rupee total: auto-compute implied per-Kg rate!
+
+    if (r > 0 && w > 0) {
+      const calcTotal = Math.round((w / 1000) * r);
+      document.getElementById('posTotal').value = calcTotal;
+      updateFormulaBanner(w, r, calcTotal, "Auto-Calculated Total Price");
+    } else if (tot > 0 && w > 0) {
       const impliedRate = Math.round((tot / w) * 1000);
       document.getElementById('posRate').value = impliedRate;
       document.getElementById('posOnlineRate').value = impliedRate + 40;
+      updateFormulaBanner(w, impliedRate, tot, "Auto-Generated Rate/Kg from Weight & Total");
     }
+  }
+
+  // 2. User types Counter Rate/Kg -> Auto-calculates Online Rate/Kg (+40) and Total ₹
+  function onCounterRateInput() {
+    const r = parseFloat(document.getElementById('posRate').value) || 0;
+    const w = parseFloat(document.getElementById('posWeight').value) || 0;
+    document.getElementById('posOnlineRate').value = r > 0 ? r + 40 : '';
+    if (r > 0 && w > 0) {
+      const calcTotal = Math.round((w / 1000) * r);
+      document.getElementById('posTotal').value = calcTotal;
+      updateFormulaBanner(w, r, calcTotal, "Auto-Calculated Total from Counter Rate");
+    }
+  }
+
+  // 3. User types Total ₹ -> Auto-calculates exact Grams (if Rate/Kg exists) OR Auto-generates Rate/Kg (if unlisted item)
+  function onTotalInput() {
+    const tot = parseFloat(document.getElementById('posTotal').value) || 0;
+    const r = parseFloat(document.getElementById('posRate').value) || 0;
+    const w = parseFloat(document.getElementById('posWeight').value) || 250;
+
+    if (tot <= 0) return;
+
+    // Check if current item is a known catalog item with a fixed Rate/Kg
+    const nameVal = document.getElementById('posItem').value.trim().toLowerCase();
+    const isKnownCatalogItem = Object.values(catalog).some(i => i.name && i.name.toLowerCase() === nameVal);
+
+    if (isKnownCatalogItem && r > 0) {
+      const exactGrams = Math.round((tot / r) * 1000);
+      document.getElementById('posWeight').value = exactGrams;
+      document.getElementById('posPack').value = 'CUSTOM';
+      updateFormulaBanner(exactGrams, r, tot, "Auto-Calculated Exact Grams for ₹" + tot);
+    } else if (w > 0) {
+      const impliedRate = Math.round((tot / w) * 1000);
+      document.getElementById('posRate').value = impliedRate;
+      document.getElementById('posOnlineRate').value = impliedRate + 40;
+      updateFormulaBanner(w, impliedRate, tot, "Auto-Generated Rate/Kg (₹" + impliedRate + "/Kg)");
+    }
+  }
+
+  function setQuickRupeeBudget(rupees) {
+    const r = parseFloat(document.getElementById('posRate').value) || 0;
+    document.getElementById('posTotal').value = rupees;
+    if (r > 0) {
+      const exactGrams = Math.round((rupees / r) * 1000);
+      document.getElementById('posWeight').value = exactGrams;
+      document.getElementById('posPack').value = 'CUSTOM';
+      updateFormulaBanner(exactGrams, r, rupees, `Quick Budget ₹${rupees} -> Weigh ${exactGrams}g`);
+    } else {
+      onTotalInput();
+    }
+  }
+
+  function updateFormulaBanner(w, r, tot, label) {
+    document.getElementById('formulaStatusText').innerHTML =
+      `✅ <b>${label}:</b> ${w}g × ₹${r}/Kg = <b class="text-[#0C831F]">₹${tot}</b> (₹${(r / 1000).toFixed(2)} per gram)`;
   }
 
   function syncItemToMasterCatalog(name, offlineRate, onlineRate, category, imageUrl) {
@@ -756,24 +1025,25 @@
       imageUrl: imageUrl || existing.imageUrl || ''
     };
     catalog[key] = updated;
-    db.ref(`catalog/${key}`).set(updated);
+    saveCatalogToStorageAndFirebase(key, updated);
+    refreshCatalogUI();
   }
 
-  // DIRECT BILLING OF BOTH SAVED & UNLISTED ITEMS
+  // DIRECT BILLING OF SAVED OR UNLISTED ITEMS
   function addItem() {
     const name = document.getElementById('posItem').value.trim();
-    const weightG = parseFloat(document.getElementById('posWeight').value) || 1000;
+    const weightG = parseFloat(document.getElementById('posWeight').value) || 250;
     let totalRs = parseFloat(document.getElementById('posTotal').value) || 0;
     let rateKg = parseFloat(document.getElementById('posRate').value) || 0;
 
-    if (!name) return alert("Please enter an item name!");
+    if (!name) return alert("Please enter or select an item name!");
     if (totalRs <= 0 && rateKg > 0) {
       totalRs = Math.round((weightG / 1000) * rateKg);
     }
     if (rateKg <= 0 && totalRs > 0 && weightG > 0) {
       rateKg = Math.round((totalRs / weightG) * 1000);
     }
-    if (totalRs <= 0) return alert("Enter either Rate/Kg or direct Total ₹ Amount!");
+    if (totalRs <= 0) return alert("Please enter either Rate/Kg or Total ₹ Amount!");
 
     const onlineRateKg = parseFloat(document.getElementById('posOnlineRate').value) || (rateKg + 40);
     const cat = document.getElementById('posNewCat').value || 'Dry Fruits';
@@ -783,7 +1053,6 @@
     currentBill.push({ name, weightG, rateKg, onlineRateKg, totalRs, category: cat });
     renderBill();
 
-    // Reset entry inputs & photo preview
     document.getElementById('posItem').value = '';
     document.getElementById('posRate').value = '';
     document.getElementById('posOnlineRate').value = '';
@@ -841,7 +1110,7 @@
   function renderBill() {
     const tbody = document.getElementById('billBody');
     if (currentBill.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-stone-400 font-medium">Bill is empty. Type any saved or custom item above to start billing.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-stone-400 font-medium">Bill is empty. Click a quick chip above or type any item name to start billing.</td></tr>`;
     } else {
       tbody.innerHTML = currentBill.map((r, i) => `
         <tr class="hover:bg-amber-50/40">
@@ -928,19 +1197,21 @@
       const key = Object.keys(catalog).find(k => catalog[k].name === item.name);
       if (key && catalog[key].stockKg !== undefined) {
         const newStock = Math.max(0, Number((Number(catalog[key].stockKg) - (Number(item.weightG) / 1000)).toFixed(3)));
-        db.ref(`catalog/${key}/stockKg`).set(newStock);
+        catalog[key].stockKg = newStock;
+        saveCatalogToStorageAndFirebase(key, catalog[key]);
       }
     });
   }
 
-  // PRINTS HIGH-CONTRAST BOLD RECEIPT WITH FULL ORDER ANALYSIS
+  // PRINTS HIGH-CONTRAST BOLD RECEIPT WITH PERFECT BILL ANALYSIS
   function populateAndPrintReceipt(record) {
     const items = record.items || [];
     const totalWeightG = items.reduce((s, i) => s + Number(i.weightG || 0), 0);
     const weightLabel = totalWeightG >= 1000 ? `${(totalWeightG / 1000).toFixed(2)} Kg (${totalWeightG}g)` : `${totalWeightG}g`;
+    const avgRate = totalWeightG > 0 ? Math.round((Number(record.totalAmount || 0) / totalWeightG) * 1000) : 0;
     const estSavings = Math.round(Number(record.totalAmount || 0) * 0.15) + Number(record.discountRs || 0);
 
-    document.getElementById('rcptMeta').innerText = `INVOICE: ${record.invoiceId} | ${new Date(record.timestamp).toLocaleString()}`;
+    document.getElementById('rcptMeta').innerText = `BILL: ${record.invoiceId} | ${new Date(record.timestamp).toLocaleString()}`;
     document.getElementById('rcptCust').innerText = record.customerName ? `CUSTOMER: ${record.customerName.toUpperCase()}` : 'WALK-IN COUNTER SALE';
     document.getElementById('rcptItems').innerHTML = items.map((i, idx) => `
       <div style="display:flex;justify-content:space-between; margin:3px 0; font-weight:900;">
@@ -959,10 +1230,11 @@
     document.getElementById('rcptTotal').innerText = `₹${record.totalAmount}`;
     document.getElementById('rcptAnalysisLines').innerHTML = `
       <div style="display:flex;justify-content:space-between;"><span>TOTAL PACKS:</span><span>${items.length} Packs</span></div>
-      <div style="display:flex;justify-content:space-between;"><span>TOTAL NET WEIGHT:</span><span>${weightLabel}</span></div>
-      <div style="display:flex;justify-content:space-between;"><span>WHOLESALE SAVINGS:</span><span>₹${estSavings} Saved</span></div>
+      <div style="display:flex;justify-content:space-between;"><span>NET WEIGHT:</span><span>${weightLabel}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span>EFFECTIVE RATE:</span><span>₹${avgRate}/Kg Avg</span></div>
+      <div style="display:flex;justify-content:space-between;"><span>TOTAL SAVINGS:</span><span>₹${estSavings} Saved</span></div>
     `;
-    document.getElementById('rcptPayInfo').innerText = `PAYMENT MODE: ${record.payMode || 'CASH / UPI'}`;
+    document.getElementById('rcptPayInfo').innerText = `PAID VIA: ${record.payMode || 'CASH / UPI'}`;
     window.print();
   }
 
@@ -980,21 +1252,21 @@
     document.getElementById('rcptMeta').innerText = `DAILY Z-REPORT | DATE: ${today}`;
     document.getElementById('rcptCust').innerText = `TOTAL INVOICES: ${todayBills.length}`;
     document.getElementById('rcptItems').innerHTML = `
-      <div style="display:flex;justify-content:space-between; margin:3px 0;"><span>CASH COLLECTION:</span><span>₹${cashTot}</span></div>
+      <div style="display:flex;justify-content:space-between; margin:3px 0;"><span>CASH SALES:</span><span>₹${cashTot}</span></div>
       <div style="display:flex;justify-content:space-between; margin:3px 0;"><span>PHONEPE / UPI:</span><span>₹${upiTot}</span></div>
-      <div style="display:flex;justify-content:space-between; margin:3px 0;"><span>TOTAL WEIGHT SOLD:</span><span>${(totGrams / 1000).toFixed(2)} Kg</span></div>
+      <div style="display:flex;justify-content:space-between; margin:3px 0;"><span>WEIGHT SOLD:</span><span>${(totGrams / 1000).toFixed(2)} Kg</span></div>
     `;
     document.getElementById('rcptDiscountRow').style.display = 'none';
     document.getElementById('rcptTotal').innerText = `₹${rev}`;
     document.getElementById('rcptAnalysisLines').innerHTML = `
       <div style="display:flex;justify-content:space-between;"><span>AVG BILL VALUE:</span><span>₹${todayBills.length ? Math.round(rev / todayBills.length) : 0}</span></div>
     `;
-    document.getElementById('rcptPayInfo').innerText = `GENERATED BY OWNER POS`;
+    document.getElementById('rcptPayInfo').innerText = `OWNER MASTER SUMMARY`;
     window.print();
   }
 
   function printAndSaveBill() {
-    if (currentBill.length === 0) return alert("Bill is empty!");
+    if (currentBill.length === 0) return alert("Bill is empty! Add items first.");
 
     currentBill.forEach(item => {
       syncItemToMasterCatalog(item.name, item.rateKg, item.onlineRateKg, item.category);
@@ -1021,7 +1293,9 @@
       timestamp: Date.now()
     };
 
-    db.ref(`daily_sales/${today}/${inv}`).set(record);
+    salesHistory.unshift(record);
+    updateAnalyticsAndHistory();
+    db.ref(`daily_sales/${today}/${inv}`).set(record).catch(e => console.warn(e.message));
     deductInventory(currentBill);
     populateAndPrintReceipt(record);
 
@@ -1046,7 +1320,7 @@
   function renderOnlineFeed() {
     const feed = document.getElementById('onlineFeed');
     if (onlineOrders.length === 0) {
-      feed.innerHTML = `<div class="text-xs text-stone-400 text-center py-10 bg-stone-50 rounded-xl border border-dashed border-stone-200">No pending online payments. Pos will chime automatically when an order arrives!</div>`;
+      feed.innerHTML = `<div class="text-xs text-stone-400 text-center py-10 bg-stone-50 rounded-xl border border-dashed border-stone-200">No pending online payments. POS will ring automatically when a customer pays!</div>`;
       return;
     }
     feed.innerHTML = onlineOrders.map(o => `
@@ -1067,7 +1341,7 @@
           <button onclick="verifyOrder('${o.orderId}')" class="blinkit-green text-white font-black py-2 rounded-lg shadow-sm">
             🖨️ Verify & Print Bold Bill
           </button>
-          <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.customerName}, your AB Dry Fruits payment of ₹${o.totalAmount} (Order #${o.orderId}) is received and packed!`)}" target="_blank"
+          <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent(`Hi ${o.customerName}, your AB Dry Fruits payment of ₹${o.totalAmount} (Order #${o.orderId}) is verified and packed!`)}" target="_blank"
              class="bg-white hover:bg-stone-100 text-stone-900 border border-stone-300 font-black py-2 rounded-lg text-center">
             💬 WhatsApp
           </a>
@@ -1076,6 +1350,7 @@
   }
 
   function verifyOrder(id) {
+    stopContinuousBuzzer();
     const ord = onlineOrders.find(o => o.orderId === id);
     if (!ord) return;
     const today = new Date().toISOString().split('T')[0];
@@ -1095,6 +1370,36 @@
     db.ref(`daily_sales/${today}/${ord.orderId}`).set(saleRecord);
     deductInventory(ord.items || []);
     populateAndPrintReceipt(saleRecord);
+  }
+
+  // DIRECT NEW ITEM CREATOR IN CATALOG TAB
+  function createNewCatalogItem() {
+    const name = document.getElementById('newCatName').value.trim();
+    const cat = document.getElementById('newCatCategory').value;
+    const offRate = parseFloat(document.getElementById('newCatOffline').value) || 0;
+    const onRate = parseFloat(document.getElementById('newCatOnline').value) || (offRate + 40);
+    const photoInput = document.getElementById('newCatPhoto');
+
+    if (!name || offRate <= 0) return alert("Enter Item Name and Counter Rate/Kg!");
+    const key = getCatalogKey(name);
+
+    const finalizeSave = (imgBase64) => {
+      const obj = { name, category: cat, offlineRate: offRate, onlineRate: onRate, stockKg: 25, imageUrl: imgBase64 || '' };
+      catalog[key] = obj;
+      saveCatalogToStorageAndFirebase(key, obj);
+      refreshCatalogUI();
+      document.getElementById('newCatName').value = '';
+      document.getElementById('newCatOffline').value = '';
+      document.getElementById('newCatOnline').value = '';
+      photoInput.value = '';
+      alert(`✅ "${name}" saved to Online Store & POS!`);
+    };
+
+    if (photoInput.files && photoInput.files[0]) {
+      compressImageFile(photoInput.files[0], base64 => finalizeSave(base64));
+    } else {
+      finalizeSave('');
+    }
   }
 
   function renderCatalogManager() {
@@ -1117,7 +1422,7 @@
               }
               <label class="cursor-pointer bg-amber-100 hover:bg-amber-200 text-stone-950 px-2.5 py-1.5 rounded-lg font-black text-[10px]">
                 📷 Upload
-                <input type="file" accept="image/*" capture="environment" onchange="uploadCatalogItemPhoto('${k}', this)" class="hidden">
+                <input type="file" accept="image/*" onchange="uploadCatalogItemPhoto('${k}', this)" class="hidden">
               </label>
             </div>
           </td>
@@ -1140,7 +1445,10 @@
   }
 
   function updateCatalogField(key, field, value) {
-    db.ref(`catalog/${key}/${field}`).set(parseFloat(value) || 0);
+    if (!catalog[key]) return;
+    catalog[key][field] = parseFloat(value) || 0;
+    saveCatalogToStorageAndFirebase(key, catalog[key]);
+    refreshCatalogUI();
   }
 
   function applyBulkOnlineMarkup() {
@@ -1148,31 +1456,29 @@
     Object.keys(catalog).forEach(k => {
       const base = Number(catalog[k].offlineRate || 0);
       if (base > 0) {
-        db.ref(`catalog/${k}/onlineRate`).set(base + markup);
+        catalog[k].onlineRate = base + markup;
+        saveCatalogToStorageAndFirebase(k, catalog[k]);
       }
     });
+    refreshCatalogUI();
     alert(`✅ Online Store rates updated to Counter Rate + ₹${markup}/Kg across all items!`);
   }
 
   function deleteCatalogItem(key) {
-    if (confirm("Delete this item from Master Catalog?")) db.ref(`catalog/${key}`).remove();
+    if (confirm("Delete this item from Master Catalog?")) {
+      delete catalog[key];
+      localStorage.setItem('ab_local_catalog_backup', JSON.stringify(catalog));
+      db.ref(`catalog/${key}`).remove();
+      refreshCatalogUI();
+    }
   }
 
   function seedDefaultCatalog() {
-    const starter = {
-      "California_Badam_Jumbo": { name: "California Badam (Jumbo Grade-A)", category: "Almonds", offlineRate: 740, onlineRate: 780, stockKg: 25 },
-      "Iranian_Mamra_Badam": { name: "Iranian Mamra Badam (Pure)", category: "Almonds", offlineRate: 2300, onlineRate: 2400, stockKg: 10 },
-      "Goan_Kaju_W240": { name: "Goan Kaju W240 (Big Whole)", category: "Cashews", offlineRate: 880, onlineRate: 920, stockKg: 30 },
-      "Premium_Kaju_W320": { name: "Premium Kaju W320 (Whole)", category: "Cashews", offlineRate: 780, onlineRate: 820, stockKg: 35 },
-      "Iranian_Roasted_Pista": { name: "Iranian Roasted & Salted Pista", category: "Pistachios", offlineRate: 1080, onlineRate: 1120, stockKg: 20 },
-      "Kimia_Dates_Gold": { name: "Original Kimia Dates (Soft)", category: "Dates", offlineRate: 350, onlineRate: 380, stockKg: 40 },
-      "Madinah_Ajwa_Dates": { name: "Authentic Madinah Ajwa Dates", category: "Dates", offlineRate: 1350, onlineRate: 1400, stockKg: 15 },
-      "Afghani_Anjeer_Jumbo": { name: "Afghani Anjeer (Dried Figs)", category: "Figs & Apricots", offlineRate: 1300, onlineRate: 1350, stockKg: 18 },
-      "Kashmiri_Akhrot_Giri": { name: "Kashmiri Walnut Kernels", category: "Walnuts", offlineRate: 1100, onlineRate: 1150, stockKg: 20 },
-      "Golden_Long_Kismis": { name: "Golden Long Kismis (Raisins)", category: "Raisins", offlineRate: 330, onlineRate: 360, stockKg: 40 }
-    };
-    db.ref('catalog').update(starter);
-    alert("✅ Starter Catalog loaded!");
+    catalog = { ...starterFallbackCatalog, ...catalog };
+    localStorage.setItem('ab_local_catalog_backup', JSON.stringify(catalog));
+    db.ref('catalog').update(catalog);
+    refreshCatalogUI();
+    alert("✅ Starter Catalog loaded & synced!");
   }
 
   function updateAnalyticsAndHistory() {
@@ -1262,12 +1568,18 @@
   async function safeClearFirebase() {
     if (!confirm("📥 This will automatically download your full Excel Sales & Analysis backup first, and then clear old bills & orders from Firebase so your database stays 100% fast and free. Proceed?")) return;
     downloadExcel();
-    await db.ref('daily_sales').remove();
-    await db.ref('live_orders').remove();
-    salesHistory = [];
-    onlineOrders = [];
-    knownOrderIds.clear();
-    alert("✅ Excel Backup Downloaded & Firebase Sales/Orders Cleaned! (Your Master Catalog & Photos remain 100% untouched).");
+    try {
+      await db.ref('daily_sales').remove();
+      await db.ref('live_orders').remove();
+      salesHistory = [];
+      onlineOrders = [];
+      knownOrderIds.clear();
+      updateAnalyticsAndHistory();
+      renderOnlineFeed();
+      alert("✅ Excel Backup Downloaded & Firebase Sales/Orders Cleaned! (Your Master Catalog & Photos remain 100% safe).");
+    } catch (e) {
+      alert("⚠️ Excel downloaded, but Firebase clear was blocked by rules: " + e.message);
+    }
   }
 
   renderBill();
