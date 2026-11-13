@@ -41,13 +41,13 @@
       box-shadow: 0 6px 20px -4px rgba(20, 17, 14, 0.06);
     }
 
-    /* ULTRA-SYNCHRONIZED MINIMUM-PAPER 80MM, 55MM & A4 RECEIPT PRINT ENGINE */
+    /* SMOOTH, SPACIOUS & CLEAR 80MM, 55MM & A4 RECEIPT PRINT ENGINE */
     #thermalReceipt {
       font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
       font-variant-numeric: tabular-nums !important;
       color: #000000 !important;
       background: #FFFFFF !important;
-      line-height: 1.18 !important;
+      line-height: 1.42 !important;
       box-sizing: border-box !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
@@ -62,82 +62,61 @@
       width: 100% !important;
       table-layout: fixed !important;
       border-collapse: collapse !important;
-      margin: 2px 0 !important;
+      margin: 6px 0 !important;
     }
-    #thermalReceipt .rc-table th,
-    #thermalReceipt .rc-table td {
-      padding: 1.5px 1px !important;
-      vertical-align: top !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
+    #thermalReceipt .rc-table th {
+      padding: 4px 2px !important;
       font-weight: 800 !important;
+      border-bottom: 1.5px solid #000 !important;
     }
-    #thermalReceipt .rc-dual-qr-grid {
+    #thermalReceipt .rc-table td {
+      padding: 4px 2px !important;
+      vertical-align: top !important;
+      font-weight: 700 !important;
+    }
+    #thermalReceipt .rc-simple-scanners {
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
-      gap: 4px !important;
-      align-items: stretch !important;
-      border-top: 1.5px solid #000 !important;
-      padding-top: 4px !important;
-      margin-top: 3px !important;
-    }
-    #thermalReceipt .rc-qr-card {
-      border: 1px solid #000 !important;
-      border-radius: 4px !important;
-      padding: 3px 2px !important;
-      text-align: center !important;
-      display: flex !important;
-      flex-direction: column !important;
+      gap: 10px !important;
       align-items: center !important;
-      justify-content: space-between !important;
+      justify-items: center !important;
+      border-top: 1.5px dashed #000 !important;
+      padding-top: 8px !important;
+      margin-top: 6px !important;
     }
-    /* Paper Size Variants (Screen Preview & Print) */
     #thermalReceipt.paper-80mm {
-      width: 72mm !important;
-      max-width: 72mm !important;
-      padding: 2mm 2mm !important;
-      font-size: 10.5px !important;
+      width: 74mm !important;
+      max-width: 74mm !important;
+      padding: 3.5mm 3mm !important;
+      font-size: 11.5px !important;
     }
     #thermalReceipt.paper-80mm .rc-qr-img {
-      width: 74px !important;
-      height: 74px !important;
-    }
-    #thermalReceipt.paper-80mm .rc-dev-badge-logo {
-      width: 24px !important;
-      height: 24px !important;
+      width: 84px !important;
+      height: 84px !important;
     }
     #thermalReceipt.paper-55mm,
     #thermalReceipt.paper-58mm {
-      width: 48mm !important;
-      max-width: 48mm !important;
-      padding: 1mm 1mm !important;
-      font-size: 8.8px !important;
+      width: 50mm !important;
+      max-width: 50mm !important;
+      padding: 2mm 1.5mm !important;
+      font-size: 9.8px !important;
     }
     #thermalReceipt.paper-55mm .rc-qr-img,
     #thermalReceipt.paper-58mm .rc-qr-img {
-      width: 54px !important;
-      height: 54px !important;
-    }
-    #thermalReceipt.paper-55mm .rc-dev-badge-logo,
-    #thermalReceipt.paper-58mm .rc-dev-badge-logo {
-      width: 18px !important;
-      height: 18px !important;
+      width: 60px !important;
+      height: 60px !important;
     }
     #thermalReceipt.paper-a4 {
       width: 190mm !important;
       max-width: 190mm !important;
-      padding: 5mm 7mm !important;
-      font-size: 11.5px !important;
+      padding: 8mm 10mm !important;
+      font-size: 13px !important;
       border: 1.5px solid #000 !important;
-      border-radius: 6px !important;
+      border-radius: 8px !important;
     }
     #thermalReceipt.paper-a4 .rc-qr-img {
-      width: 96px !important;
-      height: 96px !important;
-    }
-    #thermalReceipt.paper-a4 .rc-dev-badge-logo {
-      width: 32px !important;
-      height: 32px !important;
+      width: 110px !important;
+      height: 110px !important;
     }
 
     @media print {
@@ -161,14 +140,14 @@
       }
       #thermalReceipt.paper-a4 {
         left: 8mm !important;
-        top: 6mm !important;
+        top: 8mm !important;
       }
     }
 
     /* ==================== ROYAL IMPERIAL LUXURY THEME ENHANCEMENTS ==================== */
     body {
       font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-      background-color: #F7F3EB;
+      background-color: #F8FAFC;
       background-image:
         radial-gradient(circle at 8% 8%, rgba(212, 175, 55, 0.16), transparent 32%),
         radial-gradient(circle at 92% 14%, rgba(6, 78, 59, 0.10), transparent 36%),
@@ -515,6 +494,12 @@
       <button onclick="switchPosTab('HISTORY')" id="tabBtn_HISTORY" class="px-4 py-2.5 rounded-2xl font-black text-xs bg-white text-stone-700 border border-stone-300 hover:bg-stone-100 flex items-center gap-1.5">
         📊 Sales Reports & Excel Export
       </button>
+      <button onclick="switchPosTab('KHATA')" id="tabBtn_KHATA" class="px-4 py-2.5 rounded-2xl font-black text-xs bg-amber-100 text-amber-950 border border-amber-400 hover:bg-amber-200 flex items-center gap-1.5 shadow-sm">
+        📓 Khata & Reminder Place <span id="khataCountBadge" class="bg-red-600 text-white px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
+      </button>
+      <button onclick="switchPosTab('SUPPLIERS')" id="tabBtn_SUPPLIERS" class="px-4 py-2.5 rounded-2xl font-black text-xs bg-white text-stone-700 border border-stone-300 hover:bg-stone-100 flex items-center gap-1.5">
+        🚚 Supplier & Stock-In Hub <span id="lowStockNavBadge" class="bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
+      </button>
       <button onclick="switchPosTab('HELP_FEEDBACK')" id="tabBtn_HELP_FEEDBACK" class="px-4 py-2.5 rounded-2xl font-black text-xs bg-white text-stone-700 border border-stone-300 hover:bg-stone-100 flex items-center gap-1.5">
         💬 Customer Help Chat & Feedback <span id="navHelpBadge" class="bg-emerald-700 text-white px-2 py-0.5 rounded-full text-[10px]">0</span>
       </button>
@@ -857,8 +842,8 @@
               <button onclick="openCounterQrModal()" class="blinkit-yellow text-stone-950 font-black py-2.5 rounded-xl text-[11px] shadow">
                 📱 Show Customer QR
               </button>
-              <button onclick="completeSale(false)" class="bg-stone-900 hover:bg-stone-800 text-white font-bold py-2.5 rounded-xl text-[11px]">
-                💾 Clear & Save Only
+              <button onclick="billCurrentCartIntoKhata()" class="bg-amber-500 hover:bg-amber-600 text-stone-950 font-black py-2.5 rounded-xl text-[11px] shadow">
+                📓 Bill into Khata
               </button>
             </div>
             <div class="grid grid-cols-2 gap-1.5">
@@ -1088,26 +1073,26 @@
       </div>
 
       <!-- DIRECT ADD NEW PRODUCT & SPECIFIC CATEGORY CREATOR BAR IN ADMIN CATALOG -->
-      <div class="bg-gradient-to-r from-stone-950 via-stone-900 to-emerald-950 text-white p-4 rounded-2xl border-2 border-[#F8CB46] shadow-lg space-y-2.5">
+      <div class="bg-white text-stone-900 p-4 rounded-2xl border-2 border-emerald-600/30 shadow-sm space-y-2.5">
         <div class="flex flex-wrap justify-between items-center gap-2">
           <span class="text-[10px] font-black uppercase bg-[#F8CB46] text-stone-950 px-2.5 py-0.5 rounded-full">➕ ADD NEW ITEM & SPECIFIC CATEGORY TYPE TO STORE</span>
-          <span class="text-[11px] text-amber-200 font-semibold">New categories automatically appear as filter pills on the Customer Storefront!</span>
+          <span class="text-[11px] text-stone-500 font-semibold">New categories automatically appear as filter pills on the Customer Storefront!</span>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-2 items-end text-stone-900">
           <div class="md:col-span-3">
-            <label class="text-[10px] font-black uppercase text-amber-300 block mb-0.5">Product Name *</label>
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Product Name *</label>
             <input id="newCatItemName" type="text" placeholder="e.g. Kashmiri Mongra Saffron" class="w-full rounded-xl p-2 text-xs font-black bg-white border-2 border-stone-300 focus:border-[#F8CB46] outline-none">
           </div>
           <div class="md:col-span-1">
-            <label class="text-[10px] font-black uppercase text-amber-300 block mb-0.5">Code</label>
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Code</label>
             <input id="newCatItemCode" type="text" placeholder="S2" class="w-full rounded-xl p-2 text-xs font-mono font-black text-center uppercase bg-white border-2 border-stone-300 outline-none">
           </div>
           <div class="md:col-span-2">
-            <label class="text-[10px] font-black uppercase text-amber-300 block mb-0.5">Category (Type/Pick) *</label>
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Category (Type/Pick) *</label>
             <input id="newCatItemCategory" type="text" list="customCategoryList" placeholder="e.g. Chocolates / Cakes" class="w-full rounded-xl p-2 text-xs font-black bg-amber-50 border-2 border-amber-400 focus:bg-white outline-none">
           </div>
           <div class="md:col-span-1">
-            <label class="text-[10px] font-black uppercase text-sky-300 block mb-0.5">Unit Type</label>
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Unit Type</label>
             <select id="newCatUnitType" class="w-full rounded-xl p-2 text-[11px] font-black bg-white border-2 border-sky-400 outline-none">
               <option value="AUTO">✨ Auto</option>
               <option value="WEIGHT">⚖️ Kg/g</option>
@@ -1115,15 +1100,15 @@
             </select>
           </div>
           <div class="md:col-span-1">
-            <label class="text-[10px] font-black uppercase text-emerald-300 block mb-0.5">Walk-In ₹/Kg</label>
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Walk-In ₹/Kg</label>
             <input id="newCatOfflineRate" type="number" placeholder="₹/Kg" class="w-full rounded-xl p-2 text-xs font-black text-center bg-white border-2 border-emerald-400 outline-none">
           </div>
           <div class="md:col-span-1">
-            <label class="text-[10px] font-black uppercase text-amber-300 block mb-0.5">Online ₹/Kg</label>
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Online ₹/Kg</label>
             <input id="newCatOnlineRate" type="number" placeholder="Online ₹" class="w-full rounded-xl p-2 text-xs font-black text-center bg-white border-2 border-amber-400 outline-none">
           </div>
           <div class="md:col-span-1">
-            <label class="text-[10px] font-black uppercase text-stone-300 block mb-0.5">Stock (Kg)</label>
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Stock (Kg)</label>
             <input id="newCatStockKg" type="number" step="0.5" value="20" class="w-full rounded-xl p-2 text-xs font-black text-center bg-white border-2 border-stone-300 outline-none">
           </div>
           <div class="md:col-span-2">
@@ -1293,6 +1278,269 @@
 
     </div>
 
+        <!-- ==================== TAB 6: WHITE SYSTEMATIC KHATA BOOK, DIRECT ITEM BILLING & ANALYSIS ==================== -->
+    <div id="tab_KHATA" class="hidden bg-white border border-stone-200 shadow-sm p-5 rounded-3xl space-y-5">
+      <!-- Top Header -->
+      <div class="flex flex-wrap justify-between items-center gap-3 border-b border-stone-200 pb-4">
+        <div>
+          <span class="bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">📓 SYSTEMATIC KHATA BOOK & DIRECT ITEM BILLING</span>
+          <h2 class="text-lg font-black text-stone-900 mt-1">Khata Book — Direct Item Adding, Live Credit Analysis & WhatsApp / SMS Reminders</h2>
+          <p class="text-xs text-stone-500">Add items directly inside Khata Book (Weight Kg/g or No-Grams Rate/Pc), append items to existing customer accounts, save reminder costs, and send direct WhatsApp or SMS reminders.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="exportKhataExcel()" class="bg-stone-900 hover:bg-stone-800 text-[#F8CB46] font-black px-4 py-2.5 rounded-xl text-xs shadow-sm">
+            📥 Export Khata Book (.xlsx)
+          </button>
+        </div>
+      </div>
+
+      <!-- 4-Card Systematic Khata Analysis Bar (Clean White Theme) -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-white border-2 border-stone-200 rounded-2xl p-3.5 shadow-sm">
+          <span class="text-[10px] font-black uppercase text-stone-500 block">1. Total Khata Billed</span>
+          <span id="khataStatTotalBilled" class="text-xl font-black text-stone-900 mt-0.5 block">₹0</span>
+          <span id="khataStatAccountsCount" class="text-[11px] font-bold text-stone-500">0 Active Accounts</span>
+        </div>
+        <div class="bg-white border-2 border-emerald-200 rounded-2xl p-3.5 shadow-sm">
+          <span class="text-[10px] font-black uppercase text-emerald-800 block">2. Total Collected / Advance</span>
+          <span id="khataStatTotalRecovered" class="text-xl font-black text-emerald-700 mt-0.5 block">₹0</span>
+          <span id="khataStatRecoveryRate" class="text-[11px] font-bold text-emerald-700">0% Recovery Rate</span>
+        </div>
+        <div class="bg-white border-2 border-red-200 rounded-2xl p-3.5 shadow-sm">
+          <span class="text-[10px] font-black uppercase text-red-700 block">3. Net Pending Reminder Cost</span>
+          <span id="khataTotalPendingAmt" class="text-xl font-black text-red-600 mt-0.5 block">₹0</span>
+          <span class="text-[11px] font-bold text-red-500">Total Market Receivable</span>
+        </div>
+        <div class="bg-white border-2 border-amber-200 rounded-2xl p-3.5 shadow-sm">
+          <span class="text-[10px] font-black uppercase text-amber-800 block">4. Due / Overdue Reminders</span>
+          <span id="khataStatDueTodayCount" class="text-xl font-black text-amber-900 mt-0.5 block">0</span>
+          <span class="text-[11px] font-bold text-amber-700">Ready for WhatsApp / SMS</span>
+        </div>
+      </div>
+
+      <!-- DIRECT KHATA ITEM-BY-ITEM BILLING & ACCOUNT BUILDER (CLEAN WHITE INTERFACE) -->
+      <div class="bg-white border-2 border-emerald-600/40 rounded-3xl p-4 sm:p-5 shadow-sm space-y-4">
+        <div class="flex flex-wrap justify-between items-center gap-2 border-b border-stone-200 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="bg-emerald-800 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-lg">➕ STEP 1: ADD ITEMS DIRECTLY TO KHATA BILL</span>
+            <span id="khataActiveTargetBadge" class="hidden bg-amber-100 text-amber-900 border border-amber-400 text-[11px] font-black px-2.5 py-0.5 rounded-lg"></span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="khataModeWeightBtn" onclick="setKhataItemMode('WEIGHT')" class="px-2.5 py-1 rounded-lg text-[10px] font-black bg-emerald-800 text-white">
+              ⚖️ Weight (Kg/g)
+            </button>
+            <button type="button" id="khataModePieceBtn" onclick="setKhataItemMode('PIECE')" class="px-2.5 py-1 rounded-lg text-[10px] font-black bg-stone-100 text-stone-700 border border-stone-300">
+              🍫 No-Grams (Rate / Pc)
+            </button>
+          </div>
+        </div>
+
+        <!-- 1-Tap Quick Catalog Chips inside Khata Book -->
+        <div>
+          <span class="text-[10px] font-black uppercase text-stone-400 block mb-1">⚡ 1-Tap Quick Pick Item into Khata:</span>
+          <div id="khataQuickItemChips" class="flex gap-1.5 overflow-x-auto pb-1"></div>
+        </div>
+
+        <!-- Direct Item Entry Row inside Khata Book -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-2.5 items-end bg-stone-50 p-3 rounded-2xl border border-stone-200">
+          <div class="md:col-span-4">
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Select or Type Item Name *</label>
+            <input id="khataItemName" type="text" list="catList" placeholder="e.g. Ajwa Dates / Badam / Chocolate Box"
+                   oninput="onKhataItemInput()"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();addItemToKhataDraft();}"
+                   class="w-full rounded-xl p-2 text-xs font-bold bg-white border border-stone-300 focus:border-emerald-700 outline-none">
+          </div>
+          <div class="md:col-span-2">
+            <label id="khataPackLbl" class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Quick Pack</label>
+            <select id="khataPackPreset" onchange="onKhataPackChange()" class="w-full rounded-xl p-2 text-xs font-black bg-white border border-stone-300 outline-none">
+              <option value="1">1 Kg Full</option>
+              <option value="0.5">500 gm</option>
+              <option value="0.25">250 gm</option>
+              <option value="0.1">100 gm</option>
+              <option value="2">2 Kg</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label id="khataWtLbl" class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Wt (Kg) / Qty</label>
+            <input id="khataItemWt" type="number" step="0.001" value="1" oninput="recalcKhataItemLine()"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();addItemToKhataDraft();}"
+                   class="w-full rounded-xl p-2 text-xs font-black text-center bg-white border border-stone-300 outline-none">
+          </div>
+          <div class="md:col-span-2">
+            <label id="khataRateLbl" class="text-[10px] font-black uppercase text-emerald-800 block mb-0.5">Rate (₹)</label>
+            <input id="khataItemRate" type="number" placeholder="₹ Rate" oninput="recalcKhataItemLine()"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();addItemToKhataDraft();}"
+                   class="w-full rounded-xl p-2 text-xs font-black text-center bg-white border-2 border-emerald-500 outline-none">
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-[10px] font-black uppercase text-stone-700 block mb-0.5">Line Total ₹</label>
+            <div class="flex gap-1">
+              <input id="khataItemTotal" type="number" placeholder="₹ Total" oninput="recalcKhataWtFromTotal()"
+                     onkeydown="if(event.key==='Enter'){event.preventDefault();addItemToKhataDraft();}"
+                     class="w-full rounded-xl p-2 text-xs font-black text-center bg-amber-50 border border-amber-400 outline-none">
+              <button type="button" onclick="addItemToKhataDraft()" class="bg-emerald-800 hover:bg-emerald-900 text-white font-black px-3 py-2 rounded-xl text-xs shadow shrink-0">
+                + Add
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Added Khata Draft Items Table -->
+        <div class="border border-stone-200 rounded-2xl overflow-hidden bg-white">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-stone-100 text-stone-600 uppercase text-[10px] font-black border-b border-stone-200">
+              <tr>
+                <th class="p-2.5">#</th>
+                <th class="p-2.5">Item Name</th>
+                <th class="p-2.5 text-center">Pack / Qty</th>
+                <th class="p-2.5 text-center">Rate</th>
+                <th class="p-2.5 text-right">Amount (₹)</th>
+                <th class="p-2.5 text-center">Remove</th>
+              </tr>
+            </thead>
+            <tbody id="khataDraftItemsBody" class="divide-y divide-stone-100">
+              <tr><td colspan="6" class="p-3 text-center text-stone-400 font-semibold">Add items above (or type a custom note below) to build a systematic Khata bill.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- STEP 2: Customer Details, Reminder Cost & Save to Khata Book -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-2.5 items-end pt-2 border-t border-stone-200">
+          <div class="md:col-span-2">
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Customer Name *</label>
+            <input id="manualKhataName" type="text" placeholder="e.g. Ramesh Bhai" class="w-full rounded-xl p-2.5 text-xs font-black bg-white border-2 border-stone-300 focus:border-emerald-700 outline-none">
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Mobile Number *</label>
+            <input id="manualKhataPhone" type="tel" placeholder="10-Digit Mobile" class="w-full rounded-xl p-2.5 text-xs font-mono font-black bg-white border-2 border-stone-300 focus:border-emerald-700 outline-none">
+          </div>
+          <div class="md:col-span-3">
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Items Summary / Extra Note</label>
+            <input id="manualKhataItems" type="text" placeholder="Auto-filled from items above or type note" class="w-full rounded-xl p-2.5 text-xs font-bold bg-stone-50 border border-stone-300 outline-none">
+          </div>
+          <div class="md:col-span-1">
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Total Bill ₹</label>
+            <input id="manualKhataTotalBill" type="number" placeholder="Total ₹" oninput="calcKhataReminderCost()" class="w-full rounded-xl p-2.5 text-xs font-black text-center bg-white border border-stone-300 outline-none">
+          </div>
+          <div class="md:col-span-1">
+            <label class="text-[10px] font-black uppercase text-emerald-800 block mb-0.5">Paid Now ₹</label>
+            <input id="manualKhataPaidNow" type="number" value="0" oninput="calcKhataReminderCost()" class="w-full rounded-xl p-2.5 text-xs font-black text-center bg-emerald-50 border border-emerald-400 outline-none">
+          </div>
+          <div class="md:col-span-1">
+            <label class="text-[10px] font-black uppercase text-red-700 block mb-0.5">Reminder ₹ *</label>
+            <input id="manualKhataAmt" type="number" placeholder="Due ₹" class="w-full rounded-xl p-2.5 text-xs font-black text-center bg-red-50 border-2 border-red-400 text-red-800 outline-none">
+          </div>
+          <div class="md:col-span-2">
+            <label class="text-[10px] font-black uppercase text-stone-600 block mb-0.5">Reminder Date</label>
+            <div class="flex gap-1.5">
+              <input id="manualKhataDueDate" type="date" class="w-full rounded-xl p-2 text-[11px] font-black bg-white border border-stone-300 outline-none">
+              <button type="button" onclick="addManualKhataEntry()" class="blinkit-green text-white font-black px-3.5 py-2 rounded-xl text-xs shadow shrink-0">
+                💾 Save Khata
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search & Filter Khata Accounts -->
+      <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
+        <div class="flex flex-wrap items-center gap-2">
+          <input id="khataSearchInput" type="text" placeholder="🔍 Search customer name, mobile, or items..." oninput="renderKhataModalList()" class="border border-stone-300 rounded-xl px-3.5 py-2 text-xs font-bold bg-white w-72">
+          <select id="khataFilterStatus" onchange="renderKhataModalList()" class="border border-stone-300 rounded-xl px-3 py-2 text-xs font-black bg-white text-stone-700">
+            <option value="ALL">All Khata Accounts</option>
+            <option value="PENDING">⏰ Pending Reminder Dues Only</option>
+            <option value="PAID">✓ Settled / Paid Only</option>
+          </select>
+        </div>
+        <div class="text-xs font-bold text-stone-500">
+          Click <strong>➕ Add Items</strong> on any customer below to append new items directly to their Khata, or tap <strong>💬 WhatsApp</strong> / <strong>📲 Direct SMS</strong>.
+        </div>
+      </div>
+
+      <div id="khataListContainer" class="space-y-3"></div>
+    </div>
+
+    <!-- ==================== TAB 7: DRY FRUIT SUPPLIER & WHOLESALE STOCK-IN TECH HUB ==================== -->
+    <div id="tab_SUPPLIERS" class="hidden panel-card p-5 rounded-3xl space-y-5">
+      <div class="flex flex-wrap justify-between items-center gap-3 border-b border-stone-200 pb-3">
+        <div>
+          <span class="bg-emerald-100 text-emerald-900 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">🚚 DRY FRUIT SUPPLIER & WHOLESALE TECH SUITE</span>
+          <h2 class="text-lg font-black text-stone-900 mt-0.5">Wholesale Stock-In, Auto Low-Stock Radar, Supplier Payables & 1-Tap Purchase Orders</h2>
+          <p class="text-xs text-stone-500">Receive stock from suppliers directly into live inventory, track wholesale payables, and send 1-tap WhatsApp or SMS Purchase Orders.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="bg-amber-50 border border-amber-300 px-4 py-2 rounded-2xl text-right">
+            <span class="text-[10px] font-black uppercase text-amber-900 block">Supplier Payable Balance</span>
+            <span id="supplierTotalPayableEl" class="text-xl font-black text-amber-900">₹0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Low Stock Auto-Radar Bar -->
+      <div class="bg-amber-50/90 border-2 border-amber-300 rounded-2xl p-3.5 space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-black uppercase text-amber-950 flex items-center gap-1.5">
+            ⚠️ Automatic Low-Stock Alert Radar (Items ≤ 12 Kg / Pcs)
+          </span>
+          <span class="text-[11px] font-bold text-stone-600">Click any low-stock item to pre-fill a Supplier Purchase Order</span>
+        </div>
+        <div id="lowStockRadarList" class="flex gap-2 overflow-x-auto pb-1"></div>
+      </div>
+
+      <!-- 2-Column Layout: Left = 1-Tap Wholesale Stock-In & PO Sender | Right = Supplier Directory & Balances -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-5 bg-stone-50 p-4 rounded-2xl border border-stone-200 space-y-3">
+          <h3 class="text-sm font-black text-stone-900">📦 1-Tap Wholesale Stock-In (Auto-Updates Catalog Stock)</h3>
+          <div class="space-y-2">
+            <div>
+              <label class="text-[10px] font-black uppercase text-stone-600">Select Supplier</label>
+              <select id="stockInSupplierSelect" class="w-full border border-stone-300 rounded-xl p-2 text-xs font-black bg-white mt-0.5"></select>
+            </div>
+            <div>
+              <label class="text-[10px] font-black uppercase text-stone-600">Select Store Catalog Item to Restock</label>
+              <select id="stockInItemSelect" class="w-full border border-stone-300 rounded-xl p-2 text-xs font-black bg-white mt-0.5"></select>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="text-[10px] font-black uppercase text-stone-600">Incoming Qty</label>
+                <input id="stockInQty" type="number" step="0.5" value="10" class="w-full border border-stone-300 rounded-xl p-2 text-xs font-black text-center bg-white mt-0.5">
+              </div>
+              <div>
+                <label class="text-[10px] font-black uppercase text-stone-600">Total Bill ₹</label>
+                <input id="stockInCost" type="number" placeholder="Cost ₹" class="w-full border border-stone-300 rounded-xl p-2 text-xs font-black text-center bg-white mt-0.5">
+              </div>
+              <div>
+                <label class="text-[10px] font-black uppercase text-stone-600">Unpaid Due ₹</label>
+                <input id="stockInDue" type="number" value="0" class="w-full border border-amber-400 rounded-xl p-2 text-xs font-black text-center bg-amber-50 mt-0.5">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button onclick="recordSupplierStockIn()" class="blinkit-green text-white font-black py-2.5 rounded-xl text-xs shadow">
+                📥 Add Stock & Log Bill
+              </button>
+              <button onclick="sendSupplierPoWhatsApp()" class="bg-stone-900 hover:bg-stone-800 text-[#F8CB46] font-black py-2.5 rounded-xl text-xs shadow">
+                💬 WhatsApp PO to Supplier
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-white p-4 rounded-2xl border border-stone-200 space-y-3">
+          <div class="flex flex-wrap justify-between items-center gap-2">
+            <h3 class="text-sm font-black text-stone-900">🏢 Dry Fruit Suppliers Directory & Payable Ledger</h3>
+            <div class="flex flex-wrap gap-1.5">
+              <input id="newSupName" type="text" placeholder="Supplier / Firm Name" class="border border-stone-300 rounded-xl px-2.5 py-1.5 text-xs font-bold w-36">
+              <input id="newSupPhone" type="tel" placeholder="Mobile" class="border border-stone-300 rounded-xl px-2.5 py-1.5 text-xs font-mono font-bold w-28">
+              <input id="newSupCity" type="text" placeholder="City / Specialty" class="border border-stone-300 rounded-xl px-2.5 py-1.5 text-xs font-bold w-28">
+              <button onclick="addNewSupplier()" class="bg-stone-900 text-[#F8CB46] font-black px-3 py-1.5 rounded-xl text-xs">+ Add Supplier</button>
+            </div>
+          </div>
+          <div id="suppliersListContainer" class="space-y-2 max-h-[340px] overflow-y-auto divide-y divide-stone-100"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- HIDDEN LEGACY COMPATIBILITY CONTAINER (Removed from visible UI as requested) -->
     <div id="tab_REVIEWS_SECURITY" class="hidden">
       <input id="googleReviewUrlInput" type="hidden" value="https://www.google.com/maps/search/?api=1&query=AB+Dates+and+Dry+Fruits+Khammam">
@@ -1406,47 +1654,41 @@
     </div>
   </div>
 
-  <!-- ==================== SYNCHRONIZED MINIMUM-PAPER RECEIPT TEMPLATE (80MM, 55MM & A4) ==================== -->
+  <!-- ==================== SMOOTH & CLEAR RECEIPT TEMPLATE (80MM, 55MM & A4) ==================== -->
   <div id="thermalReceipt" class="hidden paper-80mm">
-    <!-- Compact Synchronized Store Header with Official AB Dry Fruits Logo -->
-    <div style="border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 3px;">
-      <div style="display:flex; align-items:center; justify-content:center; gap:5px;">
-        <img src="" data-bind-asset="ab-logo" alt="AB Dry Fruits" style="width:28px; height:20px; object-fit:cover; border-radius:3px; border:1px solid #000; flex-shrink:0;">
-        <div style="text-align:center; line-height:1.12;">
-          <div id="rInvoiceHeaderType" style="font-size: 0.78em; font-weight: 900; letter-spacing: 0.6px; text-transform:uppercase;">RETAIL CASH / TAX INVOICE</div>
-          <div style="font-size: 1.22em; font-weight: 900; letter-spacing: 0.2px;">AB DATES & DRY FRUITS</div>
-        </div>
-      </div>
-      <div style="text-align:center; font-size: 0.82em; font-weight: 800; line-height: 1.15; margin-top: 1px;">
-        Near Bus Stand, Khammam • Cell/WA: <strong>91543 39465</strong> • GSTIN: <strong>36EKJPM4902A1ZF</strong>
-      </div>
+    <!-- Clean Spacious Store Header -->
+    <div style="text-align:center; border-bottom: 1.5px solid #000; padding-bottom: 6px; margin-bottom: 6px;">
+      <div id="rInvoiceHeaderType" style="font-size: 0.80em; font-weight: 800; letter-spacing: 0.8px; text-transform:uppercase;">RETAIL CASH / TAX INVOICE</div>
+      <div style="font-size: 1.30em; font-weight: 900; letter-spacing: 0.3px; margin: 2px 0;">AB DATES & DRY FRUITS</div>
+      <div style="font-size: 0.86em; font-weight: 700;">Near Bus Stand, Khammam • Ph: 91543 39465</div>
+      <div style="font-size: 0.82em; font-weight: 700;">GSTIN: 36EKJPM4902A1ZF</div>
     </div>
 
-    <!-- Compact Adjacent 2-Column Bill Metadata (Minimum Paper) -->
-    <div style="font-size: 0.88em; line-height: 1.2; border-bottom: 1px dashed #000; padding-bottom: 3px; margin-bottom: 2px;">
-      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
-        <span>BILL: <strong id="rBillNo">#1001</strong></span>
+    <!-- Clean Bill Metadata -->
+    <div style="font-size: 0.90em; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px;">
+      <div style="display:flex; justify-content:space-between; gap:6px;">
+        <span>Bill: <strong id="rBillNo">#1001</strong></span>
         <span id="rDate" style="text-align:right;"></span>
       </div>
-      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
-        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">CUST: <strong id="rCust">Walk-In</strong></span>
-        <span style="white-space:nowrap;">PAY: <strong id="rPayMode">CASH</strong></span>
+      <div style="display:flex; justify-content:space-between; gap:6px;">
+        <span>Customer: <strong id="rCust">Walk-In</strong></span>
+        <span>Mode: <strong id="rPayMode">CASH</strong></span>
       </div>
-      <div id="rCustGstinRow" style="display:none; font-size:0.92em;">BUYER GSTIN: <strong id="rCustGstin"></strong></div>
-      <div id="rAddressRow" style="display:none; margin-top:1.5px; padding:1.5px 3px; border:1px solid #000; font-weight:800; font-size:0.92em;">
-        ADDR: <span id="rAddress"></span>
+      <div id="rCustGstinRow" style="display:none;">Buyer GSTIN: <strong id="rCustGstin"></strong></div>
+      <div id="rAddressRow" style="display:none; margin-top:3px; padding:3px 4px; border:1px solid #000; font-weight:700;">
+        Delivery Address: <span id="rAddress"></span>
       </div>
-      <div id="rEtaRow" style="display:none; margin-top:1px; font-size:0.92em;">
-        EST. ARRIVAL: <strong id="rEtaText"></strong>
+      <div id="rEtaRow" style="display:none; margin-top:2px;">
+        Est. Arrival: <strong id="rEtaText"></strong>
       </div>
     </div>
 
-    <!-- Perfectly Aligned Fixed-Column Item Table (Suitable for 55mm, 80mm & A4) -->
-    <table class="rc-table" style="font-size: 0.90em;">
+    <!-- Smooth, Clear Item Table -->
+    <table class="rc-table" style="font-size: 0.92em;">
       <thead>
-        <tr style="border-bottom: 1.5px solid #000; text-align:left;">
+        <tr>
           <th style="width:46%; text-align:left;">ITEM</th>
-          <th style="width:16%; text-align:center;">WT</th>
+          <th style="width:16%; text-align:center;">QTY</th>
           <th style="width:18%; text-align:right;">RATE</th>
           <th style="width:20%; text-align:right;">AMT</th>
         </tr>
@@ -1454,17 +1696,17 @@
       <tbody id="rItems" style="border-bottom: 1px dashed #000;"></tbody>
     </table>
 
-    <!-- Compact Totals & GST Block -->
-    <div style="font-size: 0.88em; line-height: 1.22;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span>Items / Total Wt:</span>
-        <strong id="rWeightSummary">0 Items / 0.000 Kg</strong>
+    <!-- Smooth Totals Section -->
+    <div style="font-size: 0.90em; line-height: 1.45; margin-top: 4px;">
+      <div style="display:flex; justify-content:space-between;">
+        <span>Total Items / Summary:</span>
+        <strong id="rWeightSummary">0 Items</strong>
       </div>
-      <div id="rDiscountRow" style="display:none; justify-content:space-between; align-items:center;">
+      <div id="rDiscountRow" style="display:none; justify-content:space-between;">
         <span>Special Discount:</span>
         <strong id="rDiscountAmt">-₹0</strong>
       </div>
-      <div id="rGstSummaryBlock" style="display:none; border-top:1px dashed #000; margin-top:1.5px; padding-top:1.5px;">
+      <div id="rGstSummaryBlock" style="display:none; border-top:1px dashed #000; margin-top:3px; padding-top:3px;">
         <div style="display:flex; justify-content:space-between;">
           <span>Taxable Value:</span>
           <strong id="rTaxableAmt">₹0</strong>
@@ -1478,49 +1720,31 @@
           <strong id="rSgstAmt">₹0</strong>
         </div>
       </div>
-      <div style="display:flex; justify-content:space-between; align-items:center; font-size: 1.22em; font-weight: 900; border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; padding: 2px 0; margin: 2px 0;">
-        <span>NET PAYABLE:</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size: 1.25em; font-weight: 900; border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; padding: 5px 0; margin: 5px 0;">
+        <span>NET TOTAL:</span>
         <span id="rTotal">₹0</span>
       </div>
     </div>
 
-    <!-- DUAL SYNCHRONIZED ADJACENT SCANNERS: [LEFT: SCAN TO PAY EXACT AMOUNT] | [RIGHT: DEVELOPER QR + LOGO + INSTAGRAM INFO BENEATH] -->
-    <div class="rc-dual-qr-grid">
-      <!-- Left Scanner: Particular Bill Amount Payment QR -->
-      <div class="rc-qr-card">
-        <div id="rScanToPayHeader" style="font-size: 0.80em; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 2px;">
+    <!-- SIMPLE, CLEAN DUAL SCANNERS ON BILL ONLY -->
+    <div class="rc-simple-scanners">
+      <div style="text-align:center;">
+        <div style="font-size: 0.78em; font-weight: 900; margin-bottom: 3px;">
           SCAN TO PAY <span id="rScanToPayAmt">₹0</span>
         </div>
-        <img id="rPaymentQrImg" class="rc-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=upi%3A%2F%2Fpay%3Fpa%3Dvyapar.178552634679%40hdfcbank%26pn%3DAB%2520DATES%2520AND%2520DRY%2520FRUITS%26cu%3DINR" onerror="if(window.__fallbackUpiSrc && this.src!==window.__fallbackUpiSrc)this.src=window.__fallbackUpiSrc;" alt="Scan to Pay" style="object-fit:contain; display:block; margin: 0 auto; border: 1px solid #000; padding: 1px; background:#fff;">
-        <div style="font-size: 0.72em; font-weight: 800; line-height: 1.12; margin-top: 2px; word-break: break-all;">
-          <div style="font-weight:900;">AB DATES & DRY FRUITS</div>
-          <div>vyapar.178552634679@hdfcbank</div>
-        </div>
+        <img id="rPaymentQrImg" class="rc-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=upi%3A%2F%2Fpay%3Fpa%3Dvyapar.178552634679%40hdfcbank%26pn%3DAB%2520DATES%2520AND%2520DRY%2520FRUITS%26cu%3DINR" onerror="if(window.__fallbackUpiSrc && this.src!==window.__fallbackUpiSrc)this.src=window.__fallbackUpiSrc;" alt="Scan to Pay" style="object-fit:contain; display:block; margin: 0 auto;">
       </div>
-
-      <!-- Right Scanner: Developer Smart Scan QR + Developer Logo + Developer Info Beneath Scanner -->
-      <div class="rc-qr-card">
-        <div style="display:flex; align-items:center; justify-content:center; gap:2px; margin-bottom: 2px;">
-          <img src="" data-bind-asset="dev-logo" class="rc-dev-badge-logo" alt="SZA Logo" style="object-fit:contain; border-radius:50%; border:1px solid #000; flex-shrink:0;">
-          <div style="font-size: 0.74em; font-weight: 900; line-height: 1.05; text-align:left;">
-            <div>SMART SCAN</div>
-            <div style="font-size:0.88em;">TECH SYSTEM</div>
-          </div>
+      <div style="text-align:center;">
+        <div style="font-size: 0.78em; font-weight: 900; margin-bottom: 3px;">
+          SCAN WEB
         </div>
-        <img src="" data-bind-asset="dev-qr" class="rc-qr-img" alt="Developer Smart Scan QR" style="object-fit:contain; display:block; margin: 0 auto; border: 1px solid #000; padding: 1px; background:#fff;">
-        <div style="font-size: 0.73em; font-weight: 900; line-height: 1.14; margin-top: 2px; text-align:center;">
-          <div style="display:inline-flex; align-items:center; justify-content:center; gap:2px; flex-wrap:wrap;">
-            <span>Developed by</span>
-            <svg viewBox="0 0 24 24" style="width:9px; height:9px; fill:none; stroke:#000; stroke-width:2.5; display:inline-block; vertical-align:middle;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-            <span style="text-decoration:underline;">syedzeeshaanli07</span>
-          </div>
-          <div style="font-size: 0.90em; font-weight:800;">Syed Zeeshaan Ali • 9032208086</div>
-        </div>
+        <img class="rc-qr-img" src="" data-bind-asset="dev-qr" alt="Scanner Web" style="object-fit:contain; display:block; margin: 0 auto;">
       </div>
     </div>
 
-    <div style="text-align:center; margin-top: 2px; font-size: 0.76em; font-weight: 800; line-height: 1.15;">
-      ★ 100% Pure & Fresh Quality • Thank You, Visit Again! ★
+    <div style="text-align:center; margin-top: 7px; padding-top: 4px; border-top: 1px dashed #000; font-size: 0.84em; font-weight: 800; line-height: 1.35;">
+      <div>Thank You! Visit AB Dates & Dry Fruits Again!</div>
+      <div style="font-size: 0.95em; font-weight: 900; margin-top: 2px;">Developed by @syedzeesshaanali07</div>
     </div>
   </div>
 
@@ -1530,12 +1754,13 @@
     (function syncEmbeddedReceiptAssets() {
       const abLogo = document.querySelector('link[rel="icon"]')?.href || '';
       const devLogo = document.querySelector('footer a[href*="Syed-Zeeshaan-Ali"] img')?.src || '';
-      const devQr = document.querySelector('img[alt="Syed Zeeshaan Ali Smart Scan QR"]')?.src || '';
+      const devQr = window.__DEV_WEB_QR_B64 || document.querySelector('img[alt="Syed Zeeshaan Ali Smart Scan QR"]')?.src || '';
       document.querySelectorAll('[data-bind-asset="ab-logo"]').forEach(el => { if (abLogo) el.src = abLogo; });
       document.querySelectorAll('[data-bind-asset="dev-logo"]').forEach(el => { if (devLogo) el.src = devLogo; });
       document.querySelectorAll('[data-bind-asset="dev-qr"]').forEach(el => { if (devQr) el.src = devQr; });
     })();
 
+    window.__DEV_WEB_QR_B64 = "data:image/webp;base64,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";
     const MERCHANT_UPI_ID = "vyapar.178552634679@hdfcbank";
     const MERCHANT_NAME = "AB DATES AND DRY FRUITS";
     const MERCHANT_GSTIN = "36EKJPM4902A1ZF";
@@ -1721,7 +1946,7 @@
 
     // ==================== 4. TAB NAVIGATION ====================
     function switchPosTab(tab) {
-      ['BILLING', 'DASHBOARD', 'CATALOG', 'HISTORY', 'HELP_FEEDBACK'].forEach(t => {
+      ['BILLING', 'DASHBOARD', 'CATALOG', 'HISTORY', 'KHATA', 'SUPPLIERS', 'HELP_FEEDBACK'].forEach(t => {
         const panel = document.getElementById('tab_' + t);
         const btn = document.getElementById('tabBtn_' + t);
         if (panel) panel.classList.toggle('hidden', t !== tab);
@@ -1733,6 +1958,11 @@
       });
       if (tab === 'DASHBOARD') {
         setTimeout(() => renderDashboardGraphsAndAi(), 60);
+      } else if (tab === 'KHATA') {
+        loadKhataLedger();
+        renderKhataModalList();
+      } else if (tab === 'SUPPLIERS') {
+        renderSuppliersHub();
       }
     }
 
@@ -1807,9 +2037,12 @@
     }
 
     
-    // ==================== KHATA / CUSTOMER CREDIT (UDHAAR) LEDGER ENGINE ====================
+    // ==================== KHATA / CUSTOMER CREDIT BILLING, DIRECT ITEM BUILDER & REMINDER ENGINE ====================
     const KHATA_STORAGE_KEY = 'ab_khata_ledger_v1';
     let khataLedger = [];
+    let khataDraftItems = [];
+    let khataItemMode = 'WEIGHT'; // 'WEIGHT' or 'PIECE'
+    let appendingToKhataId = null;
 
     function loadKhataLedger() {
       try {
@@ -1830,24 +2063,281 @@
     }
 
     function updateKhataBadge() {
-      const pending = khataLedger.filter(k => k.status !== 'PAID');
+      const pending = khataLedger.filter(k => k.status !== 'PAID' && (parseFloat(k.amount) || 0) > 0);
       const badge = document.getElementById('khataCountBadge');
       if (badge) badge.innerText = String(pending.length);
-      const totalEl = document.getElementById('khataTotalPendingAmt');
-      if (totalEl) {
-        const sum = pending.reduce((s, k) => s + (parseFloat(k.amount) || 0), 0);
-        totalEl.innerText = '₹' + Math.round(sum);
+
+      const totalBilled = khataLedger.reduce((s, k) => s + (parseFloat(k.totalBill || k.amount) || 0), 0);
+      const totalPending = pending.reduce((s, k) => s + (parseFloat(k.amount) || 0), 0);
+      const totalRecovered = Math.max(0, totalBilled - totalPending);
+      const recPct = totalBilled > 0 ? Math.round((totalRecovered / totalBilled) * 100) : 100;
+      const todayIso = new Date().toISOString().split('T')[0];
+      const dueCount = pending.filter(k => !k.dueDate || k.dueDate <= todayIso).length;
+
+      const elPending = document.getElementById('khataTotalPendingAmt');
+      if (elPending) elPending.innerText = '₹' + Math.round(totalPending);
+      const elBilled = document.getElementById('khataStatTotalBilled');
+      if (elBilled) elBilled.innerText = '₹' + Math.round(totalBilled);
+      const elAcc = document.getElementById('khataStatAccountsCount');
+      if (elAcc) elAcc.innerText = `${pending.length} Active / ${khataLedger.length} Total`;
+      const elRec = document.getElementById('khataStatTotalRecovered');
+      if (elRec) elRec.innerText = '₹' + Math.round(totalRecovered);
+      const elRecRate = document.getElementById('khataStatRecoveryRate');
+      if (elRecRate) elRecRate.innerText = `${recPct}% Recovery Rate`;
+      const elDueToday = document.getElementById('khataStatDueTodayCount');
+      if (elDueToday) elDueToday.innerText = String(dueCount);
+    }
+
+    function renderKhataQuickCatalogChips() {
+      const box = document.getElementById('khataQuickItemChips');
+      if (!box) return;
+      box.innerHTML = Object.keys(masterCatalog).map(k => {
+        const it = masterCatalog[k];
+        const isPc = isPieceOrNoGramItem(it);
+        return `
+          <button type="button" onclick="selectKhataQuickChip('${k}')"
+                  class="shrink-0 bg-stone-50 hover:bg-emerald-50 border border-stone-300 hover:border-emerald-600 px-2.5 py-1 rounded-xl text-[11px] font-bold text-stone-800 flex items-center gap-1 transition">
+            <span>${escapeHtml(it.name.split('(')[0].trim())}</span>
+            <strong class="text-emerald-800">₹${it.offlineRate}${isPc ? '/Pc' : '/Kg'}</strong>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectKhataQuickChip(key) {
+      const it = masterCatalog[key];
+      if (!it) return;
+      document.getElementById('khataItemName').value = it.name;
+      document.getElementById('khataItemRate').value = it.offlineRate;
+      setKhataItemMode(isPieceOrNoGramItem(it) ? 'PIECE' : 'WEIGHT');
+      document.getElementById('khataItemWt').value = '1';
+      recalcKhataItemLine();
+    }
+
+    function setKhataItemMode(mode) {
+      khataItemMode = (mode === 'PIECE') ? 'PIECE' : 'WEIGHT';
+      const wBtn = document.getElementById('khataModeWeightBtn');
+      const pBtn = document.getElementById('khataModePieceBtn');
+      const packSel = document.getElementById('khataPackPreset');
+      const wtInp = document.getElementById('khataItemWt');
+      const packLbl = document.getElementById('khataPackLbl');
+      const wtLbl = document.getElementById('khataWtLbl');
+      const rateLbl = document.getElementById('khataRateLbl');
+
+      if (khataItemMode === 'PIECE') {
+        if (pBtn) pBtn.className = "px-2.5 py-1 rounded-lg text-[10px] font-black bg-amber-500 text-stone-950 shadow-sm";
+        if (wBtn) wBtn.className = "px-2.5 py-1 rounded-lg text-[10px] font-black bg-stone-100 text-stone-700 border border-stone-300";
+        if (packLbl) packLbl.innerText = "Quick Qty";
+        if (wtLbl) wtLbl.innerText = "Qty (Pcs)";
+        if (rateLbl) rateLbl.innerText = "Rate (₹/Pc)";
+        if (packSel) {
+          packSel.innerHTML = `
+            <option value="1">1 Pc / Pack</option>
+            <option value="2">2 Pcs</option>
+            <option value="3">3 Pcs</option>
+            <option value="5">5 Pcs</option>
+            <option value="10">10 Pcs</option>
+            <option value="custom">Custom</option>
+          `;
+        }
+        if (wtInp) {
+          wtInp.step = "1";
+          wtInp.value = Math.max(1, Math.round(parseFloat(wtInp.value) || 1));
+        }
+      } else {
+        if (wBtn) wBtn.className = "px-2.5 py-1 rounded-lg text-[10px] font-black bg-emerald-800 text-white shadow-sm";
+        if (pBtn) pBtn.className = "px-2.5 py-1 rounded-lg text-[10px] font-black bg-stone-100 text-stone-700 border border-stone-300";
+        if (packLbl) packLbl.innerText = "Quick Pack";
+        if (wtLbl) wtLbl.innerText = "Exact Wt (Kg)";
+        if (rateLbl) rateLbl.innerText = "1Kg Rate (₹)";
+        if (packSel) {
+          packSel.innerHTML = `
+            <option value="1">1 Kg Full</option>
+            <option value="0.5">500 gm</option>
+            <option value="0.25">250 gm</option>
+            <option value="0.1">100 gm</option>
+            <option value="2">2 Kg</option>
+            <option value="custom">Custom</option>
+          `;
+        }
+        if (wtInp) wtInp.step = "0.001";
       }
+      recalcKhataItemLine();
+    }
+
+    function onKhataItemInput() {
+      const val = (document.getElementById('khataItemName')?.value || '').trim().toLowerCase();
+      const matchKey = Object.keys(masterCatalog).find(k => {
+        const it = masterCatalog[k];
+        return it.name.toLowerCase() === val || (it.code && it.code.toLowerCase() === val);
+      });
+      if (matchKey) {
+        const it = masterCatalog[matchKey];
+        document.getElementById('khataItemRate').value = it.offlineRate;
+        setKhataItemMode(isPieceOrNoGramItem(it) ? 'PIECE' : 'WEIGHT');
+        recalcKhataItemLine();
+      } else if (val.length > 2 && isPieceOrNoGramItem('', val)) {
+        setKhataItemMode('PIECE');
+      }
+    }
+
+    function onKhataPackChange() {
+      const val = document.getElementById('khataPackPreset')?.value;
+      if (val && val !== 'custom') {
+        document.getElementById('khataItemWt').value = parseFloat(val);
+        recalcKhataItemLine();
+      }
+    }
+
+    function recalcKhataItemLine() {
+      const wt = parseFloat(document.getElementById('khataItemWt')?.value) || 0;
+      const rate = parseFloat(document.getElementById('khataItemRate')?.value) || 0;
+      const tot = Math.round(wt * rate);
+      const totEl = document.getElementById('khataItemTotal');
+      if (totEl) totEl.value = tot > 0 ? tot : '';
+    }
+
+    function recalcKhataWtFromTotal() {
+      const tot = parseFloat(document.getElementById('khataItemTotal')?.value) || 0;
+      const rate = parseFloat(document.getElementById('khataItemRate')?.value) || 0;
+      if (rate > 0 && tot > 0) {
+        const wt = khataItemMode === 'PIECE' ? Math.max(1, Math.round(tot / rate)) : +(tot / rate).toFixed(3);
+        document.getElementById('khataItemWt').value = wt;
+        document.getElementById('khataPackPreset').value = 'custom';
+      }
+    }
+
+    function addItemToKhataDraft() {
+      const name = (document.getElementById('khataItemName')?.value || '').trim();
+      let wt = parseFloat(document.getElementById('khataItemWt')?.value);
+      if (isNaN(wt) || wt <= 0) wt = 1;
+      const rate = parseFloat(document.getElementById('khataItemRate')?.value) || 0;
+      const isPc = khataItemMode === 'PIECE' || isPieceOrNoGramItem('', name);
+      if (isPc) wt = Math.max(1, Math.round(wt));
+      const total = parseFloat(document.getElementById('khataItemTotal')?.value) || Math.round(wt * rate);
+
+      if (!name || rate <= 0) {
+        showPosToast("Enter Item Name and Rate ₹ to add to Khata bill!", "⚠️");
+        return;
+      }
+
+      const packLabel = isPc ? (wt === 1 ? '1 Pc' : `${wt} Pcs`) : (wt < 1 ? `${Math.round(wt * 1000)}g` : `${wt}Kg`);
+      khataDraftItems.push({
+        name,
+        unitType: isPc ? 'PIECE' : 'WEIGHT',
+        wt: isPc ? wt : +wt.toFixed(3),
+        packLabel,
+        rate,
+        total: Math.round(total)
+      });
+
+      document.getElementById('khataItemName').value = '';
+      document.getElementById('khataItemWt').value = '1';
+      document.getElementById('khataItemRate').value = '';
+      document.getElementById('khataItemTotal').value = '';
+      renderKhataDraftTable();
+      document.getElementById('khataItemName')?.focus();
+    }
+
+    function removeKhataDraftRow(idx) {
+      khataDraftItems.splice(idx, 1);
+      renderKhataDraftTable();
+    }
+
+    function renderKhataDraftTable() {
+      const tbody = document.getElementById('khataDraftItemsBody');
+      if (!tbody) return;
+      if (khataDraftItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-stone-400 font-semibold">Add items above (or type a custom note below) to build a systematic Khata bill.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = khataDraftItems.map((it, idx) => `
+        <tr class="hover:bg-stone-50 font-bold text-stone-800">
+          <td class="p-2 text-stone-400">${idx + 1}</td>
+          <td class="p-2 font-black text-stone-900">${escapeHtml(it.name)}</td>
+          <td class="p-2 text-center">${escapeHtml(it.packLabel)}</td>
+          <td class="p-2 text-center">₹${it.rate}${it.unitType === 'PIECE' ? '/Pc' : '/Kg'}</td>
+          <td class="p-2 text-right font-black text-emerald-800">₹${it.total}</td>
+          <td class="p-2 text-center">
+            <button type="button" onclick="removeKhataDraftRow(${idx})" class="text-red-500 hover:text-red-700 font-black px-2">✕</button>
+          </td>
+        </tr>
+      `).join('');
+
+      const sumTotal = khataDraftItems.reduce((s, i) => s + (parseFloat(i.total) || 0), 0);
+      const summaryText = khataDraftItems.map(i => `${i.name} (${i.packLabel} - ₹${i.total})`).join(', ');
+      if (document.getElementById('manualKhataItems')) document.getElementById('manualKhataItems').value = summaryText;
+      if (document.getElementById('manualKhataTotalBill')) document.getElementById('manualKhataTotalBill').value = Math.round(sumTotal);
+      calcKhataReminderCost();
+    }
+
+    function startAppendingItemsToKhata(id) {
+      loadKhataLedger();
+      const entry = khataLedger.find(k => k.id === id);
+      if (!entry) return;
+      appendingToKhataId = id;
+      khataDraftItems = [];
+      renderKhataDraftTable();
+      if (document.getElementById('manualKhataName')) document.getElementById('manualKhataName').value = entry.customer || '';
+      if (document.getElementById('manualKhataPhone')) document.getElementById('manualKhataPhone').value = entry.phone || '';
+      if (document.getElementById('manualKhataDueDate')) document.getElementById('manualKhataDueDate').value = entry.dueDate || '';
+      const badge = document.getElementById('khataActiveTargetBadge');
+      if (badge) {
+        badge.innerText = `➕ Appending New Items to ${entry.customer}'s Khata (Current Due: ₹${entry.amount})`;
+        badge.classList.remove('hidden');
+      }
+      document.getElementById('khataItemName')?.focus();
+      document.getElementById('tab_KHATA')?.scrollIntoView({ behavior: 'smooth' });
+      showPosToast(`Add items above and click "💾 Save Khata" to append to ${entry.customer}'s Khata!`, "➕");
+    }
+
+    function calcKhataReminderCost() {
+      const tot = parseFloat(document.getElementById('manualKhataTotalBill')?.value) || 0;
+      const paid = parseFloat(document.getElementById('manualKhataPaidNow')?.value) || 0;
+      const remEl = document.getElementById('manualKhataAmt');
+      if (remEl && tot > 0) {
+        remEl.value = Math.max(0, Math.round(tot - paid));
+      }
+    }
+
+    function billCurrentCartIntoKhata() {
+      if (!currentBill || currentBill.length === 0) {
+        switchPosTab('KHATA');
+        showPosToast("Switched to Khata Book — add items directly above!", "📓");
+        return;
+      }
+      const name = (document.getElementById('walkinName')?.value || '').trim();
+      const phone = (document.getElementById('walkinPhone')?.value || '').trim();
+      if (!name && !phone) {
+        showPosToast("Please enter Customer Name or Mobile Number to bill into Khata!", "⚠️");
+        document.getElementById('walkinName')?.focus();
+        return;
+      }
+      document.getElementById('payMode').value = 'KHATA';
+      completeSale(false);
+      switchPosTab('KHATA');
+      showPosToast(`Billed to Khata for ${name || phone}!`, "📓");
     }
 
     function recordKhataDueFromSale(saleRecord) {
       loadKhataLedger();
+      const itemsSummary = (saleRecord.items || []).map(i => `${i.name} (${i.packLabel} - ₹${i.total})`).join(', ');
+      const cashGiven = parseFloat(document.getElementById('cashTendered')?.value) || 0;
+      const reminderDue = cashGiven > 0 && cashGiven < saleRecord.total
+        ? Math.round(saleRecord.total - cashGiven)
+        : Math.round(saleRecord.total || 0);
+
       khataLedger.unshift({
         id: 'KH-' + Date.now().toString().slice(-5),
         billNo: saleRecord.billNo,
         customer: saleRecord.customer || 'Walk-in Customer',
         phone: saleRecord.phone || '',
-        amount: saleRecord.total || 0,
+        itemsNote: itemsSummary || 'POS Counter Bill',
+        itemsList: saleRecord.items || [],
+        totalBill: saleRecord.total || 0,
+        paidAmt: cashGiven > 0 && cashGiven < saleRecord.total ? Math.round(cashGiven) : 0,
+        amount: reminderDue,
+        dueDate: new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0],
         date: saleRecord.date,
         status: 'PENDING'
       });
@@ -1857,27 +2347,103 @@
     function addManualKhataEntry() {
       const name = (document.getElementById('manualKhataName')?.value || '').trim();
       const phone = (document.getElementById('manualKhataPhone')?.value || '').trim();
-      const amt = parseFloat(document.getElementById('manualKhataAmt')?.value) || 0;
+      const itemsNote = (document.getElementById('manualKhataItems')?.value || '').trim() || 'Direct Khata Bill';
+      const totalBill = parseFloat(document.getElementById('manualKhataTotalBill')?.value) || 0;
+      const paidAmt = parseFloat(document.getElementById('manualKhataPaidNow')?.value) || 0;
+      const amt = parseFloat(document.getElementById('manualKhataAmt')?.value) || Math.max(0, totalBill - paidAmt);
+      const dueDate = document.getElementById('manualKhataDueDate')?.value || '';
+
       if (!name || amt <= 0) {
-        showPosToast("Enter Customer Name and Due Amount ₹!", "⚠️");
+        showPosToast("Enter Customer Name and add items (or enter Reminder Cost ₹)!", "⚠️");
         return;
       }
+
+      // Deduct stock for any items added directly in Khata Book
+      if (khataDraftItems.length > 0) {
+        khataDraftItems.forEach(soldItem => {
+          const key = Object.keys(masterCatalog).find(k => masterCatalog[k].name.toLowerCase() === soldItem.name.toLowerCase());
+          if (key && masterCatalog[key].stockKg !== undefined) {
+            masterCatalog[key].stockKg = Math.max(0, +(masterCatalog[key].stockKg - soldItem.wt).toFixed(2));
+            if (db) db.ref('master_catalog/' + key + '/stockKg').set(masterCatalog[key].stockKg);
+          }
+        });
+        safeSetStorage('ab_master_catalog_v3', JSON.stringify(masterCatalog));
+        renderCatalogUI();
+      }
+
       loadKhataLedger();
+
+      if (appendingToKhataId) {
+        const idx = khataLedger.findIndex(k => k.id === appendingToKhataId);
+        if (idx > -1) {
+          const existing = khataLedger[idx];
+          const dateTag = new Date().toLocaleDateString('en-IN');
+          existing.itemsNote = (existing.itemsNote ? existing.itemsNote + ` | [${dateTag}] ` : '') + itemsNote;
+          existing.totalBill = Math.round((parseFloat(existing.totalBill) || 0) + (totalBill || amt));
+          existing.paidAmt = Math.round((parseFloat(existing.paidAmt) || 0) + paidAmt);
+          existing.amount = Math.round((parseFloat(existing.amount) || 0) + amt);
+          if (dueDate) existing.dueDate = dueDate;
+          existing.status = existing.amount > 0 ? 'PENDING' : 'PAID';
+          appendingToKhataId = null;
+          document.getElementById('khataActiveTargetBadge')?.classList.add('hidden');
+          saveKhataLedger();
+          resetKhataFormFields();
+          renderKhataModalList();
+          showPosToast(`Appended items (+₹${Math.round(amt)}) to ${existing.customer}'s Khata!`, "✅");
+          return;
+        }
+        appendingToKhataId = null;
+      }
+
       khataLedger.unshift({
         id: 'KH-' + Date.now().toString().slice(-5),
-        billNo: 'MANUAL',
+        billNo: 'KH-' + Math.floor(100 + Math.random() * 900),
         customer: name,
         phone: phone,
+        itemsNote: itemsNote,
+        itemsList: [...khataDraftItems],
+        totalBill: Math.round(totalBill || amt),
+        paidAmt: Math.round(paidAmt),
         amount: Math.round(amt),
+        dueDate: dueDate,
         date: new Date().toLocaleString('en-IN'),
         status: 'PENDING'
       });
       saveKhataLedger();
-      document.getElementById('manualKhataName').value = '';
-      document.getElementById('manualKhataPhone').value = '';
-      document.getElementById('manualKhataAmt').value = '';
+      resetKhataFormFields();
       renderKhataModalList();
-      showPosToast(`Added ₹${amt} credit due for ${name}`, "📓");
+      showPosToast(`Saved Khata Bill & Reminder of ₹${Math.round(amt)} for ${name}`, "📓");
+    }
+
+    function resetKhataFormFields() {
+      khataDraftItems = [];
+      renderKhataDraftTable();
+      if (document.getElementById('manualKhataName')) document.getElementById('manualKhataName').value = '';
+      if (document.getElementById('manualKhataPhone')) document.getElementById('manualKhataPhone').value = '';
+      if (document.getElementById('manualKhataItems')) document.getElementById('manualKhataItems').value = '';
+      if (document.getElementById('manualKhataTotalBill')) document.getElementById('manualKhataTotalBill').value = '';
+      if (document.getElementById('manualKhataPaidNow')) document.getElementById('manualKhataPaidNow').value = '0';
+      if (document.getElementById('manualKhataAmt')) document.getElementById('manualKhataAmt').value = '';
+      document.getElementById('khataActiveTargetBadge')?.classList.add('hidden');
+    }
+
+    function saveUpdatedKhataReminderCost(id) {
+      loadKhataLedger();
+      const idx = khataLedger.findIndex(k => k.id === id);
+      if (idx === -1) return;
+      const inp = document.getElementById('khataCostInp_' + id);
+      const dateInp = document.getElementById('khataDateInp_' + id);
+      if (inp) {
+        const newCost = Math.max(0, Math.round(parseFloat(inp.value) || 0));
+        khataLedger[idx].amount = newCost;
+        khataLedger[idx].status = newCost === 0 ? 'PAID' : 'PENDING';
+      }
+      if (dateInp) {
+        khataLedger[idx].dueDate = dateInp.value;
+      }
+      saveKhataLedger();
+      renderKhataModalList();
+      showPosToast(`Saved updated Reminder Cost (₹${khataLedger[idx].amount})!`, "💾");
     }
 
     function markKhataPaid(id) {
@@ -1885,6 +2451,8 @@
       const idx = khataLedger.findIndex(k => k.id === id);
       if (idx > -1) {
         khataLedger[idx].status = 'PAID';
+        khataLedger[idx].paidAmt = khataLedger[idx].totalBill || khataLedger[idx].amount;
+        khataLedger[idx].amount = 0;
         khataLedger[idx].paidAt = new Date().toLocaleString('en-IN');
         saveKhataLedger();
         renderKhataModalList();
@@ -1899,58 +2467,326 @@
       renderKhataModalList();
     }
 
+    function buildKhataReminderPlainText(entry) {
+      const dueStr = entry.dueDate ? ` (Reminder Date: ${entry.dueDate})` : '';
+      return `AB DATES & DRY FRUITS (Khammam)\nNamaste ${entry.customer},\nFriendly payment reminder for your Khata Bill #${entry.billNo}${entry.itemsNote ? ' (' + entry.itemsNote + ')' : ''}.\nPending Reminder Amount: Rs.${entry.amount}${dueStr}\nPay via UPI: ${MERCHANT_UPI_ID}\nContact: 91543 39465\nThank you!`;
+    }
+
     function sendKhataWhatsAppReminder(id) {
       const entry = khataLedger.find(k => k.id === id);
       if (!entry) return;
+      saveUpdatedKhataReminderCost(id);
       const cleanPhone = (entry.phone || '').replace(/\D/g, '');
-      const msg = `*AB DATES & DRY FRUITS (KHAMMAM)*%0ANamaste *${entry.customer}*,%0AYour pending bill balance of *₹${entry.amount}* (Bill #${entry.billNo}) is due.%0A💳 *Pay via UPI:* ${MERCHANT_UPI_ID}%0A📞 Store Contact: 91543 39465%0AThank you!`;
-      const url = cleanPhone.length >= 10 ? `https://wa.me/91${cleanPhone.slice(-10)}?text=${msg}` : `https://wa.me/?text=${msg}`;
+      const text = encodeURIComponent(buildKhataReminderPlainText(entry));
+      const url = cleanPhone.length >= 10 ? `https://wa.me/91${cleanPhone.slice(-10)}?text=${text}` : `https://wa.me/?text=${text}`;
       window.open(url, '_blank');
     }
 
+    function sendKhataSmsReminder(id) {
+      const entry = khataLedger.find(k => k.id === id);
+      if (!entry) return;
+      saveUpdatedKhataReminderCost(id);
+      const cleanPhone = (entry.phone || '').replace(/\D/g, '');
+      const body = encodeURIComponent(buildKhataReminderPlainText(entry));
+      const phoneTarget = cleanPhone.length >= 10 ? `+91${cleanPhone.slice(-10)}` : '';
+      window.location.href = `sms:${phoneTarget}?body=${body}`;
+    }
+
     function openKhataModal() {
-      loadKhataLedger();
-      renderKhataModalList();
-      document.getElementById('khataModal')?.classList.remove('hidden');
+      switchPosTab('KHATA');
     }
 
     function closeKhataModal() {
       document.getElementById('khataModal')?.classList.add('hidden');
     }
 
+    function exportKhataExcel() {
+      loadKhataLedger();
+      if (!khataLedger.length) {
+        showPosToast("No Khata entries to export!", "⚠️");
+        return;
+      }
+      const rows = khataLedger.map(k => ({
+        Bill_No: k.billNo,
+        Date: k.date,
+        Customer: k.customer,
+        Mobile: k.phone || '',
+        Items_Added: k.itemsNote || '',
+        Total_Bill: k.totalBill || k.amount,
+        Paid_Advance: k.paidAmt || 0,
+        Pending_Reminder_Cost: k.amount,
+        Reminder_Date: k.dueDate || '',
+        Status: k.status
+      }));
+      const ws = XLSX.utils.json_to_sheet(rows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Khata_Book");
+      XLSX.writeFile(wb, "AB_Dry_Fruits_Khata_Book.xlsx");
+    }
+
     function renderKhataModalList() {
       const box = document.getElementById('khataListContainer');
       if (!box) return;
       updateKhataBadge();
-      if (khataLedger.length === 0) {
-        box.innerHTML = `<div class="p-6 text-center text-stone-400 text-xs font-bold">No pending Khata / Credit dues recorded. Select "📓 KHATA / CREDIT DUE" during checkout or add a due above.</div>`;
+      renderKhataQuickCatalogChips();
+
+      const q = (document.getElementById('khataSearchInput')?.value || '').toLowerCase();
+      const statusFilter = document.getElementById('khataFilterStatus')?.value || 'ALL';
+
+      const filtered = khataLedger.filter(k => {
+        if (statusFilter === 'PENDING' && (k.status === 'PAID' || (parseFloat(k.amount) || 0) <= 0)) return false;
+        if (statusFilter === 'PAID' && k.status !== 'PAID') return false;
+        if (!q) return true;
+        return (k.customer || '').toLowerCase().includes(q) ||
+               (k.phone || '').toLowerCase().includes(q) ||
+               (k.itemsNote || '').toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        box.innerHTML = `<div class="p-8 text-center text-stone-400 text-xs font-bold bg-white rounded-2xl border border-stone-200">No Khata records match your filter. Add items directly in the White Khata Builder above and click "💾 Save Khata".</div>`;
         return;
       }
-      box.innerHTML = khataLedger.map(k => {
-        const isPaid = k.status === 'PAID';
+
+      box.innerHTML = filtered.map(k => {
+        const isPaid = k.status === 'PAID' || (parseFloat(k.amount) || 0) <= 0;
         return `
-          <div class="py-2.5 flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <div class="text-xs font-black text-stone-900 flex items-center gap-1.5">
+          <div class="p-4 bg-white hover:bg-stone-50/80 rounded-2xl border-2 border-stone-200 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <div class="min-w-[240px] flex-1 space-y-1">
+              <div class="text-sm font-black text-stone-900 flex flex-wrap items-center gap-2">
                 <span>${escapeHtml(k.customer)}</span>
-                ${k.phone ? `<span class="text-[10px] font-mono text-stone-500">(${escapeHtml(k.phone)})</span>` : ''}
-                <span class="text-[9px] px-2 py-0.5 rounded-full font-black ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-700'}">${isPaid ? '✓ PAID' : '⏳ PENDING DUE'}</span>
+                ${k.phone ? `<a href="tel:${escapeHtml(k.phone)}" class="text-xs font-mono text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">📞 ${escapeHtml(k.phone)}</a>` : ''}
+                <span class="text-[10px] px-2.5 py-0.5 rounded-full font-black ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-700'}">${isPaid ? '✓ SETTLED' : '⏰ REMINDER ACTIVE'}</span>
               </div>
-              <div class="text-[10px] text-stone-500 font-semibold">Bill #${escapeHtml(String(k.billNo))} • ${escapeHtml(k.date || '')}</div>
+              <div class="text-xs text-stone-800 font-bold bg-stone-50 p-2 rounded-xl border border-stone-200">
+                📦 <strong>Items:</strong> ${escapeHtml(k.itemsNote || 'POS Credit Bill')}
+              </div>
+              <div class="text-[11px] text-stone-500 font-semibold flex flex-wrap gap-3">
+                <span>Bill #${escapeHtml(String(k.billNo))}</span>
+                <span>• Date: ${escapeHtml(k.date || '')}</span>
+                <span>• Total Billed: <strong class="text-stone-800">₹${k.totalBill || k.amount}</strong></span>
+                <span>• Paid: <strong class="text-emerald-700">₹${k.paidAmt || 0}</strong></span>
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-black ${isPaid ? 'text-stone-400 line-through' : 'text-red-700'}">₹${k.amount}</span>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="startAppendingItemsToKhata('${k.id}')" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-black px-3 py-2 rounded-xl text-xs shadow-sm">
+                ➕ Add Items
+              </button>
+
+              <div class="flex items-center gap-1.5 bg-stone-50 p-1.5 rounded-xl border border-stone-300">
+                <div class="text-left px-1">
+                  <span class="text-[9px] font-black uppercase text-stone-500 block">Reminder Cost (₹)</span>
+                  <input id="khataCostInp_${k.id}" type="number" value="${k.amount}" class="w-24 border border-red-400 rounded-lg px-2 py-1 text-sm font-black text-red-700 bg-white text-center">
+                </div>
+                <div class="text-left px-1">
+                  <span class="text-[9px] font-black uppercase text-stone-500 block">Reminder Date</span>
+                  <input id="khataDateInp_${k.id}" type="date" value="${k.dueDate || ''}" class="border border-stone-300 rounded-lg px-2 py-1 text-[11px] font-bold bg-white">
+                </div>
+                <button type="button" onclick="saveUpdatedKhataReminderCost('${k.id}')" class="bg-stone-900 hover:bg-stone-800 text-[#F8CB46] font-black px-2.5 py-2 rounded-xl text-[11px] shadow-sm">
+                  💾 Save Cost
+                </button>
+              </div>
+
               ${!isPaid ? `
-                <button onclick="sendKhataWhatsAppReminder('${k.id}')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-black px-2.5 py-1 rounded-xl text-[10px]">💬 WhatsApp Reminder</button>
-                <button onclick="markKhataPaid('${k.id}')" class="bg-stone-900 hover:bg-stone-800 text-[#F8CB46] font-black px-2.5 py-1 rounded-xl text-[10px]">✓ Mark Paid</button>
+                <button type="button" onclick="sendKhataWhatsAppReminder('${k.id}')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black px-3 py-2 rounded-xl text-xs shadow-sm">
+                  💬 WhatsApp Direct
+                </button>
+                <button type="button" onclick="sendKhataSmsReminder('${k.id}')" class="bg-sky-700 hover:bg-sky-800 text-white font-black px-3 py-2 rounded-xl text-xs shadow-sm">
+                  📲 Direct SMS
+                </button>
+                <button type="button" onclick="markKhataPaid('${k.id}')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300 font-black px-3 py-2 rounded-xl text-xs">
+                  ✓ Mark Paid
+                </button>
               ` : ''}
-              <button onclick="deleteKhataEntry('${k.id}')" class="text-red-500 hover:text-red-700 font-bold text-xs px-1.5">🗑️</button>
+              <button type="button" onclick="deleteKhataEntry('${k.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-2.5 py-2 rounded-xl text-xs">🗑️</button>
             </div>
           </div>
         `;
       }).join('');
     }
-    setTimeout(loadKhataLedger, 150);
+
+    // ==================== DRY FRUIT SUPPLIER & WHOLESALE STOCK-IN TECH ENGINE ====================
+    const SUPPLIERS_STORAGE_KEY = 'ab_suppliers_directory_v1';
+    const defaultSuppliers = [
+      { id: 'SUP-1', name: 'Al-Madinah Royal Dates Importers', phone: '9848011223', city: 'Hyderabad / Madinah Import', balanceDue: 0 },
+      { id: 'SUP-2', name: 'Kashmir Pampore Saffron & Walnut Co.', phone: '9849022334', city: 'Srinagar / Begum Bazar', balanceDue: 0 },
+      { id: 'SUP-3', name: 'Goa W240 Cashew & Badam Syndicate', phone: '9989033445', city: 'Panaji / Vijayawada', balanceDue: 0 },
+      { id: 'SUP-4', name: 'Royal Imported Chocolates & Bakery Hub', phone: '9701044556', city: 'Hyderabad Wholesale', balanceDue: 0 }
+    ];
+    let suppliersList = [];
+
+    function loadSuppliersData() {
+      try {
+        const raw = JSON.parse(safeGetStorage(SUPPLIERS_STORAGE_KEY, 'null'));
+        suppliersList = Array.isArray(raw) && raw.length > 0 ? raw : defaultSuppliers;
+      } catch (e) {
+        suppliersList = defaultSuppliers;
+      }
+    }
+
+    function saveSuppliersData() {
+      safeSetStorage(SUPPLIERS_STORAGE_KEY, JSON.stringify(suppliersList));
+      if (db) {
+        try { db.ref('ab_suppliers').set(suppliersList); } catch (e) {}
+      }
+      renderSuppliersHub();
+    }
+
+    function renderSuppliersHub() {
+      loadSuppliersData();
+      const supSel = document.getElementById('stockInSupplierSelect');
+      if (supSel) {
+        supSel.innerHTML = suppliersList.map(s => `<option value="${s.id}">${escapeHtml(s.name)} (${escapeHtml(s.city)})</option>`).join('');
+      }
+      const itemSel = document.getElementById('stockInItemSelect');
+      if (itemSel) {
+        itemSel.innerHTML = Object.keys(masterCatalog).map(k => {
+          const it = masterCatalog[k];
+          const unit = isPieceOrNoGramItem(it) ? 'Pcs' : 'Kg';
+          return `<option value="${k}">${escapeHtml(it.name)} (Stock: ${it.stockKg || 0} ${unit})</option>`;
+        }).join('');
+      }
+
+      // Low-stock radar
+      const lowItems = Object.entries(masterCatalog).filter(([_, it]) => (parseFloat(it.stockKg) || 0) <= 12);
+      const lowBadge = document.getElementById('lowStockNavBadge');
+      if (lowBadge) lowBadge.innerText = String(lowItems.length);
+      const radarEl = document.getElementById('lowStockRadarList');
+      if (radarEl) {
+        if (lowItems.length === 0) {
+          radarEl.innerHTML = `<div class="text-xs font-bold text-emerald-800 py-1">✅ All dry fruits, chocolates & bakery items have healthy stock (> 12 Kg/Pcs).</div>`;
+        } else {
+          radarEl.innerHTML = lowItems.map(([k, it]) => {
+            const unit = isPieceOrNoGramItem(it) ? 'Pcs' : 'Kg';
+            return `
+              <button onclick="document.getElementById('stockInItemSelect').value='${k}';document.getElementById('stockInQty').focus();"
+                      class="shrink-0 bg-white hover:bg-red-50 border-2 border-red-300 px-3 py-1.5 rounded-xl text-xs font-black text-red-800 shadow-sm flex items-center gap-1.5">
+                <span>⚠️ ${escapeHtml(it.name)}</span>
+                <span class="bg-red-600 text-white px-1.5 py-0.5 rounded text-[10px]">${it.stockKg || 0} ${unit} left</span>
+              </button>
+            `;
+          }).join('');
+        }
+      }
+
+      const totalPayable = suppliersList.reduce((s, x) => s + (parseFloat(x.balanceDue) || 0), 0);
+      const totEl = document.getElementById('supplierTotalPayableEl');
+      if (totEl) totEl.innerText = '₹' + Math.round(totalPayable);
+
+      const listBox = document.getElementById('suppliersListContainer');
+      if (listBox) {
+        listBox.innerHTML = suppliersList.map(s => `
+          <div class="py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <div class="text-xs font-black text-stone-900">${escapeHtml(s.name)} <span class="text-[10px] text-stone-500 font-bold">• ${escapeHtml(s.city || '')}</span></div>
+              <div class="text-[11px] font-mono text-emerald-800">📞 ${escapeHtml(s.phone || '')}</div>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-[10px] font-bold text-stone-500">Payable Due ₹:</span>
+              <input type="number" value="${s.balanceDue || 0}" onchange="updateSupplierDue('${s.id}', this.value)" class="w-20 border border-amber-400 rounded-lg px-2 py-1 text-xs font-black text-center bg-amber-50">
+              <button onclick="sendDirectSupplierMsg('${s.id}', 'WA')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black px-2.5 py-1 rounded-lg text-[10px]">💬 WhatsApp PO</button>
+              <button onclick="sendDirectSupplierMsg('${s.id}', 'SMS')" class="bg-sky-700 hover:bg-sky-800 text-white font-black px-2.5 py-1 rounded-lg text-[10px]">📲 SMS PO</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function addNewSupplier() {
+      const name = (document.getElementById('newSupName')?.value || '').trim();
+      const phone = (document.getElementById('newSupPhone')?.value || '').trim();
+      const city = (document.getElementById('newSupCity')?.value || '').trim() || 'Wholesale Supplier';
+      if (!name) {
+        showPosToast("Enter Supplier Name!", "⚠️");
+        return;
+      }
+      loadSuppliersData();
+      suppliersList.unshift({
+        id: 'SUP-' + Date.now().toString().slice(-4),
+        name,
+        phone,
+        city,
+        balanceDue: 0
+      });
+      document.getElementById('newSupName').value = '';
+      document.getElementById('newSupPhone').value = '';
+      document.getElementById('newSupCity').value = '';
+      saveSuppliersData();
+      showPosToast(`Added supplier ${name}`, "🚚");
+    }
+
+    function updateSupplierDue(supId, val) {
+      loadSuppliersData();
+      const s = suppliersList.find(x => x.id === supId);
+      if (s) {
+        s.balanceDue = Math.max(0, Math.round(parseFloat(val) || 0));
+        saveSuppliersData();
+        showPosToast("Updated supplier payable balance!", "💾");
+      }
+    }
+
+    function recordSupplierStockIn() {
+      const supId = document.getElementById('stockInSupplierSelect')?.value;
+      const itemKey = document.getElementById('stockInItemSelect')?.value;
+      const qty = parseFloat(document.getElementById('stockInQty')?.value) || 0;
+      const unpaidDue = parseFloat(document.getElementById('stockInDue')?.value) || 0;
+      if (!itemKey || !masterCatalog[itemKey] || qty <= 0) {
+        showPosToast("Select an item and enter incoming stock quantity!", "⚠️");
+        return;
+      }
+      masterCatalog[itemKey].stockKg = +((parseFloat(masterCatalog[itemKey].stockKg) || 0) + qty).toFixed(2);
+      safeSetStorage('ab_master_catalog_v3', JSON.stringify(masterCatalog));
+      if (db) db.ref('master_catalog/' + itemKey).set(masterCatalog[itemKey]);
+
+      if (unpaidDue > 0 && supId) {
+        loadSuppliersData();
+        const sup = suppliersList.find(x => x.id === supId);
+        if (sup) {
+          sup.balanceDue = Math.round((parseFloat(sup.balanceDue) || 0) + unpaidDue);
+          saveSuppliersData();
+        }
+      }
+      renderCatalogUI();
+      renderSuppliersHub();
+      document.getElementById('stockInCost').value = '';
+      document.getElementById('stockInDue').value = '0';
+      showPosToast(`Added +${qty} stock to ${masterCatalog[itemKey].name}!`, "📦");
+    }
+
+    function sendSupplierPoWhatsApp() {
+      const supId = document.getElementById('stockInSupplierSelect')?.value;
+      const itemKey = document.getElementById('stockInItemSelect')?.value;
+      const qty = parseFloat(document.getElementById('stockInQty')?.value) || 10;
+      loadSuppliersData();
+      const sup = suppliersList.find(x => x.id === supId) || suppliersList[0];
+      const item = masterCatalog[itemKey];
+      const unit = item && isPieceOrNoGramItem(item) ? 'Pcs/Boxes' : 'Kg';
+      const msg = `*PURCHASE ORDER — AB DATES & DRY FRUITS (KHAMMAM)*\nSupplier: ${sup ? sup.name : ''}\nPlease dispatch fresh wholesale stock:\n• *${item ? item.name : 'Dry Fruits'}* — *${qty} ${unit}*\n📍 Delivery: AB Dates & Dry Fruits, Near Bus Stand, Khammam (Ph: 91543 39465)`;
+      const cleanPhone = (sup?.phone || '').replace(/\D/g, '');
+      const url = cleanPhone.length >= 10 ? `https://wa.me/91${cleanPhone.slice(-10)}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    function sendDirectSupplierMsg(supId, channel) {
+      loadSuppliersData();
+      const sup = suppliersList.find(x => x.id === supId);
+      if (!sup) return;
+      const itemKey = document.getElementById('stockInItemSelect')?.value;
+      const qty = parseFloat(document.getElementById('stockInQty')?.value) || 10;
+      const item = masterCatalog[itemKey];
+      const unit = item && isPieceOrNoGramItem(item) ? 'Pcs/Boxes' : 'Kg';
+      const msg = `PURCHASE ORDER - AB DATES & DRY FRUITS (Khammam)\nHello ${sup.name},\nPlease dispatch wholesale order: ${item ? item.name : 'Dry Fruits'} - ${qty} ${unit}.${sup.balanceDue > 0 ? ' (Current Ledger Balance: Rs.' + sup.balanceDue + ')' : ''}\nContact: 91543 39465`;
+      const cleanPhone = (sup.phone || '').replace(/\D/g, '');
+      if (channel === 'SMS') {
+        const phoneTarget = cleanPhone.length >= 10 ? `+91${cleanPhone.slice(-10)}` : '';
+        window.location.href = `sms:${phoneTarget}?body=${encodeURIComponent(msg)}`;
+      } else {
+        const url = cleanPhone.length >= 10 ? `https://wa.me/91${cleanPhone.slice(-10)}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+      }
+    }
+
+    setTimeout(() => { loadKhataLedger(); renderSuppliersHub(); }, 150);
 
     function closeReceiptPreviewModal() {
       const modal = document.getElementById('receiptPreviewModal');
