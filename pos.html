@@ -441,6 +441,51 @@
                    class="border-2 border-emerald-600 bg-emerald-50/50 rounded-xl px-3 py-1.5 text-xs font-bold w-64 outline-none focus:bg-white"
                    onkeydown="handleQuickCodeScan(event)">
             <span id="billNoDisplay" class="text-xs font-mono bg-stone-900 text-[#F8CB46] px-3 py-1.5 rounded-xl font-black">Bill #1001</span>
+            <button onclick="holdCurrentBill(false, 'Manual Counter Hold')" title="Hold / Park Current Bill (Shortcut: F4)" class="bg-amber-500 hover:bg-amber-600 text-stone-950 font-black px-3 py-1.5 rounded-xl text-xs shadow-sm flex items-center gap-1 transition">
+              ⏸️ Hold Bill <span class="text-[9px] bg-stone-900/20 px-1.5 py-0.5 rounded font-mono">F4</span>
+            </button>
+            <button onclick="startNewBlankBillWithAutoHold()" title="Auto-Hold Current Bill & Start Fresh Bill (Shortcut: F8)" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black px-3 py-1.5 rounded-xl text-xs shadow-sm flex items-center gap-1 transition">
+              🆕 New Bill
+            </button>
+          </div>
+        </div>
+
+        <!-- AUTO-HOLD & MULTI-BILL PARK / RESUME ENGINE BAR -->
+        <div id="heldBillsBar" class="bg-gradient-to-r from-amber-50/95 via-stone-50 to-emerald-50/90 border-2 border-amber-300/90 rounded-2xl p-3 shadow-sm space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-black uppercase tracking-wider text-stone-900 flex items-center gap-1.5">
+                ⏸️ Held / Parked Bills
+                <span id="heldBillsCountBadge" class="bg-amber-500 text-stone-950 px-2 py-0.5 rounded-full text-[10px] font-black shadow-sm">0</span>
+              </span>
+              <label class="inline-flex items-center gap-1.5 bg-white border border-emerald-400 px-2.5 py-1 rounded-xl cursor-pointer select-none shadow-sm" title="Automatically holds your active walk-in cart whenever you load an Online Order, switch to another Held Bill, click New Bill, or after inactivity">
+                <input type="checkbox" id="autoHoldToggle" checked onchange="toggleAutoHoldSetting(this.checked)" class="w-3.5 h-3.5 accent-emerald-700 rounded cursor-pointer">
+                <span class="text-[11px] font-black text-emerald-900">⚡ Auto-Hold Active</span>
+              </label>
+              <div class="inline-flex items-center gap-1 bg-white border border-stone-300 px-2 py-1 rounded-xl text-[10px] font-bold text-stone-700" title="Auto-hold active cart if counter is idle for selected minutes">
+                <span>⏱️ Idle Auto-Hold:</span>
+                <select id="autoHoldIdleSelect" onchange="updateAutoHoldIdleMinutes(this.value)" class="bg-transparent font-black text-amber-800 outline-none cursor-pointer">
+                  <option value="0">Off</option>
+                  <option value="2">2 Min</option>
+                  <option value="3" selected>3 Min</option>
+                  <option value="5">5 Min</option>
+                  <option value="10">10 Min</option>
+                </select>
+                <span id="autoHoldIdleCountdown" class="font-mono text-[9px] text-stone-500 ml-1"></span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span id="draftSavedIndicator" class="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-lg hidden">✓ Draft Auto-Saved</span>
+              <button onclick="holdCurrentBill(false, 'Manual Hold')" class="bg-amber-400 hover:bg-amber-500 text-stone-950 font-black px-2.5 py-1 rounded-xl text-[11px] shadow-sm transition">
+                + Hold Current Cart
+              </button>
+              <button onclick="clearAllHeldBills()" id="clearAllHeldBtn" class="hidden bg-red-100 hover:bg-red-200 text-red-700 font-bold px-2.5 py-1 rounded-xl text-[10px] transition">
+                🗑️ Clear Held
+              </button>
+            </div>
+          </div>
+          <div id="heldBillsList" class="flex gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-thin">
+            <div class="text-[11px] text-stone-400 italic py-1">No bills on hold — With ⚡ Auto-Hold enabled, any active cart is automatically parked if you inspect/load an online order, switch customers, or step away.</div>
           </div>
         </div>
 
@@ -671,6 +716,9 @@
             <div class="grid grid-cols-2 gap-1.5">
               <button onclick="sendWhatsAppReceipt()" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-black py-2 rounded-xl text-[11px]">
                 💬 WhatsApp Bill
+              </button>
+              <button onclick="holdCurrentBill(false, 'Checkout Bar Hold')" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400 font-black py-2 rounded-xl text-[11px]">
+                ⏸️ Hold Bill (F4)
               </button>
               <button onclick="clearCurrentBill()" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold py-2 rounded-xl text-[11px]">
                 🗑️ Reset Cart
@@ -1689,6 +1737,7 @@
       });
 
       renderBill();
+      if (typeof initAutoHoldEngine === "function" && !window.__autoHoldInited) { window.__autoHoldInited = true; initAutoHoldEngine(); }
 
       document.getElementById('posItem').value = '';
       document.getElementById('posWeight').value = '1';
@@ -1728,6 +1777,8 @@
     }
 
     function renderBill() {
+      if (typeof recordPosActivity === 'function') recordPosActivity();
+      setTimeout(() => { if (typeof saveActivePosDraftSnapshot === 'function') saveActivePosDraftSnapshot(); }, 10);
       const tbody = document.getElementById('billBody');
       tbody.innerHTML = '';
 
@@ -1790,7 +1841,349 @@
       renderBill();
     }
 
-    function clearCurrentBill() {
+    // =========================================================
+    // AUTO-HOLD & MULTI-BILL PARK / RESUME ENGINE (LOCAL + FIREBASE + CRASH RECOVERY)
+    // =========================================================
+    const HELD_BILLS_STORAGE_KEY = 'ab_held_bills_v1';
+    const AUTO_HOLD_ENABLED_KEY = 'ab_auto_hold_enabled_v1';
+    const AUTO_HOLD_IDLE_MINS_KEY = 'ab_auto_hold_idle_mins_v1';
+    const ACTIVE_POS_DRAFT_KEY = 'ab_active_pos_draft_v1';
+
+    let heldBills = [];
+    let autoHoldEnabled = safeGetStorage(AUTO_HOLD_ENABLED_KEY, 'true') !== 'false';
+    let autoHoldIdleMins = parseInt(safeGetStorage(AUTO_HOLD_IDLE_MINS_KEY, '3'), 10);
+    if (isNaN(autoHoldIdleMins)) autoHoldIdleMins = 3;
+    let lastPosActivityTimestamp = Date.now();
+    let isRestoringOrHoldingBill = false;
+
+    function loadHeldBillsFromStorage() {
+      try {
+        const raw = safeGetStorage(HELD_BILLS_STORAGE_KEY, '[]');
+        const parsed = JSON.parse(raw || '[]');
+        heldBills = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        heldBills = [];
+      }
+    }
+
+    function saveHeldBillsToStorage() {
+      safeSetStorage(HELD_BILLS_STORAGE_KEY, JSON.stringify(heldBills));
+      if (firebaseReady && db) {
+        try {
+          db.ref('ab_pos_held_bills').set(heldBills);
+        } catch (e) {}
+      }
+    }
+
+    function recordPosActivity() {
+      lastPosActivityTimestamp = Date.now();
+    }
+
+    function toggleAutoHoldSetting(checked) {
+      autoHoldEnabled = !!checked;
+      safeSetStorage(AUTO_HOLD_ENABLED_KEY, autoHoldEnabled ? 'true' : 'false');
+      recordPosActivity();
+    }
+
+    function updateAutoHoldIdleMinutes(val) {
+      autoHoldIdleMins = parseInt(val, 10) || 0;
+      safeSetStorage(AUTO_HOLD_IDLE_MINS_KEY, String(autoHoldIdleMins));
+      recordPosActivity();
+      updateIdleCountdownBadge();
+    }
+
+    function saveActivePosDraftSnapshot() {
+      if (isRestoringOrHoldingBill) return;
+      try {
+        if (!currentBill || currentBill.length === 0) {
+          safeSetStorage(ACTIVE_POS_DRAFT_KEY, '');
+          return;
+        }
+        const snap = {
+          items: JSON.parse(JSON.stringify(currentBill)),
+          custName: (document.getElementById('walkinName')?.value || '').trim(),
+          custPhone: (document.getElementById('walkinPhone')?.value || '').trim(),
+          discount: document.getElementById('billDiscount')?.value || '0',
+          gstSlab: document.getElementById('posGstSlab')?.value || '0',
+          custBizName: (document.getElementById('posCustBizName')?.value || '').trim(),
+          custGstin: (document.getElementById('posCustGstin')?.value || '').trim(),
+          onlineId: currentLoadedOnlineId || null,
+          orderAddress: currentLoadedOrderAddress || '',
+          orderEta: currentLoadedOrderEta || '',
+          savedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        safeSetStorage(ACTIVE_POS_DRAFT_KEY, JSON.stringify(snap));
+        const ind = document.getElementById('draftSavedIndicator');
+        if (ind) {
+          ind.classList.remove('hidden');
+        }
+      } catch (e) {}
+    }
+
+    function holdCurrentBill(isAuto = false, reasonLabel = 'Manual Hold') {
+      if (!currentBill || currentBill.length === 0) {
+        if (!isAuto) alert('Cart is empty! Add items first to hold a bill.');
+        return false;
+      }
+      isRestoringOrHoldingBill = true;
+      try {
+        const custName = (document.getElementById('walkinName')?.value || '').trim() || 'Walk-in Customer';
+        const custPhone = (document.getElementById('walkinPhone')?.value || '').trim();
+        const discount = parseFloat(document.getElementById('billDiscount')?.value) || 0;
+        const gstSlab = document.getElementById('posGstSlab')?.value || '0';
+        const custBizName = (document.getElementById('posCustBizName')?.value || '').trim();
+        const custGstin = (document.getElementById('posCustGstin')?.value || '').trim();
+        const subTotal = currentBill.reduce((s, i) => s + (parseFloat(i.total) || 0), 0);
+        const netTotal = Math.max(0, Math.round(subTotal - discount));
+
+        const holdEntry = {
+          holdId: 'HOLD-' + Date.now().toString().slice(-5),
+          isAuto: !!isAuto,
+          reason: reasonLabel || (isAuto ? 'Auto-Held' : 'Manual Hold'),
+          heldAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          custName,
+          custPhone,
+          discount,
+          gstSlab,
+          custBizName,
+          custGstin,
+          onlineId: currentLoadedOnlineId || null,
+          orderAddress: currentLoadedOrderAddress || '',
+          orderEta: currentLoadedOrderEta || '',
+          items: JSON.parse(JSON.stringify(currentBill)),
+          itemCount: currentBill.length,
+          netTotal
+        };
+
+        heldBills.unshift(holdEntry);
+        if (heldBills.length > 25) heldBills = heldBills.slice(0, 25);
+        saveHeldBillsToStorage();
+        clearCurrentBill(true);
+        renderHeldBillsTray();
+        recordPosActivity();
+        return true;
+      } finally {
+        isRestoringOrHoldingBill = false;
+      }
+    }
+
+    function autoHoldCurrentBillIfNeeded(reasonLabel = 'Auto-Held', incomingOnlineId = null) {
+      if (!autoHoldEnabled) return false;
+      if (!currentBill || currentBill.length === 0) return false;
+      if (incomingOnlineId && currentLoadedOnlineId && String(currentLoadedOnlineId) === String(incomingOnlineId)) {
+        return false;
+      }
+      return holdCurrentBill(true, reasonLabel);
+    }
+
+    function startNewBlankBillWithAutoHold() {
+      if (currentBill && currentBill.length > 0) {
+        if (autoHoldEnabled) {
+          holdCurrentBill(true, 'Auto-Held on New Bill');
+        } else {
+          if (!confirm('Clear current items and start a new bill? (Enable Auto-Hold to park bills automatically)')) return;
+          clearCurrentBill(true);
+        }
+      } else {
+        clearCurrentBill(true);
+      }
+      const searchEl = document.getElementById('posItemSearch');
+      if (searchEl) searchEl.focus();
+    }
+
+    function resumeHeldBill(holdId) {
+      const idx = heldBills.findIndex(b => b.holdId === holdId);
+      if (idx === -1) return;
+      const targetBill = heldBills[idx];
+
+      // Remove the target bill from held list first so if current bill is auto-held it doesn't collide
+      heldBills.splice(idx, 1);
+
+      if (currentBill && currentBill.length > 0) {
+        if (autoHoldEnabled) {
+          holdCurrentBill(true, 'Auto-Held on Switch');
+        } else if (confirm('Hold current active bill before resuming ' + targetBill.custName + '?')) {
+          holdCurrentBill(false, 'Held on Switch');
+        }
+      }
+
+      isRestoringOrHoldingBill = true;
+      try {
+        currentBill = JSON.parse(JSON.stringify(targetBill.items || []));
+        currentLoadedOnlineId = targetBill.onlineId || null;
+        currentLoadedOrderAddress = targetBill.orderAddress || '';
+        currentLoadedOrderEta = targetBill.orderEta || '';
+
+        const tagEl = document.getElementById('editingOrderTag');
+        if (tagEl) {
+          if (currentLoadedOnlineId) {
+            tagEl.textContent = `EDITING ONLINE ORDER #${String(currentLoadedOnlineId).slice(-5)}`;
+            tagEl.classList.remove('hidden');
+          } else {
+            tagEl.classList.add('hidden');
+          }
+        }
+
+        if (document.getElementById('walkinName')) document.getElementById('walkinName').value = targetBill.custName === 'Walk-in Customer' ? '' : (targetBill.custName || '');
+        if (document.getElementById('walkinPhone')) document.getElementById('walkinPhone').value = targetBill.custPhone || '';
+        if (document.getElementById('billDiscount')) document.getElementById('billDiscount').value = String(targetBill.discount || 0);
+        if (document.getElementById('posGstSlab')) document.getElementById('posGstSlab').value = String(targetBill.gstSlab || '0');
+        if (document.getElementById('posCustBizName')) document.getElementById('posCustBizName').value = targetBill.custBizName || '';
+        if (document.getElementById('posCustGstin')) document.getElementById('posCustGstin').value = targetBill.custGstin || '';
+
+        saveHeldBillsToStorage();
+        renderHeldBillsTray();
+        renderBill();
+        recordPosActivity();
+      } finally {
+        isRestoringOrHoldingBill = false;
+      }
+      saveActivePosDraftSnapshot();
+    }
+
+    function deleteHeldBill(holdId, evt) {
+      if (evt) evt.stopPropagation();
+      heldBills = heldBills.filter(b => b.holdId !== holdId);
+      saveHeldBillsToStorage();
+      renderHeldBillsTray();
+    }
+
+    function clearAllHeldBills() {
+      if (!heldBills.length) return;
+      if (!confirm(`Clear all ${heldBills.length} held bills?`)) return;
+      heldBills = [];
+      saveHeldBillsToStorage();
+      renderHeldBillsTray();
+    }
+
+    function renderHeldBillsTray() {
+      const listEl = document.getElementById('heldBillsList');
+      const badgeEl = document.getElementById('heldBillsCountBadge');
+      const clearBtn = document.getElementById('clearAllHeldBtn');
+      if (!listEl) return;
+
+      if (badgeEl) badgeEl.textContent = String(heldBills.length);
+      if (clearBtn) {
+        if (heldBills.length > 0) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+
+      if (heldBills.length === 0) {
+        listEl.innerHTML = `<div class="text-[11px] text-stone-400 italic py-1">No bills on hold — With ⚡ Auto-Hold enabled, any active cart is automatically parked if you inspect/load an online order, switch customers, or step away.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = heldBills.map(b => {
+        const badgeStyle = b.isAuto
+          ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
+          : 'bg-amber-100 text-amber-900 border-amber-300';
+        const badgeText = b.isAuto ? '⚡ AUTO-HELD' : '⏸️ MANUAL';
+        const previewItems = (b.items || []).slice(0, 2).map(i => i.name).join(', ') + ((b.items || []).length > 2 ? ` +${b.items.length - 2}` : '');
+        return `
+          <div class="flex-shrink-0 bg-white border-2 border-amber-300 hover:border-emerald-600 rounded-xl px-3 py-2 shadow-sm flex items-center gap-2.5 transition group min-w-[235px] max-w-[290px]">
+            <div class="flex-1 min-w-0 cursor-pointer" onclick="resumeHeldBill('${b.holdId}')">
+              <div class="flex items-center gap-1.5">
+                <span class="text-[9px] font-black px-1.5 py-0.5 rounded border ${badgeStyle}">${badgeText}</span>
+                <span class="text-[10px] font-mono font-bold text-stone-400">${b.heldAt}</span>
+              </div>
+              <div class="text-xs font-black text-stone-900 truncate mt-0.5">${escapeHtml(b.custName || 'Walk-in')} ${b.custPhone ? `<span class="text-[10px] font-mono text-stone-500">(${escapeHtml(b.custPhone)})</span>` : ''}</div>
+              <div class="text-[10px] text-stone-500 truncate">${escapeHtml(previewItems || 'Items')}</div>
+              <div class="text-[11px] font-black text-emerald-800 mt-0.5">${b.itemCount} items • ₹${b.netTotal} <span class="text-[9px] font-normal text-stone-400">(${escapeHtml(b.reason || '')})</span></div>
+            </div>
+            <div class="flex flex-col gap-1">
+              <button onclick="resumeHeldBill('${b.holdId}')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black px-2.5 py-1 rounded-lg text-[10px] shadow-sm transition">
+                ▶️ Resume
+              </button>
+              <button onclick="deleteHeldBill('${b.holdId}', event)" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-2 py-0.5 rounded-lg text-[10px] transition">
+                ✕ Drop
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateIdleCountdownBadge() {
+      const el = document.getElementById('autoHoldIdleCountdown');
+      if (!el) return;
+      if (!autoHoldEnabled || autoHoldIdleMins <= 0 || !currentBill || currentBill.length === 0) {
+        el.textContent = '';
+        return;
+      }
+      const elapsedMs = Date.now() - lastPosActivityTimestamp;
+      const limitMs = autoHoldIdleMins * 60 * 1000;
+      const remainSec = Math.max(0, Math.ceil((limitMs - elapsedMs) / 1000));
+      const m = Math.floor(remainSec / 60);
+      const s = remainSec % 60;
+      el.textContent = `(${m}:${String(s).padStart(2, '0')})`;
+      if (remainSec <= 0) {
+        holdCurrentBill(true, `Idle ${autoHoldIdleMins}m Auto-Hold`);
+      }
+    }
+
+    function initAutoHoldEngine() {
+      loadHeldBillsFromStorage();
+      const toggleEl = document.getElementById('autoHoldToggle');
+      if (toggleEl) toggleEl.checked = autoHoldEnabled;
+      const idleSel = document.getElementById('autoHoldIdleSelect');
+      if (idleSel) idleSel.value = String(autoHoldIdleMins);
+
+      // Restore any crash/reload active POS draft automatically into Held Bills or active cart
+      try {
+        const rawDraft = safeGetStorage(ACTIVE_POS_DRAFT_KEY, '');
+        if (rawDraft) {
+          const snap = JSON.parse(rawDraft);
+          if (snap && Array.isArray(snap.items) && snap.items.length > 0 && (!currentBill || currentBill.length === 0)) {
+            const subTotal = snap.items.reduce((s, i) => s + (parseFloat(i.total) || 0), 0);
+            const netTotal = Math.max(0, Math.round(subTotal - (parseFloat(snap.discount) || 0)));
+            heldBills.unshift({
+              holdId: 'HOLD-REC-' + Date.now().toString().slice(-4),
+              isAuto: true,
+              reason: 'Auto-Recovered Session',
+              heldAt: snap.savedAt || 'Recovered',
+              custName: snap.custName || 'Walk-in Customer',
+              custPhone: snap.custPhone || '',
+              discount: parseFloat(snap.discount) || 0,
+              gstSlab: snap.gstSlab || '0',
+              custBizName: snap.custBizName || '',
+              custGstin: snap.custGstin || '',
+              onlineId: snap.onlineId || null,
+              orderAddress: snap.orderAddress || '',
+              orderEta: snap.orderEta || '',
+              items: snap.items,
+              itemCount: snap.items.length,
+              netTotal
+            });
+            safeSetStorage(ACTIVE_POS_DRAFT_KEY, '');
+            saveHeldBillsToStorage();
+          }
+        }
+      } catch (e) {}
+
+      renderHeldBillsTray();
+
+      // Track user activity in POS for idle auto-hold
+      ['mousedown', 'keydown', 'touchstart', 'input'].forEach(evtName => {
+        window.addEventListener(evtName, () => {
+          lastPosActivityTimestamp = Date.now();
+        }, { passive: true });
+      });
+
+      // Keyboard shortcuts: F4 = Hold Bill, F8 = New Bill with Auto-Hold
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'F4') {
+          e.preventDefault();
+          holdCurrentBill(false, 'F4 Shortcut Hold');
+        } else if (e.key === 'F8') {
+          e.preventDefault();
+          startNewBlankBillWithAutoHold();
+        }
+      });
+
+      setInterval(updateIdleCountdownBadge, 1000);
+    }
+
+    function clearCurrentBill(skipAutoHoldPrompt = false) {
       currentBill = [];
       currentLoadedOnlineId = null;
       currentLoadedOrderAddress = "";
@@ -1803,6 +2196,9 @@
       document.getElementById('posGstSlab').value = '0';
       document.getElementById('posCustBizName').value = '';
       document.getElementById('posCustGstin').value = '';
+      safeSetStorage(ACTIVE_POS_DRAFT_KEY, '');
+      const ind = document.getElementById('draftSavedIndicator');
+      if (ind) ind.classList.add('hidden');
       renderBill();
     }
 
@@ -2337,6 +2733,11 @@
       saveOrderStatusAndEta();
       const ord = liveOrdersMap[currentInspectedOrderId];
       if (!ord) return;
+
+      // Auto-Hold active walk-in or different bill before loading inspected online order
+      if (typeof autoHoldCurrentBillIfNeeded === 'function') {
+        autoHoldCurrentBillIfNeeded('Auto-Held before Online Order #' + String(currentInspectedOrderId).slice(-5), currentInspectedOrderId);
+      }
 
       currentBill = (ord.items || []).map(i => ({
         name: i.name,
