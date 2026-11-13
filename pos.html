@@ -1001,7 +1001,7 @@
 
     <!-- HIDDEN LEGACY COMPATIBILITY CONTAINER (Removed from visible UI as requested) -->
     <div id="tab_REVIEWS_SECURITY" class="hidden">
-      <input id="googleReviewUrlInput" type="hidden" value="https://www.google.com/maps/search/?api=1&query=AB+Dates+and+Dry+Fruits+Khammam">
+      <input id="googleReviewUrlInput" type="hidden" value="https://search.google.com/local/reviews?placeid=ChIJs3CLrdJZNDoRQObrwiQ8qlk&q=AB+Dry+Fruits+World&authuser=0&hl=en&gl=IN">
       <div id="posReviewSamplesList"></div>
       <img id="posReviewQrImg" src="" alt="">
     </div>
@@ -1150,7 +1150,7 @@
 
     // ==================== 1. SECRET OWNER PIN PROTECTION (HIDDEN PIN) ====================
     function getOwnerPin() {
-      return safeGetStorage('ab_owner_pin_direct', '9154');
+      return safeGetStorage('ab_owner_pin_direct', '9009');
     }
 
     function unlockOwnerPos() {
