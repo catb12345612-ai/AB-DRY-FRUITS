@@ -41,33 +41,127 @@
       box-shadow: 0 6px 20px -4px rgba(20, 17, 14, 0.06);
     }
 
-    /* ULTRA-BOLD HIGH-CONTRAST 58MM & 80MM THERMAL RECEIPT PRINT ENGINE */
+    /* ULTRA-SYNCHRONIZED MINIMUM-PAPER 80MM, 55MM & A4 RECEIPT PRINT ENGINE */
+    #thermalReceipt {
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+      font-variant-numeric: tabular-nums !important;
+      color: #000000 !important;
+      background: #FFFFFF !important;
+      line-height: 1.18 !important;
+      box-sizing: border-box !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    #thermalReceipt * {
+      box-sizing: border-box !important;
+      color: #000000 !important;
+      font-family: inherit !important;
+      font-variant-numeric: tabular-nums !important;
+    }
+    #thermalReceipt .rc-table {
+      width: 100% !important;
+      table-layout: fixed !important;
+      border-collapse: collapse !important;
+      margin: 2px 0 !important;
+    }
+    #thermalReceipt .rc-table th,
+    #thermalReceipt .rc-table td {
+      padding: 1.5px 1px !important;
+      vertical-align: top !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      font-weight: 800 !important;
+    }
+    #thermalReceipt .rc-dual-qr-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 4px !important;
+      align-items: stretch !important;
+      border-top: 1.5px solid #000 !important;
+      padding-top: 4px !important;
+      margin-top: 3px !important;
+    }
+    #thermalReceipt .rc-qr-card {
+      border: 1px solid #000 !important;
+      border-radius: 4px !important;
+      padding: 3px 2px !important;
+      text-align: center !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
+    /* Paper Size Variants (Screen Preview & Print) */
+    #thermalReceipt.paper-80mm {
+      width: 72mm !important;
+      max-width: 72mm !important;
+      padding: 2mm 2mm !important;
+      font-size: 10.5px !important;
+    }
+    #thermalReceipt.paper-80mm .rc-qr-img {
+      width: 74px !important;
+      height: 74px !important;
+    }
+    #thermalReceipt.paper-80mm .rc-dev-badge-logo {
+      width: 24px !important;
+      height: 24px !important;
+    }
+    #thermalReceipt.paper-55mm,
+    #thermalReceipt.paper-58mm {
+      width: 48mm !important;
+      max-width: 48mm !important;
+      padding: 1mm 1mm !important;
+      font-size: 8.8px !important;
+    }
+    #thermalReceipt.paper-55mm .rc-qr-img,
+    #thermalReceipt.paper-58mm .rc-qr-img {
+      width: 54px !important;
+      height: 54px !important;
+    }
+    #thermalReceipt.paper-55mm .rc-dev-badge-logo,
+    #thermalReceipt.paper-58mm .rc-dev-badge-logo {
+      width: 18px !important;
+      height: 18px !important;
+    }
+    #thermalReceipt.paper-a4 {
+      width: 190mm !important;
+      max-width: 190mm !important;
+      padding: 5mm 7mm !important;
+      font-size: 11.5px !important;
+      border: 1.5px solid #000 !important;
+      border-radius: 6px !important;
+    }
+    #thermalReceipt.paper-a4 .rc-qr-img {
+      width: 96px !important;
+      height: 96px !important;
+    }
+    #thermalReceipt.paper-a4 .rc-dev-badge-logo {
+      width: 32px !important;
+      height: 32px !important;
+    }
+
     @media print {
       @page { margin: 0; }
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #FFFFFF !important;
+      }
       body * { visibility: hidden !important; }
       #thermalReceipt, #thermalReceipt * {
         visibility: visible !important;
-        color: #000000 !important;
-        font-weight: 900 !important;
       }
       #thermalReceipt {
         display: block !important;
         position: absolute !important;
         left: 0 !important;
         top: 0 !important;
-        background: #FFFFFF !important;
-        font-family: 'Courier New', Courier, monospace !important;
         margin: 0 !important;
+        box-shadow: none !important;
       }
-      #thermalReceipt.paper-80mm {
-        width: 72mm !important;
-        padding: 3mm !important;
-        font-size: 12px !important;
-      }
-      #thermalReceipt.paper-58mm {
-        width: 48mm !important;
-        padding: 1.5mm !important;
-        font-size: 10.5px !important;
+      #thermalReceipt.paper-a4 {
+        left: 8mm !important;
+        top: 6mm !important;
       }
     }
 
@@ -389,9 +483,10 @@
           <span id="topTodayUpi" class="text-base font-black text-sky-400">₹0</span>
         </div>
 
-        <select id="paperWidthSelect" onchange="updatePaperSize()" class="bg-stone-900 text-amber-300 border border-stone-700 rounded-xl px-2.5 py-2 text-xs font-black">
-          <option value="80mm">🖨️ 80mm Big Roll</option>
-          <option value="58mm">🖨️ 58mm Small Roll</option>
+        <select id="paperWidthSelect" onchange="updatePaperSize(this.value)" class="bg-stone-900 text-amber-300 border border-stone-700 rounded-xl px-2.5 py-2 text-xs font-black cursor-pointer" title="Select Bill Print Format: 80mm, 55mm, or A4">
+          <option value="80mm">🖨️ 80mm Thermal Roll</option>
+          <option value="55mm">🖨️ 55mm / 58mm Compact Roll</option>
+          <option value="a4">🖨️ A4 Tax Invoice Sheet</option>
         </select>
 
         <button onclick="testOrderAlarm()" class="bg-stone-800 hover:bg-stone-700 text-amber-300 border border-stone-700 px-3 py-2 rounded-xl text-xs font-black" title="Test Sound Alert">
@@ -498,8 +593,50 @@
           <div id="quickItemChips" class="flex gap-1.5 overflow-x-auto pb-1.5"></div>
         </div>
 
-        <!-- SMART ITEM ENTRY & AUTOMATIC FORMULA CALCULATOR -->
+        <!-- SMART ITEM ENTRY & AUTOMATIC FORMULA CALCULATOR (SUPPORTS BOTH KG/GRAMS & NO-GRAMS FIXED RATE) -->
         <div class="bg-stone-50/90 p-3.5 rounded-2xl border-2 border-stone-200 space-y-3">
+          <!-- Mode Switcher Bar: Weight (Kg/g) vs No-Grams (Name + Rate Only for Chocolates, Cakes, Biscuits, Packs) -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-stone-200">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-black uppercase text-stone-500">Billing Mode:</span>
+              <button type="button" id="modeBtnWeight" onclick="setPosEntryUnitMode('WEIGHT')" class="px-3 py-1 rounded-xl text-[11px] font-black bg-emerald-800 text-white shadow-sm transition">
+                ⚖️ Weight System (Kg / Grams)
+              </button>
+              <button type="button" id="modeBtnPiece" onclick="setPosEntryUnitMode('PIECE')" class="px-3 py-1 rounded-xl text-[11px] font-black bg-white text-stone-700 border border-stone-300 hover:bg-amber-50 transition">
+                🍫 No Grams • Just Name & Rate (Chocolates / Cakes / Biscuits / Packs)
+              </button>
+            </div>
+            <span id="posUnitModeHint" class="text-[10px] font-extrabold text-emerald-900 bg-emerald-100/80 px-2.5 py-0.5 rounded-lg">
+              Auto-detects Chocolates, Cakes & Biscuits as No-Grams!
+            </span>
+          </div>
+
+          <!-- ⚡ 1-TAP INSTANT NO-GRAMS BAR (JUST NAME & RATE — FOR CHOCOLATES, CAKES, BISCUITS, GIFT BOXES) -->
+          <div class="bg-gradient-to-r from-amber-50 via-white to-amber-50 border-2 border-amber-300 rounded-xl p-2.5 flex flex-wrap items-center gap-2">
+            <span class="text-[10px] font-black uppercase bg-stone-900 text-[#F8CB46] px-2 py-1 rounded-lg shrink-0">
+              🍫 Quick No-Grams Add
+            </span>
+            <input id="quickFixedName" type="text" list="catList" placeholder="Item Name (e.g. Choc / Cake / Biscuit / Box)" 
+                   class="flex-1 min-w-[160px] border border-stone-300 rounded-lg px-2.5 py-1.5 text-xs font-bold bg-white outline-none focus:border-amber-600"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('quickFixedRate').focus();}">
+            <input id="quickFixedRate" type="number" placeholder="Rate ₹ *" 
+                   class="w-24 border-2 border-emerald-500 rounded-lg px-2.5 py-1.5 text-xs font-black text-center bg-white outline-none"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();addQuickNoGramItem();}">
+            <input id="quickFixedQty" type="number" step="1" min="1" value="1" title="Quantity (Pieces / Packs)"
+                   class="w-16 border border-stone-300 rounded-lg px-2 py-1.5 text-xs font-black text-center bg-white outline-none"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();addQuickNoGramItem();}">
+            <select id="quickFixedCat" class="border border-amber-400 rounded-lg px-2 py-1.5 text-[11px] font-black bg-amber-50 text-stone-900 outline-none">
+              <option value="Imported Chocolates">🍫 Chocolates</option>
+              <option value="Cakes & Bakery">🎂 Cakes & Bakery</option>
+              <option value="Biscuits & Cookies">🍪 Biscuits</option>
+              <option value="Gift Boxes">🎁 Gift Boxes</option>
+              <option value="Custom Items">✨ Custom / Other</option>
+            </select>
+            <button type="button" onclick="addQuickNoGramItem()" class="bg-stone-900 hover:bg-stone-800 text-[#F8CB46] font-black px-3 py-1.5 rounded-xl text-xs shadow-sm transition shrink-0">
+              + Add Rate Only
+            </button>
+          </div>
+
           <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-end">
             <div class="md:col-span-4">
               <label class="text-[10px] font-black text-stone-600 uppercase">Item Name (Search or Type New)</label>
@@ -511,7 +648,7 @@
 
             <!-- Quick Weight Pack Preset Selector -->
             <div class="md:col-span-2">
-              <label class="text-[10px] font-black text-stone-600 uppercase">Quick Pack</label>
+              <label id="lblPosPack" class="text-[10px] font-black text-stone-600 uppercase">Quick Pack</label>
               <select id="posPack" onchange="onPackPresetChange()" class="w-full border-2 border-stone-300 p-2.5 rounded-xl text-xs font-black bg-white focus:border-[#0C831F] outline-none mt-0.5">
                 <option value="1">1 Kg Full</option>
                 <option value="0.5">500 gm (1/2 Kg)</option>
@@ -525,21 +662,21 @@
             </div>
 
             <div class="md:col-span-2">
-              <label class="text-[10px] font-black text-stone-600 uppercase">Exact Wt (Kg)</label>
+              <label id="lblPosWeight" class="text-[10px] font-black text-stone-600 uppercase">Exact Wt (Kg)</label>
               <input id="posWeight" type="number" step="0.001" value="1" 
                      class="w-full border-2 border-stone-300 p-2.5 rounded-xl text-sm font-black text-center bg-white focus:border-[#0C831F] outline-none mt-0.5"
                      oninput="recalcFromWeightOrRate()">
             </div>
 
             <div class="md:col-span-2">
-              <label class="text-[10px] font-black text-emerald-800 uppercase">1 Kg Rate (₹)</label>
+              <label id="lblPosRate" class="text-[10px] font-black text-emerald-800 uppercase">1 Kg Rate (₹)</label>
               <input id="posRate" type="number" placeholder="₹/Kg" 
                      class="w-full border-2 border-emerald-500 p-2.5 rounded-xl text-sm font-black text-center bg-emerald-50/40 focus:bg-white outline-none mt-0.5"
                      oninput="recalcFromWeightOrRate()">
             </div>
 
             <div class="md:col-span-2">
-              <label class="text-[10px] font-black text-amber-900 uppercase">Online Rate/Kg</label>
+              <label id="lblPosOnlineRate" class="text-[10px] font-black text-amber-900 uppercase">Online Rate/Kg</label>
               <input id="posOnlineRate" type="number" placeholder="Online ₹" 
                      class="w-full border-2 border-amber-400 p-2.5 rounded-xl text-sm font-black text-center bg-amber-50/60 focus:bg-white outline-none mt-0.5">
             </div>
@@ -702,6 +839,17 @@
 
           <!-- Action Buttons (BILL PRINT ONLY ALLOWED BY CLEARING & COMPLETING BILL) -->
           <div class="md:col-span-4 flex flex-col gap-2">
+            <div class="flex items-center justify-between gap-1.5 bg-stone-100 border border-stone-300 rounded-xl px-2.5 py-1.5">
+              <span class="text-[10px] font-black uppercase text-stone-700">🖨️ Bill Size:</span>
+              <div class="flex items-center gap-1">
+                <button type="button" id="btnSize80mm" onclick="updatePaperSize('80mm')" class="px-2 py-0.5 rounded-lg text-[10px] font-black bg-emerald-800 text-white shadow-sm">80mm</button>
+                <button type="button" id="btnSize55mm" onclick="updatePaperSize('55mm')" class="px-2 py-0.5 rounded-lg text-[10px] font-black bg-white text-stone-700 border border-stone-300">55mm</button>
+                <button type="button" id="btnSizeA4" onclick="updatePaperSize('a4')" class="px-2 py-0.5 rounded-lg text-[10px] font-black bg-white text-stone-700 border border-stone-300">A4</button>
+              </div>
+              <button type="button" onclick="openReceiptPreviewModal()" class="text-[10px] font-black text-amber-900 bg-amber-200 hover:bg-amber-300 px-2 py-0.5 rounded-lg transition" title="Preview synchronized 80mm / 55mm / A4 bill">
+                👁️ Preview
+              </button>
+            </div>
             <button onclick="completeSale(true)" class="w-full blinkit-green text-white font-black py-3.5 rounded-2xl shadow-lg text-xs uppercase tracking-wider flex items-center justify-center gap-1.5">
               ✅ Clear Bill & Print Receipt [F9]
             </button>
@@ -954,9 +1102,17 @@
             <label class="text-[10px] font-black uppercase text-amber-300 block mb-0.5">Code</label>
             <input id="newCatItemCode" type="text" placeholder="S2" class="w-full rounded-xl p-2 text-xs font-mono font-black text-center uppercase bg-white border-2 border-stone-300 outline-none">
           </div>
-          <div class="md:col-span-3">
-            <label class="text-[10px] font-black uppercase text-amber-300 block mb-0.5">Specific Category (Select or Type New) *</label>
-            <input id="newCatItemCategory" type="text" list="customCategoryList" placeholder="e.g. Spices & Saffron / Gift Hampers" class="w-full rounded-xl p-2 text-xs font-black bg-amber-50 border-2 border-amber-400 focus:bg-white outline-none">
+          <div class="md:col-span-2">
+            <label class="text-[10px] font-black uppercase text-amber-300 block mb-0.5">Category (Type/Pick) *</label>
+            <input id="newCatItemCategory" type="text" list="customCategoryList" placeholder="e.g. Chocolates / Cakes" class="w-full rounded-xl p-2 text-xs font-black bg-amber-50 border-2 border-amber-400 focus:bg-white outline-none">
+          </div>
+          <div class="md:col-span-1">
+            <label class="text-[10px] font-black uppercase text-sky-300 block mb-0.5">Unit Type</label>
+            <select id="newCatUnitType" class="w-full rounded-xl p-2 text-[11px] font-black bg-white border-2 border-sky-400 outline-none">
+              <option value="AUTO">✨ Auto</option>
+              <option value="WEIGHT">⚖️ Kg/g</option>
+              <option value="PIECE">🍫 Rate/Pc</option>
+            </select>
           </div>
           <div class="md:col-span-1">
             <label class="text-[10px] font-black uppercase text-emerald-300 block mb-0.5">Walk-In ₹/Kg</label>
@@ -1198,55 +1354,117 @@
     </div>
   </footer>
 
-  <!-- ==================== THERMAL RECEIPT PRINT TEMPLATE (80MM & 58MM ULTRA-BOLD) ==================== -->
+    <!-- ==================== KHATA / CUSTOMER CREDIT DUES LEDGER MODAL ==================== -->
+  <div id="khataModal" class="fixed inset-0 bg-stone-950/85 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col border-2 border-[#F8CB46] shadow-2xl overflow-hidden">
+      <div class="bg-stone-900 text-white px-5 py-3.5 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-black uppercase text-[#F8CB46] tracking-wider">📓 CUSTOMER CREDIT & UDHAAR LEDGER</span>
+          <h3 class="text-base font-black text-white">Pending Customer Dues & 1-Tap WhatsApp Payment Reminders</h3>
+        </div>
+        <button onclick="closeKhataModal()" class="bg-stone-800 hover:bg-stone-700 text-stone-300 font-black px-3 py-1.5 rounded-xl text-xs">✕ Close</button>
+      </div>
+      <div class="p-4 bg-amber-50/70 border-b border-amber-200 flex flex-wrap items-center justify-between gap-2">
+        <div class="text-xs font-bold text-stone-700">
+          Total Pending Market Dues: <strong id="khataTotalPendingAmt" class="text-base font-black text-red-700">₹0</strong>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5">
+          <input id="manualKhataName" type="text" placeholder="Customer Name" class="border border-stone-300 rounded-xl px-2.5 py-1.5 text-xs font-bold bg-white">
+          <input id="manualKhataPhone" type="tel" placeholder="Mobile (10 digits)" class="border border-stone-300 rounded-xl px-2.5 py-1.5 text-xs font-bold bg-white w-36">
+          <input id="manualKhataAmt" type="number" placeholder="Due ₹" class="border border-stone-300 rounded-xl px-2.5 py-1.5 text-xs font-black bg-white w-24">
+          <button onclick="addManualKhataEntry()" class="bg-stone-900 text-[#F8CB46] font-black px-3 py-1.5 rounded-xl text-xs shadow">+ Add Due</button>
+        </div>
+      </div>
+      <div id="khataListContainer" class="p-4 overflow-y-auto flex-1 space-y-2 divide-y divide-stone-100"></div>
+    </div>
+  </div>
+
+  <!-- ==================== LIVE RECEIPT PREVIEW MODAL (80MM / 55MM / A4) ==================== -->
+  <div id="receiptPreviewModal" class="fixed inset-0 bg-stone-950/85 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3">
+    <div class="bg-stone-100 rounded-3xl max-w-3xl w-full max-h-[92vh] flex flex-col border-2 border-[#F8CB46] shadow-2xl overflow-hidden">
+      <div class="bg-stone-900 text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-black text-[#F8CB46]">🧾 Synchronized Minimum-Paper Bill Preview</span>
+          <div class="flex items-center gap-1 bg-stone-800 p-1 rounded-xl">
+            <button type="button" id="prevBtn80mm" onclick="updatePaperSize('80mm')" class="px-2.5 py-1 rounded-lg text-[11px] font-black bg-emerald-700 text-white">80mm Roll</button>
+            <button type="button" id="prevBtn55mm" onclick="updatePaperSize('55mm')" class="px-2.5 py-1 rounded-lg text-[11px] font-black text-stone-300 hover:bg-stone-700">55mm Roll</button>
+            <button type="button" id="prevBtnA4" onclick="updatePaperSize('a4')" class="px-2.5 py-1 rounded-lg text-[11px] font-black text-stone-300 hover:bg-stone-700">A4 Sheet</button>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="window.print()" class="bg-[#F8CB46] hover:bg-amber-400 text-stone-950 font-black px-3 py-1.5 rounded-xl text-xs shadow">
+            🖨️ Print Now
+          </button>
+          <button type="button" onclick="closeReceiptPreviewModal()" class="bg-stone-800 hover:bg-stone-700 text-stone-300 font-black px-3 py-1.5 rounded-xl text-xs">
+            ✕ Close
+          </button>
+        </div>
+      </div>
+      <div class="p-4 overflow-y-auto flex-1 flex justify-center items-start bg-stone-200/70">
+        <div id="receiptPreviewMount" class="bg-white shadow-xl border border-stone-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SYNCHRONIZED MINIMUM-PAPER RECEIPT TEMPLATE (80MM, 55MM & A4) ==================== -->
   <div id="thermalReceipt" class="hidden paper-80mm">
-    <div style="text-align:center; border-bottom: 2px dashed #000; padding-bottom: 6px; margin-bottom: 6px;">
-      <div id="rInvoiceHeaderType" style="font-size: 11px; font-weight: 900; letter-spacing: 1px;">RETAIL CASH / TAX INVOICE</div>
-      <div style="font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">AB DATES & DRY FRUITS</div>
-      <div style="font-size: 10px; font-weight: 900;">Premium Dry Fruits, Ajwa Dates, Nuts & Spices</div>
-      <div style="font-size: 10px; font-weight: 900;">Near Bus Stand, Khammam, Telangana</div>
-      <div style="font-size: 11px; font-weight: 900;">Cell / WhatsApp: 91543 39465</div>
-      <div style="font-size: 10px; font-weight: 900;">GSTIN: 36EKJPM4902A1ZF</div>
+    <!-- Compact Synchronized Store Header with Official AB Dry Fruits Logo -->
+    <div style="border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 3px;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:5px;">
+        <img src="" data-bind-asset="ab-logo" alt="AB Dry Fruits" style="width:28px; height:20px; object-fit:cover; border-radius:3px; border:1px solid #000; flex-shrink:0;">
+        <div style="text-align:center; line-height:1.12;">
+          <div id="rInvoiceHeaderType" style="font-size: 0.78em; font-weight: 900; letter-spacing: 0.6px; text-transform:uppercase;">RETAIL CASH / TAX INVOICE</div>
+          <div style="font-size: 1.22em; font-weight: 900; letter-spacing: 0.2px;">AB DATES & DRY FRUITS</div>
+        </div>
+      </div>
+      <div style="text-align:center; font-size: 0.82em; font-weight: 800; line-height: 1.15; margin-top: 1px;">
+        Near Bus Stand, Khammam • Cell/WA: <strong>91543 39465</strong> • GSTIN: <strong>36EKJPM4902A1ZF</strong>
+      </div>
     </div>
 
-    <div style="font-size: 11px; line-height: 1.35; border-bottom: 1.5px dashed #000; padding-bottom: 5px; margin-bottom: 5px;">
-      <div style="display:flex; justify-content:space-between;">
-        <span>BILL: <strong id="rBillNo"></strong></span>
-        <span id="rDate"></span>
+    <!-- Compact Adjacent 2-Column Bill Metadata (Minimum Paper) -->
+    <div style="font-size: 0.88em; line-height: 1.2; border-bottom: 1px dashed #000; padding-bottom: 3px; margin-bottom: 2px;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
+        <span>BILL: <strong id="rBillNo">#1001</strong></span>
+        <span id="rDate" style="text-align:right;"></span>
       </div>
-      <div>CUSTOMER: <strong id="rCust">Walk-In Customer</strong></div>
-      <div id="rCustGstinRow" style="display:none;">BUYER GSTIN: <strong id="rCustGstin"></strong></div>
-      <div id="rAddressRow" style="display:none; margin-top:3px; padding:3px; border:1px solid #000; font-weight:900;">
-        DELIVERY ADDRESS: <span id="rAddress"></span>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
+        <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">CUST: <strong id="rCust">Walk-In</strong></span>
+        <span style="white-space:nowrap;">PAY: <strong id="rPayMode">CASH</strong></span>
       </div>
-      <div id="rEtaRow" style="display:none; margin-top:2px;">
+      <div id="rCustGstinRow" style="display:none; font-size:0.92em;">BUYER GSTIN: <strong id="rCustGstin"></strong></div>
+      <div id="rAddressRow" style="display:none; margin-top:1.5px; padding:1.5px 3px; border:1px solid #000; font-weight:800; font-size:0.92em;">
+        ADDR: <span id="rAddress"></span>
+      </div>
+      <div id="rEtaRow" style="display:none; margin-top:1px; font-size:0.92em;">
         EST. ARRIVAL: <strong id="rEtaText"></strong>
       </div>
-      <div>PAYMENT: <strong id="rPayMode">CASH</strong></div>
     </div>
 
-    <table style="width:100%; font-size: 11px; border-collapse: collapse; margin-bottom: 6px;">
+    <!-- Perfectly Aligned Fixed-Column Item Table (Suitable for 55mm, 80mm & A4) -->
+    <table class="rc-table" style="font-size: 0.90em;">
       <thead>
-        <tr style="border-bottom: 2px solid #000; text-align:left;">
-          <th style="padding: 2px 0;">ITEM</th>
-          <th style="padding: 2px 0; text-align:center;">WT</th>
-          <th style="padding: 2px 0; text-align:right;">RATE</th>
-          <th style="padding: 2px 0; text-align:right;">AMT</th>
+        <tr style="border-bottom: 1.5px solid #000; text-align:left;">
+          <th style="width:46%; text-align:left;">ITEM</th>
+          <th style="width:16%; text-align:center;">WT</th>
+          <th style="width:18%; text-align:right;">RATE</th>
+          <th style="width:20%; text-align:right;">AMT</th>
         </tr>
       </thead>
-      <tbody id="rItems" style="border-bottom: 1.5px dashed #000;"></tbody>
+      <tbody id="rItems" style="border-bottom: 1px dashed #000;"></tbody>
     </table>
 
-    <div style="font-size: 11px; line-height: 1.4;">
-      <div style="display:flex; justify-content:space-between;">
-        <span>Total Items / Weight:</span>
+    <!-- Compact Totals & GST Block -->
+    <div style="font-size: 0.88em; line-height: 1.22;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Items / Total Wt:</span>
         <strong id="rWeightSummary">0 Items / 0.000 Kg</strong>
       </div>
-      <div id="rDiscountRow" style="display:none; justify-content:space-between;">
+      <div id="rDiscountRow" style="display:none; justify-content:space-between; align-items:center;">
         <span>Special Discount:</span>
         <strong id="rDiscountAmt">-₹0</strong>
       </div>
-      <div id="rGstSummaryBlock" style="display:none; border-top:1px dashed #000; margin-top:3px; padding-top:3px;">
+      <div id="rGstSummaryBlock" style="display:none; border-top:1px dashed #000; margin-top:1.5px; padding-top:1.5px;">
         <div style="display:flex; justify-content:space-between;">
           <span>Taxable Value:</span>
           <strong id="rTaxableAmt">₹0</strong>
@@ -1260,22 +1478,64 @@
           <strong id="rSgstAmt">₹0</strong>
         </div>
       </div>
-      <div style="display:flex; justify-content:space-between; font-size: 15px; font-weight: 900; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 4px 0; margin: 4px 0;">
-        <span>NET TOTAL:</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size: 1.22em; font-weight: 900; border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; padding: 2px 0; margin: 2px 0;">
+        <span>NET PAYABLE:</span>
         <span id="rTotal">₹0</span>
       </div>
     </div>
 
-    <div style="text-align:center; margin-top: 6px; font-size: 10px; line-height: 1.3;">
-      <div style="font-weight: 900;">UPI: vyapar.178552634679@hdfcbank</div>
-      <div style="margin-top: 3px;">★ 100% Pure & Fresh Quality Guaranteed ★</div>
-      <div>Thank You! Visit AB Dates & Dry Fruits Again!</div>
-      <div style="font-size: 8.5px; margin-top: 4px;">Software by High-Fledged Digital Tech Solutions (9032208086)</div>
+    <!-- DUAL SYNCHRONIZED ADJACENT SCANNERS: [LEFT: SCAN TO PAY EXACT AMOUNT] | [RIGHT: DEVELOPER QR + LOGO + INSTAGRAM INFO BENEATH] -->
+    <div class="rc-dual-qr-grid">
+      <!-- Left Scanner: Particular Bill Amount Payment QR -->
+      <div class="rc-qr-card">
+        <div id="rScanToPayHeader" style="font-size: 0.80em; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 2px;">
+          SCAN TO PAY <span id="rScanToPayAmt">₹0</span>
+        </div>
+        <img id="rPaymentQrImg" class="rc-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=upi%3A%2F%2Fpay%3Fpa%3Dvyapar.178552634679%40hdfcbank%26pn%3DAB%2520DATES%2520AND%2520DRY%2520FRUITS%26cu%3DINR" onerror="if(window.__fallbackUpiSrc && this.src!==window.__fallbackUpiSrc)this.src=window.__fallbackUpiSrc;" alt="Scan to Pay" style="object-fit:contain; display:block; margin: 0 auto; border: 1px solid #000; padding: 1px; background:#fff;">
+        <div style="font-size: 0.72em; font-weight: 800; line-height: 1.12; margin-top: 2px; word-break: break-all;">
+          <div style="font-weight:900;">AB DATES & DRY FRUITS</div>
+          <div>vyapar.178552634679@hdfcbank</div>
+        </div>
+      </div>
+
+      <!-- Right Scanner: Developer Smart Scan QR + Developer Logo + Developer Info Beneath Scanner -->
+      <div class="rc-qr-card">
+        <div style="display:flex; align-items:center; justify-content:center; gap:2px; margin-bottom: 2px;">
+          <img src="" data-bind-asset="dev-logo" class="rc-dev-badge-logo" alt="SZA Logo" style="object-fit:contain; border-radius:50%; border:1px solid #000; flex-shrink:0;">
+          <div style="font-size: 0.74em; font-weight: 900; line-height: 1.05; text-align:left;">
+            <div>SMART SCAN</div>
+            <div style="font-size:0.88em;">TECH SYSTEM</div>
+          </div>
+        </div>
+        <img src="" data-bind-asset="dev-qr" class="rc-qr-img" alt="Developer Smart Scan QR" style="object-fit:contain; display:block; margin: 0 auto; border: 1px solid #000; padding: 1px; background:#fff;">
+        <div style="font-size: 0.73em; font-weight: 900; line-height: 1.14; margin-top: 2px; text-align:center;">
+          <div style="display:inline-flex; align-items:center; justify-content:center; gap:2px; flex-wrap:wrap;">
+            <span>Developed by</span>
+            <svg viewBox="0 0 24 24" style="width:9px; height:9px; fill:none; stroke:#000; stroke-width:2.5; display:inline-block; vertical-align:middle;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            <span style="text-decoration:underline;">syedzeeshaanli07</span>
+          </div>
+          <div style="font-size: 0.90em; font-weight:800;">Syed Zeeshaan Ali • 9032208086</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top: 2px; font-size: 0.76em; font-weight: 800; line-height: 1.15;">
+      ★ 100% Pure & Fresh Quality • Thank You, Visit Again! ★
     </div>
   </div>
 
   <!-- ==================== JAVASCRIPT MASTER ENGINE ==================== -->
   <script>
+    
+    (function syncEmbeddedReceiptAssets() {
+      const abLogo = document.querySelector('link[rel="icon"]')?.href || '';
+      const devLogo = document.querySelector('footer a[href*="Syed-Zeeshaan-Ali"] img')?.src || '';
+      const devQr = document.querySelector('img[alt="Syed Zeeshaan Ali Smart Scan QR"]')?.src || '';
+      document.querySelectorAll('[data-bind-asset="ab-logo"]').forEach(el => { if (abLogo) el.src = abLogo; });
+      document.querySelectorAll('[data-bind-asset="dev-logo"]').forEach(el => { if (devLogo) el.src = devLogo; });
+      document.querySelectorAll('[data-bind-asset="dev-qr"]').forEach(el => { if (devQr) el.src = devQr; });
+    })();
+
     const MERCHANT_UPI_ID = "vyapar.178552634679@hdfcbank";
     const MERCHANT_NAME = "AB DATES AND DRY FRUITS";
     const MERCHANT_GSTIN = "36EKJPM4902A1ZF";
@@ -1476,10 +1736,231 @@
       }
     }
 
-    function updatePaperSize() {
-      const size = document.getElementById('paperWidthSelect').value;
+    function updatePaperSize(forcedSize) {
+      const sel = document.getElementById('paperWidthSelect');
+      const size = forcedSize || (sel ? sel.value : '80mm') || '80mm';
+      if (sel && sel.value !== size) sel.value = size;
+      safeSetStorage('ab_preferred_paper_size_v1', size);
+
       const receipt = document.getElementById('thermalReceipt');
-      receipt.className = "hidden paper-" + size;
+      if (receipt) {
+        const isPreviewOpen = !document.getElementById('receiptPreviewModal')?.classList.contains('hidden');
+        receipt.className = (isPreviewOpen ? "" : "hidden ") + "paper-" + size;
+      }
+
+      const mapBtns = [
+        ['btnSize80mm', '80mm', 'bg-emerald-800 text-white shadow-sm', 'bg-white text-stone-700 border border-stone-300'],
+        ['btnSize55mm', '55mm', 'bg-emerald-800 text-white shadow-sm', 'bg-white text-stone-700 border border-stone-300'],
+        ['btnSizeA4', 'a4', 'bg-emerald-800 text-white shadow-sm', 'bg-white text-stone-700 border border-stone-300'],
+        ['prevBtn80mm', '80mm', 'bg-emerald-700 text-white', 'text-stone-300 hover:bg-stone-700'],
+        ['prevBtn55mm', '55mm', 'bg-emerald-700 text-white', 'text-stone-300 hover:bg-stone-700'],
+        ['prevBtnA4', 'a4', 'bg-emerald-700 text-white', 'text-stone-300 hover:bg-stone-700']
+      ];
+      mapBtns.forEach(([id, target, activeCls, idleCls]) => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          const base = id.startsWith('prevBtn') ? 'px-2.5 py-1 rounded-lg text-[11px] font-black ' : 'px-2 py-0.5 rounded-lg text-[10px] font-black ';
+          btn.className = base + (size === target ? activeCls : idleCls);
+        }
+      });
+    }
+
+    function openReceiptPreviewModal() {
+      const calc = getNetBillCalculation();
+      const mode = document.getElementById('payMode')?.value || 'CASH';
+      const name = (document.getElementById('walkinName')?.value || '').trim();
+      const phone = (document.getElementById('walkinPhone')?.value || '').trim();
+      const custDisplay = name ? (phone ? `${name} (${phone})` : name) : (phone || "Walk-In Customer");
+      const nowStr = new Date().toLocaleString('en-IN');
+      const custGstInfo = {
+        bizName: (document.getElementById('posCustBizName')?.value || '').trim(),
+        gstin: (document.getElementById('posCustGstin')?.value || '').trim().toUpperCase()
+      };
+      const previewItems = currentBill.length > 0 ? currentBill : [
+        { name: "Ajwa Dates Jumbo (Sample)", wt: 0.5, packLabel: "500g", rate: 1200, total: 600 }
+      ];
+      const previewCalc = currentBill.length > 0 ? calc : {
+        subtotal: 600, discountAmt: 0, taxableAmount: 600, gstSlab: 0, cgstAmt: 0, sgstAmt: 0, totalGstAmt: 0, netPayable: 600, totalWt: 0.5
+      };
+
+      populateReceiptTemplate(
+        currentBillNo,
+        custDisplay,
+        currentLoadedOnlineId ? 'ONLINE_UPI' : mode,
+        previewItems,
+        previewCalc,
+        nowStr,
+        currentLoadedOrderAddress || "Walk-in Counter",
+        currentLoadedOrderEta || "",
+        custGstInfo
+      );
+
+      const modal = document.getElementById('receiptPreviewModal');
+      const mount = document.getElementById('receiptPreviewMount');
+      const receipt = document.getElementById('thermalReceipt');
+      if (modal && mount && receipt) {
+        mount.appendChild(receipt);
+        modal.classList.remove('hidden');
+        const currentSize = document.getElementById('paperWidthSelect')?.value || '80mm';
+        receipt.className = "paper-" + currentSize;
+      }
+    }
+
+    
+    // ==================== KHATA / CUSTOMER CREDIT (UDHAAR) LEDGER ENGINE ====================
+    const KHATA_STORAGE_KEY = 'ab_khata_ledger_v1';
+    let khataLedger = [];
+
+    function loadKhataLedger() {
+      try {
+        khataLedger = JSON.parse(safeGetStorage(KHATA_STORAGE_KEY, '[]') || '[]');
+        if (!Array.isArray(khataLedger)) khataLedger = [];
+      } catch (e) {
+        khataLedger = [];
+      }
+      updateKhataBadge();
+    }
+
+    function saveKhataLedger() {
+      safeSetStorage(KHATA_STORAGE_KEY, JSON.stringify(khataLedger));
+      if (db) {
+        try { db.ref('ab_khata_ledger').set(khataLedger); } catch (e) {}
+      }
+      updateKhataBadge();
+    }
+
+    function updateKhataBadge() {
+      const pending = khataLedger.filter(k => k.status !== 'PAID');
+      const badge = document.getElementById('khataCountBadge');
+      if (badge) badge.innerText = String(pending.length);
+      const totalEl = document.getElementById('khataTotalPendingAmt');
+      if (totalEl) {
+        const sum = pending.reduce((s, k) => s + (parseFloat(k.amount) || 0), 0);
+        totalEl.innerText = '₹' + Math.round(sum);
+      }
+    }
+
+    function recordKhataDueFromSale(saleRecord) {
+      loadKhataLedger();
+      khataLedger.unshift({
+        id: 'KH-' + Date.now().toString().slice(-5),
+        billNo: saleRecord.billNo,
+        customer: saleRecord.customer || 'Walk-in Customer',
+        phone: saleRecord.phone || '',
+        amount: saleRecord.total || 0,
+        date: saleRecord.date,
+        status: 'PENDING'
+      });
+      saveKhataLedger();
+    }
+
+    function addManualKhataEntry() {
+      const name = (document.getElementById('manualKhataName')?.value || '').trim();
+      const phone = (document.getElementById('manualKhataPhone')?.value || '').trim();
+      const amt = parseFloat(document.getElementById('manualKhataAmt')?.value) || 0;
+      if (!name || amt <= 0) {
+        showPosToast("Enter Customer Name and Due Amount ₹!", "⚠️");
+        return;
+      }
+      loadKhataLedger();
+      khataLedger.unshift({
+        id: 'KH-' + Date.now().toString().slice(-5),
+        billNo: 'MANUAL',
+        customer: name,
+        phone: phone,
+        amount: Math.round(amt),
+        date: new Date().toLocaleString('en-IN'),
+        status: 'PENDING'
+      });
+      saveKhataLedger();
+      document.getElementById('manualKhataName').value = '';
+      document.getElementById('manualKhataPhone').value = '';
+      document.getElementById('manualKhataAmt').value = '';
+      renderKhataModalList();
+      showPosToast(`Added ₹${amt} credit due for ${name}`, "📓");
+    }
+
+    function markKhataPaid(id) {
+      loadKhataLedger();
+      const idx = khataLedger.findIndex(k => k.id === id);
+      if (idx > -1) {
+        khataLedger[idx].status = 'PAID';
+        khataLedger[idx].paidAt = new Date().toLocaleString('en-IN');
+        saveKhataLedger();
+        renderKhataModalList();
+        showPosToast("Khata balance marked as settled!", "✅");
+      }
+    }
+
+    function deleteKhataEntry(id) {
+      loadKhataLedger();
+      khataLedger = khataLedger.filter(k => k.id !== id);
+      saveKhataLedger();
+      renderKhataModalList();
+    }
+
+    function sendKhataWhatsAppReminder(id) {
+      const entry = khataLedger.find(k => k.id === id);
+      if (!entry) return;
+      const cleanPhone = (entry.phone || '').replace(/\D/g, '');
+      const msg = `*AB DATES & DRY FRUITS (KHAMMAM)*%0ANamaste *${entry.customer}*,%0AYour pending bill balance of *₹${entry.amount}* (Bill #${entry.billNo}) is due.%0A💳 *Pay via UPI:* ${MERCHANT_UPI_ID}%0A📞 Store Contact: 91543 39465%0AThank you!`;
+      const url = cleanPhone.length >= 10 ? `https://wa.me/91${cleanPhone.slice(-10)}?text=${msg}` : `https://wa.me/?text=${msg}`;
+      window.open(url, '_blank');
+    }
+
+    function openKhataModal() {
+      loadKhataLedger();
+      renderKhataModalList();
+      document.getElementById('khataModal')?.classList.remove('hidden');
+    }
+
+    function closeKhataModal() {
+      document.getElementById('khataModal')?.classList.add('hidden');
+    }
+
+    function renderKhataModalList() {
+      const box = document.getElementById('khataListContainer');
+      if (!box) return;
+      updateKhataBadge();
+      if (khataLedger.length === 0) {
+        box.innerHTML = `<div class="p-6 text-center text-stone-400 text-xs font-bold">No pending Khata / Credit dues recorded. Select "📓 KHATA / CREDIT DUE" during checkout or add a due above.</div>`;
+        return;
+      }
+      box.innerHTML = khataLedger.map(k => {
+        const isPaid = k.status === 'PAID';
+        return `
+          <div class="py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <div class="text-xs font-black text-stone-900 flex items-center gap-1.5">
+                <span>${escapeHtml(k.customer)}</span>
+                ${k.phone ? `<span class="text-[10px] font-mono text-stone-500">(${escapeHtml(k.phone)})</span>` : ''}
+                <span class="text-[9px] px-2 py-0.5 rounded-full font-black ${isPaid ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-700'}">${isPaid ? '✓ PAID' : '⏳ PENDING DUE'}</span>
+              </div>
+              <div class="text-[10px] text-stone-500 font-semibold">Bill #${escapeHtml(String(k.billNo))} • ${escapeHtml(k.date || '')}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-black ${isPaid ? 'text-stone-400 line-through' : 'text-red-700'}">₹${k.amount}</span>
+              ${!isPaid ? `
+                <button onclick="sendKhataWhatsAppReminder('${k.id}')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-black px-2.5 py-1 rounded-xl text-[10px]">💬 WhatsApp Reminder</button>
+                <button onclick="markKhataPaid('${k.id}')" class="bg-stone-900 hover:bg-stone-800 text-[#F8CB46] font-black px-2.5 py-1 rounded-xl text-[10px]">✓ Mark Paid</button>
+              ` : ''}
+              <button onclick="deleteKhataEntry('${k.id}')" class="text-red-500 hover:text-red-700 font-bold text-xs px-1.5">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    setTimeout(loadKhataLedger, 150);
+
+    function closeReceiptPreviewModal() {
+      const modal = document.getElementById('receiptPreviewModal');
+      const receipt = document.getElementById('thermalReceipt');
+      if (modal) modal.classList.add('hidden');
+      if (receipt) {
+        const currentSize = document.getElementById('paperWidthSelect')?.value || '80mm';
+        receipt.className = "hidden paper-" + currentSize;
+        document.body.appendChild(receipt);
+      }
     }
 
     // ==================== 5. SYNC CATALOG WITH FIREBASE ====================
@@ -1512,7 +1993,8 @@
       const allCategories = new Set([
         "Almonds", "Cashews", "Dates", "Pistachios", "Walnuts",
         "Raisins", "Figs & Apricots", "Seeds & Berries", "Spices & Saffron",
-        "Gift Boxes", "Honey & Shilajit", "Imported Chocolates"
+        "Imported Chocolates", "Cakes & Bakery", "Biscuits & Cookies",
+        "Gift Boxes", "Honey & Shilajit", "Custom Items"
       ]);
       keys.forEach(k => {
         if (masterCatalog[k]?.category) allCategories.add(masterCatalog[k].category.trim());
@@ -1557,7 +2039,8 @@
         const thumb = item.imageUrl
           ? `<img src="${item.imageUrl}" class="w-5 h-5 rounded object-cover">`
           : `<span class="text-[10px] bg-amber-100 text-amber-900 font-black px-1.5 py-0.5 rounded">${item.code || 'DF'}</span>`;
-        chip.innerHTML = `${thumb} <span>${item.name.split('(')[0].trim()}</span> <strong class="text-emerald-800">₹${item.offlineRate}</strong>`;
+        const isPc = isPieceOrNoGramItem(item);
+        chip.innerHTML = `${thumb} <span>${item.name.split('(')[0].trim()}</span> <strong class="text-emerald-800">₹${item.offlineRate}${isPc ? '' : '/Kg'}</strong>`;
         chip.onclick = () => selectQuickChipItem(item);
         chipsBox.appendChild(chip);
       });
@@ -1565,17 +2048,152 @@
       renderMasterCatalogTable();
     }
 
+    let currentPosUnitMode = 'WEIGHT'; // 'WEIGHT' (Kg/g) or 'PIECE' (No-Grams Fixed Rate / Piece)
+
+    function isPieceOrNoGramItem(itemOrCat, nameStr = '') {
+      if (!itemOrCat && !nameStr) return false;
+      if (typeof itemOrCat === 'object' && itemOrCat !== null) {
+        if (itemOrCat.unitType === 'PIECE' || itemOrCat.unitType === 'FIXED') return true;
+        if (itemOrCat.unitType === 'WEIGHT') return false;
+        const combined = ((itemOrCat.category || '') + ' ' + (itemOrCat.name || '')).toLowerCase();
+        return /chocolate|choc|cake|pastry|bakery|biscuit|cookie|wafer|gift\s*box|hamper|bottle|jar|tin|can|pack|box|piece|ferrero|kunafa|baklava/.test(combined);
+      }
+      const str = (String(itemOrCat) + ' ' + String(nameStr)).toLowerCase();
+      return /chocolate|choc|cake|pastry|bakery|biscuit|cookie|wafer|gift\s*box|hamper|bottle|jar|tin|can|pack|box|piece|ferrero|kunafa|baklava/.test(str);
+    }
+
+    function setPosEntryUnitMode(mode) {
+      currentPosUnitMode = (mode === 'PIECE') ? 'PIECE' : 'WEIGHT';
+      const btnW = document.getElementById('modeBtnWeight');
+      const btnP = document.getElementById('modeBtnPiece');
+      const packSel = document.getElementById('posPack');
+      const wtInp = document.getElementById('posWeight');
+      const lblPack = document.getElementById('lblPosPack');
+      const lblWt = document.getElementById('lblPosWeight');
+      const lblRate = document.getElementById('lblPosRate');
+      const lblOnRate = document.getElementById('lblPosOnlineRate');
+      const rateInp = document.getElementById('posRate');
+
+      if (currentPosUnitMode === 'PIECE') {
+        if (btnP) btnP.className = "px-3 py-1 rounded-xl text-[11px] font-black bg-amber-500 text-stone-950 shadow-sm transition";
+        if (btnW) btnW.className = "px-3 py-1 rounded-xl text-[11px] font-black bg-white text-stone-700 border border-stone-300 hover:bg-emerald-50 transition";
+        if (lblPack) lblPack.innerText = "Quick Qty (No Grams)";
+        if (lblWt) lblWt.innerText = "Qty (Pcs / Packs)";
+        if (lblRate) lblRate.innerText = "Item Rate (₹/Pc)";
+        if (lblOnRate) lblOnRate.innerText = "Online Rate (₹)";
+        if (rateInp) rateInp.placeholder = "₹ Rate";
+        if (packSel) {
+          packSel.innerHTML = `
+            <option value="1">1 Pc / Pack</option>
+            <option value="2">2 Pcs / Packs</option>
+            <option value="3">3 Pcs / Packs</option>
+            <option value="4">4 Pcs / Packs</option>
+            <option value="5">5 Pcs / Packs</option>
+            <option value="6">6 Pcs / Box</option>
+            <option value="10">10 Pcs Bulk</option>
+            <option value="custom">Custom Qty</option>
+          `;
+        }
+        if (wtInp) {
+          wtInp.step = "1";
+          const cur = parseFloat(wtInp.value) || 1;
+          wtInp.value = cur < 1 ? 1 : Math.round(cur);
+        }
+      } else {
+        if (btnW) btnW.className = "px-3 py-1 rounded-xl text-[11px] font-black bg-emerald-800 text-white shadow-sm transition";
+        if (btnP) btnP.className = "px-3 py-1 rounded-xl text-[11px] font-black bg-white text-stone-700 border border-stone-300 hover:bg-amber-50 transition";
+        if (lblPack) lblPack.innerText = "Quick Pack";
+        if (lblWt) lblWt.innerText = "Exact Wt (Kg)";
+        if (lblRate) lblRate.innerText = "1 Kg Rate (₹)";
+        if (lblOnRate) lblOnRate.innerText = "Online Rate/Kg";
+        if (rateInp) rateInp.placeholder = "₹/Kg";
+        if (packSel) {
+          packSel.innerHTML = `
+            <option value="1">1 Kg Full</option>
+            <option value="0.5">500 gm (1/2 Kg)</option>
+            <option value="0.25">250 gm (1/4 Kg)</option>
+            <option value="0.1">100 gm</option>
+            <option value="0.05">50 gm</option>
+            <option value="2">2 Kg Bulk</option>
+            <option value="5">5 Kg Family</option>
+            <option value="custom">Custom Wt</option>
+          `;
+        }
+        if (wtInp) {
+          wtInp.step = "0.001";
+        }
+      }
+      recalcFromWeightOrRate();
+    }
+
+    function addQuickNoGramItem() {
+      const nameEl = document.getElementById('quickFixedName');
+      const rateEl = document.getElementById('quickFixedRate');
+      const qtyEl = document.getElementById('quickFixedQty');
+      const catEl = document.getElementById('quickFixedCat');
+      const name = (nameEl?.value || '').trim();
+      const rate = parseFloat(rateEl?.value) || 0;
+      const qty = Math.max(1, Math.round(parseFloat(qtyEl?.value) || 1));
+      const category = catEl?.value || 'Imported Chocolates';
+
+      if (!name || rate <= 0) {
+        showPosToast("Enter Item Name and Rate ₹ for quick No-Grams billing!", "⚠️");
+        if (!name && nameEl) nameEl.focus();
+        else if (rateEl) rateEl.focus();
+        return;
+      }
+
+      if (document.getElementById('saveMaster')?.checked) {
+        const safeKey = name.replace(/[.#$/\[\]\s]+/g, '_');
+        const existing = masterCatalog[safeKey] || {};
+        const updatedItem = {
+          name,
+          code: existing.code || name.substring(0, 2).toUpperCase() + Math.floor(10 + Math.random() * 89),
+          category,
+          unitType: 'PIECE',
+          offlineRate: rate,
+          onlineRate: existing.onlineRate || rate,
+          stockKg: existing.stockKg !== undefined ? existing.stockKg : 30,
+          imageUrl: existing.imageUrl || ""
+        };
+        masterCatalog[safeKey] = updatedItem;
+        safeSetStorage('ab_master_catalog_v3', JSON.stringify(masterCatalog));
+        if (db) db.ref('master_catalog/' + safeKey).set(updatedItem);
+        renderCatalogUI();
+      }
+
+      currentBill.push({
+        name,
+        unitType: 'PIECE',
+        wt: qty,
+        packLabel: qty === 1 ? '1 Pc' : `${qty} Pcs`,
+        rate,
+        total: Math.round(qty * rate)
+      });
+
+      renderBill();
+      if (nameEl) nameEl.value = '';
+      if (rateEl) rateEl.value = '';
+      if (qtyEl) qtyEl.value = '1';
+      if (nameEl) nameEl.focus();
+      showPosToast(`Added ${name} (${qty === 1 ? '1 Pc' : qty + ' Pcs'} @ ₹${rate})`, "🍫");
+    }
+
     function selectQuickChipItem(item) {
       document.getElementById('posItem').value = item.name;
       document.getElementById('posRate').value = item.offlineRate;
       document.getElementById('posOnlineRate').value = item.onlineRate || item.offlineRate;
       if (item.category) document.getElementById('posNewCat').value = item.category;
+      const shouldBePiece = isPieceOrNoGramItem(item);
+      setPosEntryUnitMode(shouldBePiece ? 'PIECE' : 'WEIGHT');
+      document.getElementById('posWeight').value = '1';
       recalcFromWeightOrRate();
     }
 
     // ==================== 6. AUTOMATIC WEIGHT-TO-PRICE & REVERSE PRICE-TO-WEIGHT FORMULA ====================
     function onPosItemInput() {
-      const val = document.getElementById('posItem').value.trim().toLowerCase();
+      const rawVal = document.getElementById('posItem').value.trim();
+      const val = rawVal.toLowerCase();
       const matchKey = Object.keys(masterCatalog).find(k => {
         const it = masterCatalog[k];
         return it.name.toLowerCase() === val || (it.code && it.code.toLowerCase() === val);
@@ -1585,7 +2203,12 @@
         document.getElementById('posRate').value = it.offlineRate;
         document.getElementById('posOnlineRate').value = it.onlineRate || it.offlineRate;
         if (it.category) document.getElementById('posNewCat').value = it.category;
+        setPosEntryUnitMode(isPieceOrNoGramItem(it) ? 'PIECE' : 'WEIGHT');
         recalcFromWeightOrRate();
+      } else if (rawVal.length > 2) {
+        if (isPieceOrNoGramItem('', rawVal)) {
+          setPosEntryUnitMode('PIECE');
+        }
       }
     }
 
@@ -1629,15 +2252,36 @@
       const desiredTotal = parseFloat(document.getElementById('posTotal').value) || 0;
       const rate = parseFloat(document.getElementById('posRate').value) || 0;
       if (rate > 0 && desiredTotal > 0) {
-        const computedWeight = +(desiredTotal / rate).toFixed(3);
-        document.getElementById('posWeight').value = computedWeight;
-        document.getElementById('posPack').value = 'custom';
-        updateAutoFormulaBar(rate, computedWeight);
+        if (currentPosUnitMode === 'PIECE') {
+          const qty = Math.max(1, Math.round(desiredTotal / rate));
+          document.getElementById('posWeight').value = qty;
+          document.getElementById('posPack').value = 'custom';
+          updateAutoFormulaBar(rate, qty);
+        } else {
+          const computedWeight = +(desiredTotal / rate).toFixed(3);
+          document.getElementById('posWeight').value = computedWeight;
+          document.getElementById('posPack').value = 'custom';
+          updateAutoFormulaBar(rate, computedWeight);
+        }
       }
     }
 
-    function updateAutoFormulaBar(ratePerKg, currentWt) {
-      const r = parseFloat(ratePerKg) || 0;
+    function updateAutoFormulaBar(rateVal, currentWt) {
+      const r = parseFloat(rateVal) || 0;
+      if (currentPosUnitMode === 'PIECE') {
+        const qty = Math.max(1, Math.round(parseFloat(currentWt) || 1));
+        document.getElementById('formulaStatusText').innerText = r > 0
+          ? `No-Grams Mode: ${qty} Pc(s) × ₹${r} = ₹${Math.round(qty * r)}`
+          : 'Enter Item Rate (₹)';
+        document.getElementById('autoRateFormulaBar').innerHTML = `
+          <div onclick="setQuickGramWeight(1)" class="cursor-pointer bg-amber-100 hover:bg-amber-200 rounded p-1">1 Pc: <strong class="text-stone-900">₹${Math.round(r * 1)}</strong></div>
+          <div onclick="setQuickGramWeight(2)" class="cursor-pointer bg-stone-100 hover:bg-amber-100 rounded p-1">2 Pcs: <strong class="text-stone-900">₹${Math.round(r * 2)}</strong></div>
+          <div onclick="setQuickGramWeight(3)" class="cursor-pointer bg-stone-100 hover:bg-amber-100 rounded p-1">3 Pcs: <strong class="text-stone-900">₹${Math.round(r * 3)}</strong></div>
+          <div onclick="setQuickGramWeight(5)" class="cursor-pointer bg-stone-100 hover:bg-amber-100 rounded p-1">5 Pcs: <strong class="text-stone-900">₹${Math.round(r * 5)}</strong></div>
+          <div onclick="setQuickGramWeight(10)" class="cursor-pointer bg-emerald-100 hover:bg-emerald-200 rounded p-1">10 Pcs: <strong class="text-emerald-900">₹${Math.round(r * 10)}</strong></div>
+        `;
+        return;
+      }
       const gms = Math.round((parseFloat(currentWt) || 0) * 1000);
       document.getElementById('formulaStatusText').innerText = r > 0
         ? `Selected: ${gms}g = ₹${Math.round((currentWt || 0) * r)}`
@@ -1696,16 +2340,19 @@
     // ==================== 8. ADD ITEM TO BILL & SYNC CATALOG ====================
     function addItemToBill() {
       const name = document.getElementById('posItem').value.trim();
-      const wt = parseFloat(document.getElementById('posWeight').value) || 0;
+      let wt = parseFloat(document.getElementById('posWeight').value);
+      if (isNaN(wt) || wt <= 0) wt = 1;
       const rate = parseFloat(document.getElementById('posRate').value) || 0;
       const onlineRate = parseFloat(document.getElementById('posOnlineRate').value) || rate;
-      const total = parseFloat(document.getElementById('posTotal').value) || Math.round(wt * rate);
       const customTypedCat = (document.getElementById('posCustomCatInput')?.value || '').trim();
       const dropdownCat = document.getElementById('posNewCat').value;
       const category = customTypedCat || (dropdownCat !== '__CUSTOM__' ? dropdownCat : 'Dry Fruits') || 'Dry Fruits';
+      const isPiece = (currentPosUnitMode === 'PIECE') || isPieceOrNoGramItem(category, name);
+      if (isPiece) wt = Math.max(1, Math.round(wt));
+      const total = parseFloat(document.getElementById('posTotal').value) || Math.round(wt * rate);
 
-      if (!name || wt <= 0 || rate <= 0) {
-        showPosToast("Please enter Item Name, Weight and 1Kg Rate.", "⚠️");
+      if (!name || rate <= 0) {
+        showPosToast("Please enter Item Name and Rate ₹.", "⚠️");
         return;
       }
 
@@ -1716,6 +2363,7 @@
           name: name,
           code: existing.code || name.substring(0, 2).toUpperCase() + Math.floor(10 + Math.random() * 89),
           category: category,
+          unitType: isPiece ? 'PIECE' : 'WEIGHT',
           offlineRate: rate,
           onlineRate: onlineRate,
           stockKg: existing.stockKg !== undefined ? existing.stockKg : 25,
@@ -1727,10 +2375,13 @@
         renderCatalogUI();
       }
 
-      const packLabel = wt < 1 ? `${Math.round(wt * 1000)}g` : `${wt}Kg`;
+      const packLabel = isPiece
+        ? (wt === 1 ? '1 Pc' : `${wt} Pcs`)
+        : (wt < 1 ? `${Math.round(wt * 1000)}g` : `${wt}Kg`);
       currentBill.push({
         name,
-        wt: +wt.toFixed(3),
+        unitType: isPiece ? 'PIECE' : 'WEIGHT',
+        wt: isPiece ? wt : +wt.toFixed(3),
         packLabel,
         rate,
         total: Math.round(total)
@@ -1759,7 +2410,14 @@
     // ==================== 9. RENDER BILL, GST BREAKDOWN, LIVE ANALYSIS & DYNAMIC UPI QR ====================
     function getNetBillCalculation() {
       const subtotal = currentBill.reduce((sum, i) => sum + i.total, 0);
-      const totalWt = currentBill.reduce((sum, i) => sum + i.wt, 0);
+      const totalWt = currentBill.reduce((sum, i) => {
+        const isPc = i.unitType === 'PIECE' || (i.packLabel && /pc|pack|box/i.test(i.packLabel));
+        return sum + (isPc ? 0 : (parseFloat(i.wt) || 0));
+      }, 0);
+      const totalPcs = currentBill.reduce((sum, i) => {
+        const isPc = i.unitType === 'PIECE' || (i.packLabel && /pc|pack|box/i.test(i.packLabel));
+        return sum + (isPc ? (parseInt(i.wt, 10) || 1) : 0);
+      }, 0);
       const discVal = parseFloat(document.getElementById('billDiscount').value) || 0;
       const discType = document.getElementById('discountType').value;
       const discountAmt = discType === 'PCT'
@@ -1773,7 +2431,7 @@
       const sgstAmt = +(totalGstAmt / 2).toFixed(2);
       const netPayable = Math.round(taxableAmount + totalGstAmt);
 
-      return { subtotal, totalWt, discountAmt, taxableAmount, gstSlab, totalGstAmt, cgstAmt, sgstAmt, netPayable };
+      return { subtotal, totalWt, totalPcs, discountAmt, taxableAmount, gstSlab, totalGstAmt, cgstAmt, sgstAmt, netPayable };
     }
 
     function renderBill() {
@@ -1783,19 +2441,22 @@
       tbody.innerHTML = '';
 
       if (currentBill.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-stone-400 font-semibold">Cart is empty. Click a Quick Chip or add an item above.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-stone-400 font-semibold">Cart is empty. Click a Quick Chip, use Quick No-Grams Add, or search an item above.</td></tr>`;
       } else {
         currentBill.forEach((item, idx) => {
+          const isPc = item.unitType === 'PIECE' || (item.packLabel && /pc|pack|box/i.test(item.packLabel));
+          const stepVal = isPc ? "1" : "0.05";
+          const rateLabel = isPc ? `₹${item.rate} <span class="text-[10px] text-amber-800 bg-amber-100 px-1 rounded">Fixed/Pc</span>` : `₹${item.rate}/Kg`;
           tbody.innerHTML += `
             <tr class="hover:bg-stone-50 font-semibold">
               <td class="p-2.5 text-stone-400 font-bold">${idx + 1}</td>
               <td class="p-2.5 font-black text-stone-900">${item.name}</td>
               <td class="p-2.5 text-center">
-                <input type="number" step="0.05" value="${item.wt}" onchange="updateCartRowWeight(${idx}, this.value)"
+                <input type="number" step="${stepVal}" value="${item.wt}" onchange="updateCartRowWeight(${idx}, this.value)"
                        class="w-16 border border-stone-300 rounded-lg p-1 text-center font-black bg-white">
                 <span class="text-[10px] text-stone-500 block">${item.packLabel}</span>
               </td>
-              <td class="p-2.5 text-center">₹${item.rate}/Kg</td>
+              <td class="p-2.5 text-center">${rateLabel}</td>
               <td class="p-2.5 text-right font-black text-emerald-900">₹${item.total}</td>
               <td class="p-2.5 text-center">
                 <button onclick="removeCartRow(${idx})" class="text-red-500 hover:text-red-700 font-black px-2 py-0.5 rounded">✕</button>
@@ -1806,14 +2467,16 @@
 
       const calc = getNetBillCalculation();
       document.getElementById('grandTotal').innerText = "₹" + calc.netPayable;
-      document.getElementById('totalWeightBadge').innerText = `Total Weight: ${calc.totalWt.toFixed(3)} Kg (${currentBill.length} Items)`;
+      const summaryParts = [];
+      if (calc.totalWt > 0) summaryParts.push(`${calc.totalWt.toFixed(3)} Kg`);
+      if (calc.totalPcs > 0) summaryParts.push(`${calc.totalPcs} Pc(s)`);
+      document.getElementById('totalWeightBadge').innerText = `Summary: ${summaryParts.join(' + ') || '0 Kg'} (${currentBill.length} Items)`;
       document.getElementById('posSideQrAmount').innerText = "₹" + calc.netPayable;
       document.getElementById('modalQrAmount').innerText = "₹" + calc.netPayable;
 
       // Update GST Split Box & Live Bill Analysis
       document.getElementById('posGstLiveSplit').innerText = `Taxable: ₹${calc.taxableAmount} | CGST: ₹${calc.cgstAmt} | SGST: ₹${calc.sgstAmt}`;
-      const avgPerKg = calc.totalWt > 0 ? Math.round(calc.taxableAmount / calc.totalWt) : 0;
-      document.getElementById('liveBillAnalysisText').innerText = `📊 Bill Analysis: ${currentBill.length} Items • ${calc.totalWt.toFixed(2)} Kg • Avg ₹${avgPerKg}/Kg`;
+      document.getElementById('liveBillAnalysisText').innerText = `📊 Bill Analysis: ${currentBill.length} Items • ${summaryParts.join(' + ') || '0 Kg'} • Net ₹${calc.netPayable}`;
 
       if (document.getElementById('payMode').value === 'SPLIT') {
         document.getElementById('splitCashAmt').value = Math.round(calc.netPayable / 2);
@@ -1830,9 +2493,18 @@
         removeCartRow(idx);
         return;
       }
-      currentBill[idx].wt = +wt.toFixed(3);
-      currentBill[idx].packLabel = wt < 1 ? `${Math.round(wt * 1000)}g` : `${wt}Kg`;
-      currentBill[idx].total = Math.round(wt * currentBill[idx].rate);
+      const item = currentBill[idx];
+      const isPc = item.unitType === 'PIECE' || (item.packLabel && /pc|pack|box/i.test(item.packLabel));
+      if (isPc) {
+        const q = Math.max(1, Math.round(wt));
+        item.wt = q;
+        item.packLabel = q === 1 ? '1 Pc' : `${q} Pcs`;
+        item.total = Math.round(q * item.rate);
+      } else {
+        item.wt = +wt.toFixed(3);
+        item.packLabel = wt < 1 ? `${Math.round(wt * 1000)}g` : `${wt}Kg`;
+        item.total = Math.round(wt * item.rate);
+      }
       renderBill();
     }
 
@@ -2236,11 +2908,22 @@
     }
 
     // ==================== 10. COUNTER HDFC UPI QR MODAL ====================
+    function buildExactUpiQrUrl(amount, billNo) {
+      const cleanAmt = Math.max(0, Math.round(parseFloat(amount) || 0));
+      const amtParam = cleanAmt > 0 ? `&am=${cleanAmt}` : '';
+      const noteParam = billNo ? `&tn=${encodeURIComponent('AB Bill #' + billNo)}` : '';
+      const upiUri = `upi://pay?pa=${MERCHANT_UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&cu=INR${amtParam}${noteParam}`;
+      return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=${encodeURIComponent(upiUri)}`;
+    }
+
     function updateDynamicUpiQrImages(amount) {
-      const amtParam = amount > 0 ? `&am=${amount}` : '';
-      const upiUri = `upi://pay?pa=${MERCHANT_UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&cu=INR${amtParam}`;
-      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUri)}`;
-      document.getElementById('modalDynamicQrImg').src = qrApiUrl;
+      const qrApiUrl = buildExactUpiQrUrl(amount, currentBillNo);
+      const modalImg = document.getElementById('modalDynamicQrImg');
+      if (modalImg) modalImg.src = qrApiUrl;
+      const rQrImg = document.getElementById('rPaymentQrImg');
+      if (rQrImg) rQrImg.src = qrApiUrl;
+      const rPayAmt = document.getElementById('rScanToPayAmt');
+      if (rPayAmt) rPayAmt.innerText = "₹" + Math.max(0, Math.round(parseFloat(amount) || 0));
     }
 
     function openCounterQrModal() {
@@ -2306,16 +2989,26 @@
       items.forEach(i => {
         const wtText = i.packLabel || (i.wt < 1 ? `${Math.round(i.wt * 1000)}g` : `${i.wt}Kg`);
         rBody.innerHTML += `
-          <tr>
-            <td style="padding: 3px 0;">${i.name}</td>
-            <td style="padding: 3px 0; text-align:center;">${wtText}</td>
-            <td style="padding: 3px 0; text-align:right;">${i.rate}</td>
-            <td style="padding: 3px 0; text-align:right;">₹${i.total}</td>
+          <tr style="border-bottom: 0.5px dotted #ccc;">
+            <td style="text-align:left; white-space:normal; word-break:break-word;">${i.name}</td>
+            <td style="text-align:center; white-space:nowrap;">${wtText}</td>
+            <td style="text-align:right; white-space:nowrap;">${i.rate}</td>
+            <td style="text-align:right; white-space:nowrap;">₹${i.total}</td>
           </tr>`;
       });
 
-      const totalWt = items.reduce((s, x) => s + (parseFloat(x.wt) || 0), 0);
-      document.getElementById('rWeightSummary').innerText = `${items.length} Items / ${totalWt.toFixed(3)} Kg`;
+      const totalWt = items.reduce((s, x) => {
+        const isPc = x.unitType === 'PIECE' || (x.packLabel && /pc|pack|box/i.test(x.packLabel));
+        return s + (isPc ? 0 : (parseFloat(x.wt) || 0));
+      }, 0);
+      const totalPcs = items.reduce((s, x) => {
+        const isPc = x.unitType === 'PIECE' || (x.packLabel && /pc|pack|box/i.test(x.packLabel));
+        return s + (isPc ? (parseInt(x.wt, 10) || 1) : 0);
+      }, 0);
+      const parts = [`${items.length} Items`];
+      if (totalWt > 0) parts.push(`${totalWt.toFixed(3)} Kg`);
+      if (totalPcs > 0) parts.push(`${totalPcs} Pcs`);
+      document.getElementById('rWeightSummary').innerText = parts.join(' • ');
 
       const discRow = document.getElementById('rDiscountRow');
       if (calc.discountAmt > 0) {
@@ -2340,6 +3033,12 @@
       }
 
       document.getElementById('rTotal').innerText = "₹" + calc.netPayable;
+      const rScanAmt = document.getElementById('rScanToPayAmt');
+      if (rScanAmt) rScanAmt.innerText = "₹" + calc.netPayable;
+      const rQrImg = document.getElementById('rPaymentQrImg');
+      if (rQrImg) {
+        rQrImg.src = buildExactUpiQrUrl(calc.netPayable, billNo);
+      }
     }
 
     // Complete & Clear Bill (Print only happens when bill is cleared & recorded)
@@ -2412,6 +3111,11 @@
         }
       });
       safeSetStorage('ab_master_catalog_v3', JSON.stringify(masterCatalog));
+
+      // If mode is KHATA (Customer Credit / Udhaar), automatically record in Khata Ledger
+      if (mode === 'KHATA') {
+        recordKhataDueFromSale(saleRecord);
+      }
 
       // Save Sale Record
       allSalesCache.unshift(saleRecord);
@@ -2813,7 +3517,15 @@
               <input type="number" value="${it.onlineRate || it.offlineRate}" onchange="updateCatalogField('${key}', 'onlineRate', this.value)" class="w-20 border-2 border-amber-400 rounded-lg p-1.5 text-center font-black bg-amber-50/40">
             </td>
             <td class="p-3 text-center text-[11px] font-bold text-stone-600">
-              250g: ₹${Math.round((it.offlineRate || 0) * 0.25)}<br>500g: ₹${Math.round((it.offlineRate || 0) * 0.5)}
+              <select onchange="updateCatalogField('${key}', 'unitType', this.value)" class="border border-stone-300 rounded-lg px-1.5 py-0.5 text-[10px] font-black mb-1 bg-white">
+                <option value="WEIGHT" ${!isPieceOrNoGramItem(it) ? 'selected' : ''}>⚖️ Kg / Grams</option>
+                <option value="PIECE" ${isPieceOrNoGramItem(it) ? 'selected' : ''}>🍫 Rate / Pc (No Grams)</option>
+              </select>
+              <div class="text-[10px]">
+                ${isPieceOrNoGramItem(it)
+                  ? `<span class="text-amber-900 font-black">Fixed: ₹${it.offlineRate}/Pc</span>`
+                  : `250g: ₹${Math.round((it.offlineRate || 0) * 0.25)} | 500g: ₹${Math.round((it.offlineRate || 0) * 0.5)}`}
+              </div>
             </td>
             <td class="p-3 text-center">
               <input type="number" step="0.5" value="${it.stockKg !== undefined ? it.stockKg : 25}" onchange="updateCatalogField('${key}', 'stockKg', this.value)" class="w-16 border border-stone-300 rounded-lg p-1.5 text-center font-bold">
@@ -2889,11 +3601,16 @@
         return;
       }
 
+      const unitSel = document.getElementById('newCatUnitType')?.value || 'AUTO';
+      const resolvedUnitType = unitSel === 'AUTO'
+        ? (isPieceOrNoGramItem(category, name) ? 'PIECE' : 'WEIGHT')
+        : unitSel;
       const safeKey = name.replace(/[.#$/\[\]\s]+/g, '_');
       const newItem = {
         name: name,
         code: code || (name.substring(0, 2).toUpperCase() + Math.floor(10 + Math.random() * 89)),
         category: category,
+        unitType: resolvedUnitType,
         offlineRate: offlineRate,
         onlineRate: onlineRate,
         stockKg: stockKg,
